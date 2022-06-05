@@ -1,0 +1,189 @@
+<?php
+
+return [
+    /*
+    |--------------------------------------------------------------------------
+    | Host
+    |--------------------------------------------------------------------------
+    |
+    | Dumps App Host address. By default: '127.0.0.1',
+    | Uncomment the line below according to your environment.
+    */
+
+    'host' => '127.0.0.1',
+
+    //'host' => 'host.docker.internal',    //Docker on Mac or Windows
+    //'host' => '127.0.0.1',               //Homestead with the VirtualBox provider,
+    //'host' => '10.211.55.2',             //Homestead with the Parallels provider,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Port
+    |--------------------------------------------------------------------------
+    |
+    | Dumps App port. By default: 9191
+    |
+    */
+
+    'port' => 9191,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Queries
+    |--------------------------------------------------------------------------
+    |
+    | If true, Dumps will start listening to your database queries and send them to Dumps App whenever
+    | ->showQueries() method is invoked.
+    |
+    */
+
+    'send_queries' => false,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Log Applications
+    |--------------------------------------------------------------------------
+    |
+    | If true, Dumps will start listening to your application logs and send them to Dumps App.
+    |
+    */
+
+    'send_log_applications' => false,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Color in Screen
+    |--------------------------------------------------------------------------
+    |
+    | If true, Dumps will separate colors into screens with the name of the submitted color
+    |
+    */
+
+    'send_color_in_screen' => false,
+
+    'screen_btn_colors_map' => [
+        'default' => [
+            'default' => 'btn-white',
+        ],
+        'danger' => [
+            'default' => 'btn-danger',
+        ],
+        'info' => [
+            'default' => 'btn-info',
+        ],
+        'success' => [
+            'default' => 'btn-success',
+        ],
+        'warning' => [
+            'default' => 'btn-warning',
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Level Log Colors Map
+    |--------------------------------------------------------------------------
+    |
+    | If true, Dumps will start listening to your application logs and send them to Dumps App.
+    |
+    */
+    'level_log_colors_map' => [
+        'error'     => 'bg-red-600',
+        'critical'  => 'bg-red-600',
+        'alert'     => 'bg-red-600',
+        'emergency' => 'bg-red-600',
+        'warning'   => 'bg-orange-300',
+        'notice'    => 'bg-blue-300',
+        'info'      => 'bg-gray-300',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Livewire Components
+    |--------------------------------------------------------------------------
+    |
+    | If true, Dumps will start sending the state of the current browser components
+    |
+    */
+
+    'send_livewire_components' => false,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Livewire Except Components
+    |--------------------------------------------------------------------------
+    |
+    | Dumps will ignore all components listed inside the array
+    |
+    */
+
+    'except_livewire_components' => [
+        // \App\Http\Livewire\Counter::class,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Preferred IDE
+    |--------------------------------------------------------------------------
+    |
+    | Configure your preferred IDE to be used in Dumps App file links.
+    |
+    */
+
+    'preferred_ide' => 'phpstorm',
+
+    /*
+    |--------------------------------------------------------------------------
+    |  IDE Handlers
+    |--------------------------------------------------------------------------
+    |
+    | Dumps already ships with pre-configured IDE protocol handlers.
+    | You may adjust the handler or include custom ones, if needed.
+    |
+    */
+
+    'ide_handlers' => [
+        'atom' => [
+            'handler'        => 'atom://core/open/file?filename=',
+            'line_separator' => '&line=',
+        ],
+        'phpstorm' => [
+            'handler'        => 'phpstorm://open?url=file://',
+            'line_separator' => '&line=',
+        ],
+        'sublime' => [
+            'handler'        => 'subl://open?url=file://',
+            'line_separator' => '&line=',
+        ],
+        'vscode' => [
+            'handler'        => 'vscode://file/',
+            'line_separator' => ':',
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    |  Except Route Contains
+    |--------------------------------------------------------------------------
+    |
+    |  You can specify a list of words that a route can count. Can specify part of a text
+    |
+    */
+    'except_route_contains' => [
+        'debugbar',
+        'ignition',
+        'horizon',
+        'livewire',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    |  Sleep
+    |--------------------------------------------------------------------------
+    |
+    | You can specify an interval in 'seconds' between each dump sent to the app
+    |
+    */
+
+    'sleep' => null,
+];

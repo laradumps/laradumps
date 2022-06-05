@@ -1,0 +1,61 @@
+{
+    "name": "laradumps/laradumps",
+    "description": "A Dump Component for Laravel.",
+    "homepage": "https://github.com/laradumps/laradumps",
+    "license": "MIT",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "authors": [
+        {
+            "name": "Luan Freitas",
+            "email": "luanfreitas10@protonmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.0",
+        "ramsey/uuid": "^4.1"
+    },
+    "require-dev": {
+        "illuminate/support": "^8.18 | ^9.0",
+        "orchestra/testbench": "^6.17 | ^7.0",
+        "symfony/var-dumper": "^5.4 | ^6.0",
+        "nunomaduro/larastan": "^1.0 | ^2.1",
+        "friendsofphp/php-cs-fixer": "^3.8",
+        "pestphp/pest": "^1.21"
+    },
+    "autoload": {
+        "psr-4": {
+            "LaraDumps\\LaraDumps\\": "src/"
+        },
+        "files": [
+            "src/functions.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "LaraDumps\\LaraDumps\\Tests\\" : "tests"
+        }
+    },
+    "scripts": {
+        "cs-fixer": "./vendor/bin/php-cs-fixer fix --verbose --dry-run --using-cache=no --stop-on-violation",
+        "fix": "./vendor/bin/php-cs-fixer fix",
+        "test:types": "./vendor/bin/phpstan analyse --ansi --memory-limit=-1",
+        "verify": [
+            "@cs-fixer",
+            "@test:types"
+        ]
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "LaraDumps\\LaraDumps\\LaraDumpsServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    }
+}
