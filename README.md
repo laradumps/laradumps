@@ -37,7 +37,6 @@
 
 * PHP 8.0+
 * Laravel 8.75+
-* Livewire 2.10+
 
 ---
 
