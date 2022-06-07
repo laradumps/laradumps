@@ -59,7 +59,7 @@ return [
     |
     */
 
-    'send_color_in_screen' => env('DS_COLOR_IN_SCREEN', false),
+    'send_color_in_screen' => env('DS_SEND_COLOR_IN_SCREEN', false),
 
     'screen_btn_colors_map' => [
         'default' => [
@@ -88,13 +88,13 @@ return [
     |
     */
     'level_log_colors_map' => [
-        'error'     => env('DS_LOG_COLORS_ERROR', 'bg-red-600'),
-        'critical'  => env('DS_LOG_COLORS_CRITICAL', 'bg-red-600'),
-        'alert'     => env('DS_LOG_COLORS_ALERT', 'bg-red-600'),
-        'emergency' => env('DS_LOG_COLORS_EMERGENCY', 'bg-red-600'),
-        'warning'   => env('DS_LOG_COLORS_WARNING', 'bg-orange-300'),
-        'notice'    => env('DS_LOG_COLORS_NOTICE', 'bg-blue-300'),
-        'info'      => env('DS_LOG_COLORS_INFO', 'bg-gray-300'),
+        'error'     => env('DS_LOG_COLOR_ERROR', 'bg-red-600'),
+        'critical'  => env('DS_LOG_COLOR_CRITICAL', 'bg-red-600'),
+        'alert'     => env('DS_LOG_COLOR_ALERT', 'bg-red-600'),
+        'emergency' => env('DS_LOG_COLOR_EMERGENCY', 'bg-red-600'),
+        'warning'   => env('DS_LOG_COLOR_WARNING', 'bg-orange-300'),
+        'notice'    => env('DS_LOG_COLOR_NOTICE', 'bg-blue-300'),
+        'info'      => env('DS_LOG_COLOR_INFO', 'bg-gray-300'),
     ],
 
     /*
