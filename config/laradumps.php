@@ -117,7 +117,7 @@ return [
     |
     */
 
-    'except_livewire_components' => [
+    'ignore_livewire_components' => [
         // \App\Http\Livewire\Counter::class,
     ],
 
@@ -163,13 +163,13 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    |  Except Route Contains
+    |  Ignore Route Contains
     |--------------------------------------------------------------------------
     |
     |  You can specify a list of words that a route can count. Can specify part of a text
     |
     */
-    'except_route_contains' => [
+    'ignore_route_contains' => [
         'debugbar',
         'ignition',
         'horizon',

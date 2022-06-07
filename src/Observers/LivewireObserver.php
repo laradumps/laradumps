@@ -21,7 +21,7 @@ class LivewireObserver
                 /** @var \Livewire\Component $component */
                 $component = $view->getData()['_instance'];
 
-                if (in_array(get_class($component), (array) (config('laradumps.except_livewire_components')))) {
+                if (in_array(get_class($component), (array) (config('laradumps.ignore_livewire_components')))) {
                     return;
                 }
 
