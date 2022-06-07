@@ -1,14 +1,14 @@
 <?php
 
+use Illuminate\Support\Str;
 use LaraDumps\LaraDumps\LaraDumps;
-use Ramsey\Uuid\Uuid;
 
 if (!function_exists('ds')) {
     function ds(mixed ...$args): LaraDumps
     {
         $backtrace   = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
 
-        $notificationId = Uuid::uuid4()->toString();
+        $notificationId = Str::uuid()->toString();
         $dump           = new LaraDumps($notificationId, backtrack: $backtrace);
 
         if ($args) {
@@ -40,7 +40,7 @@ if (!function_exists('ds1')) {
     {
         $backtrace   = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
 
-        $notificationId = Uuid::uuid4()->toString();
+        $notificationId = Str::uuid()->toString();
         $dump           = new LaraDumps($notificationId, backtrack: $backtrace);
 
         if ($args) {
@@ -58,7 +58,7 @@ if (!function_exists('ds2')) {
     {
         $backtrace   = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
 
-        $notificationId = Uuid::uuid4()->toString();
+        $notificationId = Str::uuid()->toString();
         $dump           = new LaraDumps($notificationId, backtrack: $backtrace);
 
         if ($args) {
@@ -76,7 +76,7 @@ if (!function_exists('ds3')) {
     {
         $backtrace   = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
 
-        $notificationId = Uuid::uuid4()->toString();
+        $notificationId = Str::uuid()->toString();
         $dump           = new LaraDumps($notificationId, backtrack: $backtrace);
 
         if ($args) {
@@ -94,7 +94,7 @@ if (!function_exists('ds4')) {
     {
         $backtrace   = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
 
-        $notificationId = Uuid::uuid4()->toString();
+        $notificationId = Str::uuid()->toString();
         $dump           = new LaraDumps($notificationId, backtrack: $backtrace);
 
         if ($args) {
@@ -112,7 +112,7 @@ if (!function_exists('ds5')) {
     {
         $backtrace   = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
 
-        $notificationId = Uuid::uuid4()->toString();
+        $notificationId = Str::uuid()->toString();
         $dump           = new LaraDumps($notificationId, backtrack: $backtrace);
 
         if ($args) {

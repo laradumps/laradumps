@@ -13,8 +13,7 @@
         }
     ],
     "require": {
-        "php": "^8.0",
-        "ramsey/uuid": "^4.1"
+        "php": "^8.0"
     },
     "require-dev": {
         "illuminate/support": "^8.18 | ^9.0",

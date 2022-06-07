@@ -19,7 +19,6 @@ use LaraDumps\LaraDumps\Payloads\{ClearPayload,
     ScreenPayload,
     TablePayload,
     ValidateStringPayload};
-use Ramsey\Uuid\Uuid;
 
 class LaraDumps
 {
@@ -36,7 +35,7 @@ class LaraDumps
         }
 
         $this->fullUrl        = config('laradumps.host') . ':' . config('laradumps.port') . '/api/dumps';
-        $this->notificationId = filled($notificationId) ? $this->notificationId : Uuid::uuid4()->toString();
+        $this->notificationId = filled($notificationId) ? $this->notificationId : Str::uuid()->toString();
     }
 
     public function send(array|Payload $payload): LaraDumps
