@@ -62,19 +62,16 @@ ds(['a' => 1, 'b' => 2])->danger();
 
 ds('multiple', 'arguments', $foo, $bar);
 
-queriesOn('label');
+ds()->queriesOn('label');
 
 User::firstWhere('email', 'you@email.com');
 
-queriesOff();
+ds()->queriesOff();
 
 ds()->die(); 
 ```
 
-
 And also with the blade directive:
-
-> See full documentation
 
 ```blade
 <div>
