@@ -10,7 +10,7 @@ return [
     | Uncomment the line below according to your environment.
     */
 
-    'host' => '127.0.0.1',
+    'host' => env('DS_APP_HOST', '127.0.0.1'),
 
     //'host' => 'host.docker.internal',    //Docker on Mac or Windows
     //'host' => '127.0.0.1',               //Homestead with the VirtualBox provider,
@@ -25,7 +25,7 @@ return [
     |
     */
 
-    'port' => 9191,
+    'port' => env('DS_APP_HOST', 9191),
 
     /*
     |--------------------------------------------------------------------------
@@ -37,7 +37,7 @@ return [
     |
     */
 
-    'send_queries' => false,
+    'send_queries' => env('DS_SEND_QUERIES', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -48,7 +48,7 @@ return [
     |
     */
 
-    'send_log_applications' => false,
+    'send_log_applications' => env('DS_SEND_LOGS', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -59,7 +59,7 @@ return [
     |
     */
 
-    'send_color_in_screen' => false,
+    'send_color_in_screen' => env('DS_COLOR_IN_SCREEN', false),
 
     'screen_btn_colors_map' => [
         'default' => [
@@ -88,13 +88,13 @@ return [
     |
     */
     'level_log_colors_map' => [
-        'error'     => 'bg-red-600',
-        'critical'  => 'bg-red-600',
-        'alert'     => 'bg-red-600',
-        'emergency' => 'bg-red-600',
-        'warning'   => 'bg-orange-300',
-        'notice'    => 'bg-blue-300',
-        'info'      => 'bg-gray-300',
+        'error'     => env('DS_LOG_COLORS_ERROR', 'bg-red-600'),
+        'critical'  => env('DS_LOG_COLORS_CRITICAL', 'bg-red-600'),
+        'alert'     => env('DS_LOG_COLORS_ALERT', 'bg-red-600'),
+        'emergency' => env('DS_LOG_COLORS_EMERGENCY', 'bg-red-600'),
+        'warning'   => env('DS_LOG_COLORS_WARNING', 'bg-orange-300'),
+        'notice'    => env('DS_LOG_COLORS_NOTICE', 'bg-blue-300'),
+        'info'      => env('DS_LOG_COLORS_INFO', 'bg-gray-300'),
     ],
 
     /*
@@ -106,7 +106,7 @@ return [
     |
     */
 
-    'send_livewire_components' => false,
+    'send_livewire_components' => env('DS_SEND_LIVEWIRE_COMPONENTS', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -130,7 +130,7 @@ return [
     |
     */
 
-    'preferred_ide' => 'phpstorm',
+    'preferred_ide' => env('DS_PREFERRED_IDE', 'phpstorm'),
 
     /*
     |--------------------------------------------------------------------------
@@ -185,5 +185,5 @@ return [
     |
     */
 
-    'sleep' => null,
+    'sleep' => env('DS_SLEEP'),
 ];
