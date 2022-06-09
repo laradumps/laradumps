@@ -24,6 +24,12 @@ class IdeHandle
             $line             = '';
         }
 
+        if (Str::contains($file, 'eval()')) {
+            $fileHandle       = '';
+            $file             = 'Tinker';
+            $line             = '';
+        }
+
         $file = str_replace(base_path() . '/', '', strval($file));
 
         return [
