@@ -64,8 +64,8 @@ it('should return the correct payload to model', function () {
         ->toBe('LaraDumps\LaraDumps\Tests\Models\Dish')
         ->and($payload['content']['attributes'])
         ->toContain(
-            '<span class=sf-dump-key>id</span>" => <span class=sf-dump-num>1</span>',
-            '<span class=sf-dump-key>name</span>" => "<span class=sf-dump-str title="14 characters">Pastel de Nata</span>',
-            '<span class=sf-dump-key>active</span>" => <span class=sf-dump-num>1</span>',
+            '<span class=sf-dump-key>id</span>',
+            '<span class=sf-dump-key>name</span>',
+            '<span class=sf-dump-key>active</span>',
         );
 });
