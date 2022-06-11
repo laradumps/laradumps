@@ -12,7 +12,7 @@
         <a href="https://packagist.org/packages/laradumps/laradumps"><img alt="Latest Version" src="https://img.shields.io/static/v1?label=laravel&message=%E2%89%A58.0&color=0078BE&logo=laravel&style=flat-square"></a>
         <a href="https://packagist.org/packages/laradumps/laradumps"><img alt="Total Downloads" src="https://img.shields.io/packagist/dt/laradumps/laradumps"></a>
         <a href="https://packagist.org/packages/laradumps/laradumps"><img alt="Latest Version" src="https://img.shields.io/packagist/v/laradumps/laradumps"></a>
-        <a href="https://packagist.org/packages/laradumps/laradumps"><img alt="License" src="https://img.shields.io/packagist/l/laradumps/laradumps"></a>
+        <a href="https://packagist.org/packages/laradumps/laradumps"><img alt="License" src="https://img.shields.io/github/license/laradumps/laradumps"></a>
   </p>
 </div>
 <div align="center">
