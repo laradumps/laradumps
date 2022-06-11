@@ -38,7 +38,7 @@ class LaraDumps
         $this->notificationId = filled($notificationId) ? $this->notificationId : Str::uuid()->toString();
     }
 
-    public function send(array|Payload $payload): LaraDumps
+    public function send(array|Payload $payload): array|Payload
     {
         if ($payload instanceof Payload) {
             $payload->trace($this->backtrack);
@@ -51,7 +51,7 @@ class LaraDumps
             }
         }
 
-        return $this;
+        return $payload;
     }
 
     /**

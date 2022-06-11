@@ -17,7 +17,7 @@ if (!function_exists('ds')) {
             }
         }
 
-        return new LaraDumps($notificationId, backtrack: $backtrace);
+        return $dump;
     }
 }
 
