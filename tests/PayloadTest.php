@@ -67,8 +67,5 @@ it('should return the correct payload to model', function () {
             '<span class=sf-dump-key>id</span>" => <span class=sf-dump-num>1</span>',
             '<span class=sf-dump-key>name</span>" => "<span class=sf-dump-str title="14 characters">Pastel de Nata</span>',
             '<span class=sf-dump-key>active</span>" => <span class=sf-dump-num>1</span>',
-            '<span class=sf-dump-key>active</span>" => <span class=sf-dump-num>1</span>',
-            '<span class=sf-dump-key>created_at</span>" => <span class=sf-dump-const>null</span>',
-            '<span class=sf-dump-key>updated_at</span>" => <span class=sf-dump-const>null</span>',
         );
 });
