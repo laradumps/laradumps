@@ -21,9 +21,11 @@ class LogObserver
 
             /** @var array $config */
             $config    = config('laradumps.level_log_colors_map');
-            
-            if ($message->level == 'debug') $message->level = 'info';
-            
+
+            if ($message->level == 'debug') {
+                $message->level = 'info';
+            }
+
             $log       = [
                 'message'     => $message->message,
                 'level'       => $message->level,
