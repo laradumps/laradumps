@@ -55,7 +55,7 @@ class LaraDumpsServiceProvider extends ServiceProvider
                     return $trace['function'] === '__call' && $trace['class'] === 'Illuminate\Database\Eloquent\Builder';
                 });
 
-            $ds = new LaraDumps(backtrack: (array) $backtrace->first());
+            $ds = new LaraDumps(backtrace: (array) $backtrace->first());
             /** @phpstan-ignore-next-line  */
             $ds->send(new QueryPayload($this));
 
@@ -73,7 +73,7 @@ class LaraDumpsServiceProvider extends ServiceProvider
     private function createDirectives(): void
     {
         Blade::directive('ds', function ($args) {
-            return "<?php ds($args); ?>";
+            return "<?php dsBlade($args); ?>";
         });
     }
 }

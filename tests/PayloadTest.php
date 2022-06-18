@@ -19,7 +19,7 @@ it('should return the correct payload to dump', function () {
         'line' => 1,
     ];
 
-    $laradumps      = new LaraDumps($notificationId, backtrack: $backtrace);
+    $laradumps      = new LaraDumps(notificationId: $notificationId, backtrace: $backtrace);
     $payload        = $laradumps->send(new DumpPayload($args));
 
     expect($payload)
@@ -47,7 +47,7 @@ it('should return the correct payload to model', function () {
         'line' => 1,
     ];
 
-    $laradumps      = new LaraDumps($notificationId, backtrack: $backtrace);
+    $laradumps      = new LaraDumps($notificationId, backtrace: $backtrace);
     $payload        = $laradumps->send(new ModelPayload($dish));
 
     expect($payload)
