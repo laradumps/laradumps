@@ -2,8 +2,6 @@
 
 namespace LaraDumps\LaraDumps\Support;
 
-use Illuminate\Support\Str;
-
 class IdeHandle
 {
     public function __construct(
@@ -18,19 +16,23 @@ class IdeHandle
 
         $fileHandle = $this->makeFileHandler($file, $line);
 
-        if (Str::contains($file, 'Laravel Kit')) {
+        if (str_contains($file, 'Laravel Kit')) {
             $fileHandle       = '';
             $file             = 'Laravel Kit';
             $line             = '';
         }
 
-        if (Str::contains($file, 'eval()')) {
+        if (str_contains($file, 'eval()')) {
             $fileHandle       = '';
             $file             = 'Tinker';
             $line             = '';
         }
 
         $file = str_replace(base_path() . '/', '', strval($file));
+
+        if (str_contains($file, 'resources')) {
+            $file = str_replace('resources/views/', '', strval($file));
+        }
 
         return [
             'handler' => $fileHandle,

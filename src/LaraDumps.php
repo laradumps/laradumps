@@ -27,7 +27,7 @@ class LaraDumps
     public function __construct(
         public string  $notificationId = '',
         private string $fullUrl = '',
-        private array $backtrack = [],
+        private array $backtrace = [],
     ) {
         if (config('laradumps.sleep')) {
             $sleep = intval(config('laradumps.sleep'));
@@ -41,7 +41,7 @@ class LaraDumps
     public function send(array|Payload $payload): array|Payload
     {
         if ($payload instanceof Payload) {
-            $payload->trace($this->backtrack);
+            $payload->trace($this->backtrace);
             $payload->notificationId($this->notificationId);
             $payload = $payload->toArray();
 

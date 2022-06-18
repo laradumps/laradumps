@@ -33,7 +33,7 @@ class QueryObserver
                 'query'          => $query,
             ];
 
-            $dumps = new LaraDumps(backtrack: $this->trace);
+            $dumps = new LaraDumps(backtrace: $this->trace);
 
             $dumps->send(new QueriesPayload($queries));
 
