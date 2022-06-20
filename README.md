@@ -21,7 +21,7 @@
       📚 Documentation
     </a>
     <span> | </span>
-    <a href="https://github.com/laradumps/laradumps#contribution">
+    <a href="https://github.com/laradumps/laradumps/blob/main/CONTRIBUTING.md">
       ⌨️ Contribution
     </a>
   </h3>
