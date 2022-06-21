@@ -42,9 +42,11 @@ class LivewireObserver
                 $data['component']   = get_class($component);
                 $data['id']          = $component->id;
 
-                $dumps = new LaraDumps();
+                $dumps = new LaraDumps(notificationId: $data['view']);
 
                 $dumps->send(new LivewirePayload($data));
+
+                $dumps->toScreen('Livewire');
             });
         }
     }
