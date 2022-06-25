@@ -109,6 +109,11 @@ it('ignore an error when encountering specific text on the line', function () {
     $this->assertFileExists($this->view);
     $this->assertFileExists($this->controller);
 
+    Config::set('laradumps.ci_check.directories', [
+        base_path('app'),
+        resource_path(),
+    ]);
+
     Config::set('laradumps.ci_check.ignore_line_when_contains_text', [
         'Hello from',
     ]);
@@ -124,7 +129,9 @@ function createBlade($self): void
 {
     $blade = '<div>@ds(\'Hello\') </div>';
 
-    file_put_contents($self->view, $blade);
+    if (!file_exists($self->view)) {
+        file_put_contents($self->view, $blade);
+    }
 }
 
 function createControllerClass($self): void
@@ -145,5 +152,7 @@ class LaraDumpsController extends BaseController
 }
 PHP;
 
-    file_put_contents($self->controller, $html);
+    if (!file_exists($self->controller)) {
+        file_put_contents($self->controller, $html);
+    }
 }

@@ -199,9 +199,7 @@ return [
 
     'ci_check' => [
         'directories' => [
-            base_path('app'),
-            base_path('routes'),
-            resource_path(),
+            base_path('config'),
         ],
         'ignore_line_when_contains_text' => [
         ],

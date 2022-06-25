@@ -10,7 +10,7 @@
             <div class="flex space-x-2 mx-1 mb-1">
                 @if($error)
                     <span class="p-2 bg-red text-white">
-                        [ERROR] Found {{ $total.' '.str('error')->plural($total) }} / {{ $totalFiles }} {{ str('file')->plural($totalFiles) }}
+                        [ERROR] Found {{ $total.' '. \Illuminate\Support\Str::of('error')->plural($total) }} / {{ $totalFiles }} {{ \Illuminate\Support\Str::of('file')->plural($totalFiles) }}
                     </span>
                 @else
                     <span class="px-2 bg-green text-white uppercase font-bold">
