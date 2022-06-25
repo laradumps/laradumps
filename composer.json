@@ -21,7 +21,8 @@
         "symfony/var-dumper": "^5.4 | ^6.0",
         "nunomaduro/larastan": "^1.0 | ^2.1",
         "friendsofphp/php-cs-fixer": "^3.8",
-        "pestphp/pest": "^1.21"
+        "pestphp/pest": "^1.21",
+        "nunomaduro/termwind": "^1.11"
     },
     "autoload": {
         "psr-4": {
