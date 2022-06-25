@@ -189,10 +189,11 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    |  CI
+    |  CI Check
     |--------------------------------------------------------------------------
     |
-    | WIP
+    | Check if you forgot any ds() in your files,
+    | run "php artisan ds:check" in your pipeline
     |
     */
 
