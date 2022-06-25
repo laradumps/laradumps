@@ -18,7 +18,7 @@ it('display "No ds() found" when not ds found', function () {
 
     $this->artisan('ds:check')
         ->expectsOutputToContain('No ds() found.');
-});
+})->requiresLaravel9();
 
 it('displays error when found on resources path', function () {
     createBlade($this);
