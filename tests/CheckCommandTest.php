@@ -33,7 +33,7 @@ it('displays error when found on resources path', function () {
         ->expectsOutputToContain('@ds(\'Hello\')')
         ->expectsOutputToContain('Found 1 error / 1 file')
         ->assertFailed();
-});
+})->requiresLaravel9();
 
 it('does not display error when found on resources path when not specified in config', function () {
     createBlade($this);
@@ -47,7 +47,7 @@ it('does not display error when found on resources path when not specified in co
     $this->artisan('ds:check')
         ->expectsOutputToContain('No ds() found.')
         ->assertSuccessful();
-});
+})->requiresLaravel9();
 
 it('displays error when found on controller', function () {
     createControllerClass($this);
@@ -62,7 +62,7 @@ it('displays error when found on controller', function () {
         ->expectsOutputToContain('ds(\'Hello from Controller\')->label(\'label\')')
         ->expectsOutputToContain('Found 1 error / 1 file')
         ->assertFailed();
-});
+})->requiresLaravel9();
 
 it('does displays error when found on controller when not specified in config', function () {
     if (file_exists($this->view)) {
@@ -81,7 +81,7 @@ it('does displays error when found on controller when not specified in config', 
         ->doesntExpectOutputToContain('error')
         ->expectsOutputToContain('No ds() found.')
         ->assertSuccessful();
-});
+})->requiresLaravel9();
 
 it('displays errors when found on controller and resources path', function () {
     createBlade($this);
@@ -100,7 +100,7 @@ it('displays errors when found on controller and resources path', function () {
         ->expectsOutputToContain('ds(\'Hello from Controller\')->label(\'label\')')
         ->expectsOutputToContain('Found 2 errors / 2 files')
         ->assertFailed();
-});
+})->requiresLaravel9();
 
 it('ignore an error when encountering specific text on the line', function () {
     createBlade($this);
@@ -123,7 +123,7 @@ it('ignore an error when encountering specific text on the line', function () {
         ->doesntExpectOutputToContain('ds(\'Hello from Controller\')->label(\'label\')')
         ->expectsOutputToContain('Found 1 error / 1 file')
         ->assertFailed();
-});
+})->requiresLaravel9();
 
 function createBlade($self): void
 {
