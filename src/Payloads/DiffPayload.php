@@ -7,7 +7,7 @@ class DiffPayload extends Payload
     public function __construct(
         public mixed $first,
         public mixed $second,
-        public bool $col,
+        public bool $splitDiff,
     ) {
     }
 
@@ -22,7 +22,7 @@ class DiffPayload extends Payload
         return [
             'first'  => $this->first,
             'second' => $this->second,
-            'col'    => $this->col,
+            'col'    => $this->splitDiff,
         ];
     }
 }
