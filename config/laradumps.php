@@ -123,6 +123,20 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Livewire Failed Validation
+    |--------------------------------------------------------------------------
+    |
+    | If true, LaraDumps will start listening for failed validations and send it to a specific screen
+    |
+    */
+
+    'send_livewire_failed_validation' => [
+        'enabled' => env('DS_SEND_LIVEWIRE_FAILED_VALIDATION', false),
+        'sleep'   => env('DS_SEND_LIVEWIRE_FAILED_VALIDATION_SLEEP', 400), // milliseconds
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Preferred IDE
     |--------------------------------------------------------------------------
     |

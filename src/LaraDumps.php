@@ -79,9 +79,9 @@ class LaraDumps
      * Add new screen
      *
      */
-    public function toScreen(string $screen, bool $classAttr = false): LaraDumps
+    public function toScreen(string $screen, bool $classAttr = false, int $focus = 0): LaraDumps
     {
-        $payload = new ScreenPayload($screen, $classAttr);
+        $payload = new ScreenPayload($screen, $classAttr, $focus);
         $this->send($payload);
 
         return $this;
