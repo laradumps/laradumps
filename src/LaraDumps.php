@@ -78,6 +78,7 @@ class LaraDumps
     /**
      * Add new screen
      *
+     * @param int $raiseIn Delay in seconds for the app to raise and focus
      */
     public function toScreen(string $screen, bool $classAttr = false, int $raiseIn = 0): LaraDumps
     {
