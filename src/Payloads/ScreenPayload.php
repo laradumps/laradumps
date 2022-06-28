@@ -7,7 +7,7 @@ class ScreenPayload extends Payload
     public function __construct(
         public string $screen,
         public bool $classAttr = false,
-        public int $focusAfterSleep = 0,
+        public int $raiseIn = 0,
     ) {
     }
 
@@ -26,7 +26,7 @@ class ScreenPayload extends Payload
         return [
             'screen'    => $this->screen,
             'classAttr' => $classAttr,
-            'focus'     => $this->focusAfterSleep,
+            'raiseIn'   => $this->raiseIn,
         ];
     }
 }

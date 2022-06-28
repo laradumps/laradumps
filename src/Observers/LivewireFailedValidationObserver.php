@@ -36,7 +36,7 @@ class LivewireFailedValidationObserver
 
                 $dumps->send(new TablePayload(collect($failedRules), strval(get_class($component))));
                 $dumps->danger();
-                $dumps->toScreen('Failed Validation', focusAfterSleep: intval(config('laradumps.send_livewire_failed_validation.sleep')));
+                $dumps->toScreen('Failed Validation', raiseIn: intval(config('laradumps.send_livewire_failed_validation.sleep')));
             });
         }
     }
