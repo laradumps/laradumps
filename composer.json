@@ -13,7 +13,8 @@
         }
     ],
     "require": {
-        "php": "^8.0"
+        "php": "^8.0",
+        "nunomaduro/termwind": "^1.12"
     },
     "require-dev": {
         "illuminate/support": "^8.18 | ^9.0",
@@ -21,8 +22,7 @@
         "symfony/var-dumper": "^5.4 | ^6.0",
         "nunomaduro/larastan": "^1.0 | ^2.1",
         "friendsofphp/php-cs-fixer": "^3.8",
-        "pestphp/pest": "^1.21",
-        "nunomaduro/termwind": "^1.11"
+        "pestphp/pest": "^1.21"
     },
     "autoload": {
         "psr-4": {
