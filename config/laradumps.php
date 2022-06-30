@@ -123,6 +123,20 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Livewire Failed Validation
+    |--------------------------------------------------------------------------
+    |
+    | If true, LaraDumps will start listening for failed validations and send it to a specific screen
+    |
+    */
+
+    'send_livewire_failed_validation' => [
+        'enabled' => env('DS_SEND_LIVEWIRE_FAILED_VALIDATION', false),
+        'sleep'   => env('DS_SEND_LIVEWIRE_FAILED_VALIDATION_SLEEP', 400), // milliseconds
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Preferred IDE
     |--------------------------------------------------------------------------
     |
@@ -198,4 +212,30 @@ return [
     */
 
     'auto_invoke_app' => env('DS_AUTO_INVOKE_APP', true),
+
+    |  CI Check
+    |--------------------------------------------------------------------------
+    |
+    | Check if you forgot any ds() in your files,
+    | run "php artisan ds:check" in your pipeline
+    |
+    */
+
+    'ci_check' => [
+        'directories' => [
+            base_path('app'),
+        ],
+        'ignore_line_when_contains_text' => [
+        ],
+        'text_to_search' => [
+            ' ds(',
+            ' dsd(',
+            ' ds1(',
+            ' ds2(',
+            ' ds3(',
+            ' ds4(',
+            ' ds5(',
+            '@ds(',
+        ],
+    ],
 ];

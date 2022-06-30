@@ -5,20 +5,20 @@ namespace LaraDumps\LaraDumps\Observers;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Str;
 use LaraDumps\LaraDumps\LaraDumps;
-use LaraDumps\LaraDumps\Payloads\LivewirePayload;
+use LaraDumps\LaraDumps\Payloads\{LivewirePayload, TablePayload};
 use LaraDumps\LaraDumps\Support\{Dumper, IdeHandle};
 use ReflectionClass;
 
-class LivewireObserver
+class LivewireComponentsObserver
 {
     public function register(): void
     {
-        if (class_exists(\Livewire\Component::class)) {
+        if (class_exists(\Livewire\Livewire::class)) {
             \Livewire\Livewire::listen('view:render', function (View $view) {
                 if (!$this->isEnabled()) {
                     return;
                 }
-                /** @var \Livewire\Component $component */
+
                 $component = $view->getData()['_instance'];
 
                 if (in_array(get_class($component), (array) (config('laradumps.ignore_livewire_components')))) {
