@@ -5,7 +5,7 @@ namespace LaraDumps\LaraDumps;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\{ServiceProvider, Str};
-use LaraDumps\LaraDumps\Commands\CheckCommand;
+use LaraDumps\LaraDumps\Commands\{CheckCommand, InitCommand};
 use LaraDumps\LaraDumps\Observers\{LivewireObserver, LogObserver, QueryObserver};
 use LaraDumps\LaraDumps\Payloads\QueryPayload;
 
@@ -36,6 +36,7 @@ class LaraDumpsServiceProvider extends ServiceProvider
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'laradumps');
 
         if ($this->app->runningInConsole()) {
+            $this->commands([InitCommand::class]);
             $this->commands([CheckCommand::class]);
         }
     }
