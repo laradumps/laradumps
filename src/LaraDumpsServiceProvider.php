@@ -22,11 +22,6 @@ class LaraDumpsServiceProvider extends ServiceProvider
         $this->bootMacros();
         $this->bootObservers();
 
-        app(LogObserver::class)->register();
-        app(QueryObserver::class)->register();
-        app(LivewireComponentsObserver::class)->register();
-        app(LivewireFailedValidationObserver::class)->register();
-
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'laradumps');
 
         if ($this->app->runningInConsole()) {
@@ -102,6 +97,7 @@ class LaraDumpsServiceProvider extends ServiceProvider
     {
         app(LogObserver::class)->register();
         app(QueryObserver::class)->register();
-        app(LivewireObserver::class)->register();
+        app(LivewireComponentsObserver::class)->register();
+        app(LivewireFailedValidationObserver::class)->register();
     }
 }

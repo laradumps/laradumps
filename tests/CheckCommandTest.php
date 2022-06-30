@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\{Config, File};
 
 beforeEach(function () {
     $this->view          = getLaravelDir() . 'resources/views/view.blade.php';
@@ -15,6 +15,10 @@ it('display "No ds() found" when not ds found', function () {
     if (file_exists($this->controller)) {
         File::delete($this->controller);
     }
+
+    Config::set('laradumps.ci_check.directories', [
+        resource_path(),
+    ]);
 
     $this->artisan('ds:check')
         ->expectsOutputToContain('No ds() found.');

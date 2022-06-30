@@ -213,6 +213,7 @@ return [
 
     'auto_invoke_app' => env('DS_AUTO_INVOKE_APP', true),
 
+    /**
     |  CI Check
     |--------------------------------------------------------------------------
     |
@@ -223,7 +224,7 @@ return [
 
     'ci_check' => [
         'directories' => [
-            base_path('app'),
+            base_path('config'),
         ],
         'ignore_line_when_contains_text' => [
         ],
