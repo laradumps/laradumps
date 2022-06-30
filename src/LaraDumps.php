@@ -179,12 +179,13 @@ class LaraDumps
         return $this;
     }
 
-    public function write(mixed $args = null): LaraDumps
+    public function write(mixed $args = null, ?bool $autoInvokeApp = null): LaraDumps
     {
         $originalContent = $args;
         $args            = Support\Dumper::dump($args);
         if (!empty($args)) {
             $payload = new DumpPayload($args, $originalContent);
+            $payload->autoInvokeApp($autoInvokeApp);
             $this->send($payload);
         }
 
