@@ -6,7 +6,10 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\{ServiceProvider, Str};
 use LaraDumps\LaraDumps\Commands\{CheckCommand, InitCommand};
-use LaraDumps\LaraDumps\Observers\{LivewireObserver, LogObserver, QueryObserver};
+use LaraDumps\LaraDumps\Observers\{LivewireComponentsObserver,
+    LivewireFailedValidationObserver,
+    LogObserver,
+    QueryObserver};
 use LaraDumps\LaraDumps\Payloads\QueryPayload;
 
 class LaraDumpsServiceProvider extends ServiceProvider
@@ -31,7 +34,8 @@ class LaraDumpsServiceProvider extends ServiceProvider
 
         app(LogObserver::class)->register();
         app(QueryObserver::class)->register();
-        app(LivewireObserver::class)->register();
+        app(LivewireComponentsObserver::class)->register();
+        app(LivewireFailedValidationObserver::class)->register();
 
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'laradumps');
 

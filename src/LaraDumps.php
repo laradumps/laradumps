@@ -78,10 +78,11 @@ class LaraDumps
     /**
      * Add new screen
      *
+     * @param int $raiseIn Delay in seconds for the app to raise and focus
      */
-    public function toScreen(string $screen, bool $classAttr = false): LaraDumps
+    public function toScreen(string $screen, bool $classAttr = false, int $raiseIn = 0): LaraDumps
     {
-        $payload = new ScreenPayload($screen, $classAttr);
+        $payload = new ScreenPayload($screen, $classAttr, $raiseIn);
         $this->send($payload);
 
         return $this;
