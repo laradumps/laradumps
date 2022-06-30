@@ -150,3 +150,19 @@ if (!function_exists('dsBlade')) {
         $ds->send(new BladePayload($args, $viewPath));
     }
 }
+
+if (!function_exists('dsq')) {
+    function dsq(mixed ...$args): void
+    {
+        $backtrace   = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
+
+        $notificationId = Str::uuid()->toString();
+        $dump           = new LaraDumps($notificationId, backtrace: $backtrace);
+
+        if ($args) {
+            foreach ($args as $arg) {
+                $dump->write($arg, false);
+            }
+        }
+    }
+}

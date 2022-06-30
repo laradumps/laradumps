@@ -15,22 +15,8 @@ class LaraDumpsServiceProvider extends ServiceProvider
         $this->loadConfigs();
         $this->createDirectives();
 
-        Str::macro('cut', function (string $str, string $start, string $end) {
-            /** @phpstan-ignore-next-line */
-            $arr = explode($start, $str);
-            if (isset($arr[1])) {
-                /** @phpstan-ignore-next-line */
-                $arr = explode($end, $arr[1]);
-
-                return '<pre ' . $arr[0] . '</pre>';
-            }
-
-            return '';
-        });
-
-        app(LogObserver::class)->register();
-        app(QueryObserver::class)->register();
-        app(LivewireObserver::class)->register();
+        $this->bootMacros();
+        $this->bootObservers();
     }
 
     public function register(): void
@@ -78,5 +64,28 @@ class LaraDumpsServiceProvider extends ServiceProvider
         Blade::directive('ds', function ($args) {
             return "<?php dsBlade($args); ?>";
         });
+    }
+
+    private function bootMacros(): void
+    {
+        Str::macro('cut', function (string $str, string $start, string $end) {
+            /** @phpstan-ignore-next-line */
+            $arr = explode($start, $str);
+            if (isset($arr[1])) {
+                /** @phpstan-ignore-next-line */
+                $arr = explode($end, $arr[1]);
+
+                return '<pre ' . $arr[0] . '</pre>';
+            }
+
+            return '';
+        });
+    }
+
+    private function bootObservers(): void
+    {
+        app(LogObserver::class)->register();
+        app(QueryObserver::class)->register();
+        app(LivewireObserver::class)->register();
     }
 }

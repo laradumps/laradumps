@@ -21,6 +21,8 @@ abstract class Payload
         'model',
     ];
 
+    private ?bool $autoInvokeApp = null;
+
     abstract public function type(): string;
 
     public function trace(array $backtrace): void
@@ -50,6 +52,11 @@ abstract class Payload
         return [];
     }
 
+    public function autoInvokeApp(?bool $enable = null): void
+    {
+        $this->autoInvokeApp = $enable;
+    }
+
     public function toArray(): array
     {
         $ideHandle = $this->customHandle();
@@ -62,6 +69,7 @@ abstract class Payload
             'type' => $this->type(),
             'meta' => [
                 'laradumps_version' => $this->getInstalledVersion(),
+                'auto_invoke_app'   => $this->autoInvokeApp ?? boolval(config('laradumps.auto_invoke_app')),
             ],
             'content'   => $this->content(),
             'ideHandle' => $ideHandle,

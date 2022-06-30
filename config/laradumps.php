@@ -186,4 +186,16 @@ return [
     */
 
     'sleep' => env('DS_SLEEP'),
+
+    /*
+    |--------------------------------------------------------------------------
+    |  Auto Invoke App
+    |--------------------------------------------------------------------------
+    |
+    | By default the LaraDumps app will always be invoked on every dump.
+    | Set 'false' to disable this behavior
+    |
+    */
+
+    'auto_invoke_app' => env('DS_AUTO_INVOKE_APP', true),
 ];
