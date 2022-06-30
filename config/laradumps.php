@@ -186,4 +186,32 @@ return [
     */
 
     'sleep' => env('DS_SLEEP'),
+
+    /*
+    |--------------------------------------------------------------------------
+    |  CI Check
+    |--------------------------------------------------------------------------
+    |
+    | Check if you forgot any ds() in your files,
+    | run "php artisan ds:check" in your pipeline
+    |
+    */
+
+    'ci_check' => [
+        'directories' => [
+            base_path('config'),
+        ],
+        'ignore_line_when_contains_text' => [
+        ],
+        'text_to_search' => [
+            ' ds(',
+            ' dsd(',
+            ' ds1(',
+            ' ds2(',
+            ' ds3(',
+            ' ds4(',
+            ' ds5(',
+            '@ds(',
+        ],
+    ],
 ];
