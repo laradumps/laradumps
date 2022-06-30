@@ -228,18 +228,15 @@ class LaraDumps
     }
 
     /**
-     * Check the difference between two texts
-     * @param mixed $first
-     * @param mixed $second
+     * @param mixed $argument
      * @param boolean $splitDiff Outputs comparison result in 2 rows (original/diff).
      * @return LaraDumps
      */
-    public function diff(mixed $first, mixed $second, bool $splitDiff = false): LaraDumps
+    public function diff(mixed $argument, bool $splitDiff = false): LaraDumps
     {
-        $first  = is_array($first) ? json_encode($first) : $first;
-        $second = is_array($second) ? json_encode($second) : $second;
+        $argument  = is_array($argument) ? json_encode($argument) : $argument;
 
-        $payload = new DiffPayload($first, $second, $splitDiff);
+        $payload = new DiffPayload($argument, $splitDiff);
         $this->send($payload);
 
         return $this;
