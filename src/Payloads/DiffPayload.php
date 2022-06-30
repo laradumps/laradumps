@@ -5,9 +5,8 @@ namespace LaraDumps\LaraDumps\Payloads;
 class DiffPayload extends Payload
 {
     public function __construct(
-        public mixed $first,
-        public mixed $second,
-        public bool $col,
+        public mixed $argument,
+        public bool $splitDiff,
     ) {
     }
 
@@ -20,9 +19,8 @@ class DiffPayload extends Payload
     public function content(): array
     {
         return [
-            'first'  => $this->first,
-            'second' => $this->second,
-            'col'    => $this->col,
+            'argument'  => $this->argument,
+            'splitDiff' => $this->splitDiff,
         ];
     }
 }

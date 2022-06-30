@@ -9,6 +9,8 @@ use LaraDumps\LaraDumps\Observers\{LivewireComponentsObserver,
     LivewireFailedValidationObserver,
     LogObserver,
     QueryObserver};
+use LaraDumps\LaraDumps\Commands\{CheckCommand, InitCommand};
+use LaraDumps\LaraDumps\Observers\{LivewireObserver, LogObserver, QueryObserver};
 use LaraDumps\LaraDumps\Payloads\QueryPayload;
 
 class LaraDumpsServiceProvider extends ServiceProvider
@@ -35,6 +37,15 @@ class LaraDumpsServiceProvider extends ServiceProvider
         app(QueryObserver::class)->register();
         app(LivewireComponentsObserver::class)->register();
         app(LivewireFailedValidationObserver::class)->register();
+
+        app(LivewireObserver::class)->register();
+
+        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'laradumps');
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([InitCommand::class]);
+            $this->commands([CheckCommand::class]);
+        }
     }
 
     public function register(): void
