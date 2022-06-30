@@ -41,7 +41,7 @@ class IdeHandle
         ];
     }
 
-    public static function makeFileHandler(string $file, string $line): string
+    public static function makeFileHandler(string $file, string|int $line): string
     {
         /** @var string $preferredIde */
         $preferredIde = config('laradumps.preferred_ide');
