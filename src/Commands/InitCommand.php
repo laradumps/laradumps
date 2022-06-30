@@ -12,7 +12,7 @@ class InitCommand extends Command
     use RenderAscii;
     use UpdateEnv;
 
-    protected $signature = 'ds:init {--no-interaction?} {--host=} {--port=} {--send_queries=} {--send_logs=} {--send_livewire=} {--ide=}';
+    protected $signature = 'ds:init {--no-interaction?} {--host=} {--port=} {--send_queries=} {--send_logs=} {--send_livewire=} {--auto_invoke=} {--ide=}';
 
     protected $description = 'Initialize LaraDumps configuration';
 
@@ -31,8 +31,8 @@ class InitCommand extends Command
         $this->setQueries();
         $this->setLogs();
         $this->setLivewire();
+        $this->setAutoInvoke();
         $this->setPreferredIde();
-
         $this->thanks();
 
         return Command::SUCCESS;
@@ -68,7 +68,7 @@ class InitCommand extends Command
 
         $this->line("\n🎉 <fg=green>Setup completed successfully!</> If you want to re-use this same configuration in other Laravel projects, simply run:\n");
 
-        $this->line('<fg=cyan>   php artisan ds:init --no-interaction --host=' . config('laradumps.host') . ' --port=' . config('laradumps.port') . ' --send_queries=' . (config('laradumps.send_queries') ? 'true' : 'false') . ' --send_logs=' . (config('laradumps.send_log_applications') ? 'true' : 'false') . ' --send_livewire=' . (config('laradumps.send_livewire_components') ? 'true' : 'false') . ' --ide=' . config('laradumps.preferred_ide') . "</>\n\n");
+        $this->line('<fg=cyan>   php artisan ds:init --no-interaction --host=' . config('laradumps.host') . ' --port=' . config('laradumps.port') . ' --send_queries=' . (config('laradumps.send_queries') ? 'true' : 'false') . ' --send_logs=' . (config('laradumps.send_log_applications') ? 'true' : 'false') . ' --send_livewire=' . (config('laradumps.send_livewire_components') ? 'true' : 'false') . ' --auto_invoke=' . (config('laradumps.auto_invoke_app') ? 'true' : 'false') . ' --ide=' . config('laradumps.preferred_ide') . "</>\n\n");
 
         $this->line("⭐ Please consider <comment>starring</comment> our repository at <comment>https://github.com/laradumps/laradumps</comment>\n");
 
@@ -168,6 +168,20 @@ class InitCommand extends Command
 
         config()->set('laradumps.send_livewire_components', boolval($sendLivewire));
         $this->updateEnv('DS_SEND_LIVEWIRE_COMPONENTS', ($sendLivewire ? 'true' : 'false'));
+    }
+
+    private function setAutoInvoke(): void
+    {
+        $autoInvoke =  $this->option('auto_invoke');
+
+        if (empty($autoInvoke) && $this->isInteractive) {
+            $autoInvoke = $this->confirm('Would you like to invoke the App window on every Dump?', true);
+        }
+
+        $autoInvoke = filter_var($autoInvoke, FILTER_VALIDATE_BOOLEAN);
+
+        config()->set('laradumps.auto_invoke_app', boolval($autoInvoke));
+        $this->updateEnv('DS_AUTO_INVOKE_APP', ($autoInvoke ? 'true' : 'false'));
     }
 
     private function setPreferredIde(): void

@@ -9,22 +9,23 @@ it('publishes the config file', function () {
         File::delete($configFile);
     }
 
-    $this->artisan('ds:init --no-interaction --host=127.0.0.1 --port=9191 --send_queries=true --send_logs=true --send_livewire=true --ide=phpstorm');
+    $this->artisan('ds:init --no-interaction --host=127.0.0.1 --port=9191 --send_queries=true --send_logs=true --send_livewire=true --auto_invoke=true --ide=phpstorm');
 
     expect(File::exists($configFile))->toBeTrue();
 });
 
 it('updates the config non-interactively', function () {
-    $this->artisan('ds:init --no-interaction --host=1.2.3.4 --port=2022 --send_queries=true --send_logs=true --send_livewire=true --ide=atom');
+    $this->artisan('ds:init --no-interaction --host=1.2.3.4 --port=2022 --send_queries=true --send_logs=true --send_livewire=true --auto_invoke=true --ide=atom');
 
     expect(config('laradumps.host'))->toBe('1.2.3.4');
     expect(config('laradumps.port'))->toBe('2022');
     expect(config('laradumps.send_queries'))->toBeTrue();
     expect(config('laradumps.send_log_applications'))->toBeTrue();
     expect(config('laradumps.send_livewire_components'))->toBeTrue();
+    expect(config('laradumps.auto_invoke_app'))->toBeTrue();
     expect(config('laradumps.preferred_ide'))->toBe('atom');
 
-    $this->artisan('ds:init --no-interaction --host=5.6.7.8 --port=2023 --send_queries=false --send_logs=false --send_livewire=false --ide=vscode');
+    $this->artisan('ds:init --no-interaction --host=5.6.7.8 --port=2023 --send_queries=false --send_logs=false --send_livewire=false --auto_invoke=false  --ide=vscode');
     $this->artisan('config:clear');
 
     expect(config('laradumps.host'))->toBe('5.6.7.8');
@@ -32,6 +33,7 @@ it('updates the config non-interactively', function () {
     expect(config('laradumps.send_queries'))->toBeFalse();
     expect(config('laradumps.send_log_applications'))->toBeFalse();
     expect(config('laradumps.send_livewire_components'))->toBeFalse();
+    expect(config('laradumps.auto_invoke_app'))->toBeFalse();
     expect(config('laradumps.preferred_ide'))->toBe('vscode');
 });
 
@@ -42,6 +44,7 @@ it('updates the config through the wizard', function () {
         ->expectsQuestion('Allow dumping <comment>SQL Queries</comment> to the App?', true)
         ->expectsQuestion('Allow dumping <comment>Laravel Logs</comment> to the App?', false)
         ->expectsQuestion('Allow dumping <comment>Livewire components</comment> to the App?', true)
+        ->expectsQuestion('Would you like to invoke the App window on every Dump?', true)
         ->expectsQuestion('What is your preferred for this project?', 'phpstorm');
 
     expect(config('laradumps.host'))->toBe('0.0.0.1');
@@ -49,6 +52,7 @@ it('updates the config through the wizard', function () {
     expect(config('laradumps.send_queries'))->toBeTrue();
     expect(config('laradumps.send_log_applications'))->toBeFalse();
     expect(config('laradumps.send_livewire_components'))->toBeTrue();
+    expect(config('laradumps.auto_invoke_app'))->toBeTrue();
     expect(config('laradumps.preferred_ide'))->toBe('phpstorm');
 
     $this->artisan('ds:init')
@@ -58,6 +62,7 @@ it('updates the config through the wizard', function () {
         ->expectsQuestion('Allow dumping <comment>SQL Queries</comment> to the App?', true)
         ->expectsQuestion('Allow dumping <comment>Laravel Logs</comment> to the App?', false)
         ->expectsQuestion('Allow dumping <comment>Livewire components</comment> to the App?', true)
+        ->expectsQuestion('Would you like to invoke the App window on every Dump?', true)
         ->expectsQuestion('What is your preferred for this project?', 'phpstorm');
 
     expect(config('laradumps.host'))->toBe('5.7.9.11');
