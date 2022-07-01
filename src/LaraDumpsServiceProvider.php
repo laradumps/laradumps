@@ -68,12 +68,32 @@ class LaraDumpsServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../config/laradumps.php' => config_path('laradumps.php'),
         ], 'laradumps-config');
+
+        $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
     }
 
     private function createDirectives(): void
     {
         Blade::directive('ds', function ($args) {
             return "<?php dsBlade($args); ?>";
+        });
+
+        Blade::directive('dsLivewireScripts', function ($args) {
+            $csrf = csrf_token();
+
+            return <<<HTML
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    window.onbeforeunload = () => {
+       const xmlhttp = new XMLHttpRequest();
+       xmlhttp.open("POST", "/__ds__/clear");
+       xmlhttp.setRequestHeader('X-CSRF-TOKEN', '{$csrf}');
+       xmlhttp.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+       xmlhttp.send(JSON.stringify({ "ds": true } }));
+    }
+}, false);
+</script>
+HTML;
         });
     }
 

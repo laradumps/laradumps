@@ -25,8 +25,10 @@ class ValidateStringPayload extends Payload
         ];
     }
 
-    public function setContent(string $content): void
+    public function setContent(string $content): self
     {
-        $this->content = strtolower($content);
+        $this->content = $content;
+
+        return $this;
     }
 }
