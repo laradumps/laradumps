@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
        xmlhttp.open("POST", "/__ds__/clear");
        xmlhttp.setRequestHeader('X-CSRF-TOKEN', '{$csrf}');
        xmlhttp.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-       xmlhttp.send(JSON.stringify({ "ds": true } }));
+       xmlhttp.send(JSON.stringify({ "ds": true }));
     }
 }, false);
 </script>
