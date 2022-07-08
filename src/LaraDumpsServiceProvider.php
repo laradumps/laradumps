@@ -78,13 +78,13 @@ class LaraDumpsServiceProvider extends ServiceProvider
             return "<?php dsBlade($args); ?>";
         });
 
-        Blade::directive('dsClearOnBeforeUnload', function ($args) {
+        Blade::directive('dsAutoClearOnPageReload', function ($args) {
+            if (!boolval(config('laradumps.auto_clear_on_page_reload')) || !boolval(config('laradumps.send_livewire_components'))) {
+                return '';
+            }
+
             $csrf = csrf_token();
 
-            if(!boolval(config('laradumps.clear_onbeforeunload')) || !boolval(config('laradumps.send_livewire_components'))) {
-                return;
-            }
-            
             return <<<HTML
 <script>
 document.addEventListener('DOMContentLoaded', () => {
