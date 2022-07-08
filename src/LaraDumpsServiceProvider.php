@@ -78,9 +78,13 @@ class LaraDumpsServiceProvider extends ServiceProvider
             return "<?php dsBlade($args); ?>";
         });
 
-        Blade::directive('dsLivewireScripts', function ($args) {
+        Blade::directive('dsClearOnBeforeUnload', function ($args) {
             $csrf = csrf_token();
 
+            if(!boolval(config('laradumps.clear_onbeforeunload')) || !boolval(config('laradumps.send_livewire_components'))) {
+                return;
+            }
+            
             return <<<HTML
 <script>
 document.addEventListener('DOMContentLoaded', () => {
