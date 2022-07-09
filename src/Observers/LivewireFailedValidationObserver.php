@@ -36,7 +36,16 @@ class LivewireFailedValidationObserver
 
                 $dumps->send(new TablePayload(collect($failedRules), strval(get_class($component))));
                 $dumps->danger();
-                $dumps->toScreen('Failed Validation', raiseIn: intval(config('laradumps.send_livewire_failed_validation.sleep')));
+                $dumps->toScreen(<<<HTML
+<div class="w-full flex justify-between items-center space-x-2">
+<span class="w-[1rem]">
+    <svg viewBox="0 0 32 32" class="w-[1rem]"><g><g id="Error_1_"><g id="Error"><circle cx="16" cy="16" id="BG" r="16" style="fill:#D72828;"/><path d="M14.5,25h3v-3h-3V25z M14.5,6v13h3V6H14.5z" id="Exclamatory_x5F_Sign" style="fill:#E6E6E6;"/></g></g></g></svg>
+</span>
+<span>
+    Failed Validation
+</span>
+</div>
+HTML, raiseIn: intval(config('laradumps.send_livewire_failed_validation.sleep')));
             });
         }
     }

@@ -48,8 +48,7 @@ class LivewireComponentsObserver
 
                 $dumps->toScreen(
                     <<<HTML
-<div class="w-full flex justify-between space-x-2">
-<span>Livewire</span>
+<div class="w-full flex justify-between items-center space-x-2">
 <span class="w-[1rem]">
 <svg class="w-20 h-20" viewBox="0 0 234 54" xmlns:xlink="http://www.w3.org/1999/xlink">
    <defs>
@@ -86,6 +85,7 @@ class LivewireComponentsObserver
    </g>
 </svg>
 </span>
+<span>Livewire</span>
 </div>
 HTML
                 );
