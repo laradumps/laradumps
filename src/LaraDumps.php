@@ -133,13 +133,19 @@ class LaraDumps
     }
 
     /**
-     * Search if content contains string
+     * Checks if content contains string.
      *
+     * @param string $content
+     * @param boolean $caseSensitive Search is case sensitive
+     * @param boolean $wholeWord Search for the whole words
+     * @return LaraDumps
      */
-    public function contains(string $content): LaraDumps
+    public function contains(string $content, bool $caseSensitive = false, bool $wholeWord = false): LaraDumps
     {
         $payload = new ValidateStringPayload('contains');
-        $payload->setContent($content);
+        $payload->setContent($content)
+            ->setCaseSensitive($caseSensitive)
+            ->setWholeWord($wholeWord);
 
         $this->send($payload);
 
