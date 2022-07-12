@@ -5,13 +5,13 @@
 <div align="center">
   <br />
   <p align="center">
-    <a href="https://github.com/laradumps/app/releases/download/v1.0.0/laradumps-Setup-1.0.0.exe">
+    <a href="https://github.com/laradumps/app/releases/download/v1.0.0/LaraDumps-Setup-1.0.0.exe">
       <img src="./art/os/windows.png" height="60" alt="LaraDumps Windows App" />
     </a>
-    <a href="https://github.com/laradumps/app/releases/download/v1.0.0/laradumps-1.0.0.dmg">
+    <a href="https://github.com/laradumps/app/releases/download/v1.0.0/LaraDumps-1.0.0.dmg">
       <img src="./art/os/macos.png" height="60" alt="LaraDumps MacOS App" />
     </a>
-    <a href="https://github.com/laradumps/app/releases/download/v1.0.0/laradumps-1.0.0.AppImage">
+    <a href="https://github.com/laradumps/app/releases/download/v1.0.0/LaraDumps-1.0.0.AppImage">
       <img src="./art/os/linux.png" height="60" alt="LaraDumps Linux App" />
     </a>
   </p>
@@ -29,7 +29,7 @@
       <img alt="Latest Version" src="https://img.shields.io/static/v1?label=laravel&message=%E2%89%A58.0&color=0078BE&logo=laravel&style=flat-square">
     </a>
     <a href="https://packagist.org/packages/laradumps/laradumps">
-      <img alt="Total Downloads" src="https://img.shields.io/packagist/dt/laradumps/laradumps">
+      <img alt="Total Downloads" src="https://img.shields.io/packagist/dt/laradumps/app">
     </a>
     <a href="https://packagist.org/packages/laradumps/laradumps">
       <img alt="Latest Version" src="https://img.shields.io/packagist/v/laradumps/laradumps">
@@ -63,7 +63,7 @@ These are some debug tools available for you:
 - Inspect Model attributes.
 - Send your dump to different screens, resulting in a better debugging experience.
 
-Learn more at the [Reference Sheet](https://laradumps.gitbook.io/laradumps/reference).
+Learn more at the [Reference Sheet](https://laradumps.dev/#/laravel/debug/reference-sheet).
 
 <br>
 
