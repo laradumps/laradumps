@@ -5,13 +5,13 @@
 <div align="center">
   <br />
   <p align="center">
-    <a href="https://github.com/laradumps/app/releases/download/v0.1.0/laradumps-Setup-0.1.0.exe">
+    <a href="https://github.com/laradumps/app/releases/download/v1.0.0/laradumps-Setup-1.0.0.exe">
       <img src="./art/os/windows.png" height="60" alt="LaraDumps Windows App" />
     </a>
-    <a href="https://github.com/laradumps/app/releases/download/v0.1.0/laradumps-0.1.0.dmg">
+    <a href="https://github.com/laradumps/app/releases/download/v1.0.0/laradumps-1.0.0.dmg">
       <img src="./art/os/macos.png" height="60" alt="LaraDumps MacOS App" />
     </a>
-    <a href="https://github.com/laradumps/app/releases/download/v0.1.0/laradumps-0.1.0.AppImage">
+    <a href="https://github.com/laradumps/app/releases/download/v1.0.0/laradumps-1.0.0.AppImage">
       <img src="./art/os/linux.png" height="60" alt="LaraDumps Linux App" />
     </a>
   </p>
@@ -19,7 +19,7 @@
   <br />
   <br />
   <p>
-    <a href="https://laradumps.gitbook.io/laradumps/"> 📚 Documentation </a>
+    <a href="https://laradumps.dev"> 📚 Documentation </a>
   </p>
 </div>
  <br/>
@@ -44,7 +44,7 @@
 
 <br/>
 
-LaraDumps is a lightweight app designed to boost your [Laravel](https://larvel.com/) PHP coding and debugging experience.
+LaraDumps is a friendly app designed to boost your [Laravel](https://larvel.com/) PHP coding and debugging experience.
 
 When using LaraDumps, you can see the result of your debug displayed in a standalone Desktop application.
 
@@ -58,6 +58,7 @@ These are some debug tools available for you:
 - Compare strings with `diff`.
 - Verify if a string contains a substring.
 - View `phpinfo()` configuration.
+- Debug Livewire components.
 - List your Laravel routes.
 - Inspect Model attributes.
 - Send your dump to different screens, resulting in a better debugging experience.
@@ -74,13 +75,15 @@ Learn more at the [Reference Sheet](https://laradumps.gitbook.io/laradumps/refer
 
 #### Usage
 
-1. Download the [LaraDumps](https://github.com/laradumps/app) App.
+1. Download the [LaraDumps](https://github.com/laradumps/app) Desktop App (Windows, Linux and macOS).
 
-2. Install LaraDumps in your project, run `  composer require laradumps/laradumps --dev`.
+2. Install LaraDumps in your project, run `composer require laradumps/laradumps --dev`.
 
-3. Debug your code using `ds()` instead of Laravel native dd() tool.
+3. Configure LaraDumps in your project, run `php artisan ds:init`.
 
-4. Run your Laravel application and see the debug result in LaraDumps app window.
+4. Debug your code using `ds()` instead of Laravel native dump()/dd() tool.
+
+5. Run your Laravel application and see the debug result in LaraDumps app window.
 
 Here's an example:
 
