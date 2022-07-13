@@ -15,7 +15,8 @@
       <img src="./art/os/linux.png" height="60" alt="LaraDumps Linux App" />
     </a>
   </p>
-  <sub>Available for Windows, Linux and macOS. Click on your OS logo to download the app.</sub>
+  <h3>Click on your OS logo to download the Desktop App.</h3>
+  <sub>Available for Windows, Linux and macOS.</sub>
   <br />
   <br />
   <p>
@@ -75,7 +76,13 @@ Learn more at the [Reference Sheet](https://laradumps.dev/#/laravel/debug/refere
 
 #### Usage
 
-1. Download the [LaraDumps](https://github.com/laradumps/app) Desktop App (Windows, Linux and macOS).
+1. Download the [LaraDumps](https://github.com/laradumps/app) Desktop App:
+
+  -[Windows](https://github.com/laradumps/app/releases/download/v1.0.0/LaraDumps-Setup-1.0.0.exe)
+
+  -[MacOS](https://github.com/laradumps/app/releases/download/v1.0.0/LaraDumps-1.0.0.dmg)
+
+  -[Linux](https://github.com/laradumps/app/releases/download/v1.0.0/LaraDumps-1.0.0.AppImage)
 
 2. Install LaraDumps in your project, run `composer require laradumps/laradumps --dev`.
 
