@@ -84,10 +84,6 @@ class LaraDumpsServiceProvider extends ServiceProvider
                 return '';
             }
 
-            if (config('app.env') === 'production') {
-                return '';
-            }
-
             $csrf = csrf_token();
 
             return <<<HTML
