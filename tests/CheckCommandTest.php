@@ -121,7 +121,7 @@ it('does displays error when found on controller when not specified in config', 
         ->assertSuccessful();
 })->requiresLaravel9();
 
-it('will not match a partial funcion', function () {
+it('will not match a partial function', function () {
     if (File::exists($this->view)) {
         File::delete($this->view);
     }

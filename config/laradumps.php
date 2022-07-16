@@ -225,6 +225,7 @@ return [
     'ci_check' => [
         'directories' => [
             base_path('app'),
+            base_path('resources'),
         ],
         'ignore_line_when_contains_text' => [
         ],
