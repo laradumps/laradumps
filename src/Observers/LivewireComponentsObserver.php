@@ -25,8 +25,11 @@ class LivewireComponentsObserver
                     return;
                 }
 
+                $properties = $component->getPublicPropertiesDefinedBySubClass() +
+                    $component->getProtectedOrPrivatePropertiesDefinedBySubClass();
+
                 $data = [
-                    'data' => Dumper::dump($component->getPublicPropertiesDefinedBySubClass()),
+                    'data' => Dumper::dump($properties),
                 ];
 
                 $viewPath = $this->getViewPath($view);
@@ -41,6 +44,7 @@ class LivewireComponentsObserver
                 $data['viewPath']    = (string) Str::of($viewPath)->replace(config('livewire.view_path') . '/', '');
                 $data['component']   = get_class($component);
                 $data['id']          = $component->id;
+                $data['dateTime']    = now()->format('m/d/Y H:i:i');
 
                 $dumps = new LaraDumps(notificationId: $data['view']);
 
@@ -87,7 +91,10 @@ class LivewireComponentsObserver
 </span>
 <span>Livewire</span>
 </div>
-HTML
+HTML,
+                    false,
+                    0,
+                    'Livewire'
                 );
             });
         }
