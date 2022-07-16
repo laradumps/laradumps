@@ -237,6 +237,7 @@ return [
             'ds3(',
             'ds4(',
             'ds5(',
+            'dsAutoClearOnPageReload',
         ],
     ],
 

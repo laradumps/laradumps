@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\{Config, File};
 beforeEach(function () {
     $this->view          = getLaravelDir() . 'resources/views/view.blade.php';
     $this->controller    = getLaravelDir() . 'app/Http/Controllers/LaraDumpsController.php';
+    $this->bladeHtml     =  '<div>@ds(\'Hello\') </div>';
 });
 
 it('display "No ds() found" when not ds found', function () {
@@ -158,6 +159,30 @@ it('displays errors when found on controller and resources path', function () {
         ->assertFailed();
 })->requiresLaravel9();
 
+it('displays errors when for dsAutoClearOnPageReload directive', function () {
+    $html = <<<HTML
+        <!-- Scripts -->
+        @livewireScripts
+        @if(app()->environment('local'))
+            @dsAutoClearOnPageReload
+        @endif
+        </body>
+    HTML;
+
+    createBlade($this, $html);
+
+    $this->assertFileExists($this->view);
+
+    Config::set('laradumps.ci_check.directories', [
+        resource_path(),
+    ]);
+
+    $this->artisan('ds:check')
+        ->expectsOutputToContain('@dsAutoClearOnPageReload')
+        ->expectsOutputToContain('Found 1 error / 1 file')
+        ->assertFailed();
+})->requiresLaravel9();
+
 it('ignore an error when encountering specific text on the line', function () {
     createBlade($this);
     createControllerClass($this, '//Hello from');
@@ -181,15 +206,19 @@ it('ignore an error when encountering specific text on the line', function () {
         ->assertFailed();
 })->requiresLaravel9();
 
-function createBlade($self): void
+//Helpers
+
+function createBlade($self, string $bladeHtml = ''): void
 {
     if (File::exists($self->view)) {
         File::delete($self->view);
     }
 
-    $blade = '<div>@ds(\'Hello\') </div>';
+    if (empty($bladeHtml)) {
+        $bladeHtml = $self->bladeHtml;
+    }
 
-    File::put($self->view, $blade);
+    File::put($self->view, $bladeHtml);
 }
 
 function createControllerClass($self, $dsFunction = ''): void
@@ -198,7 +227,7 @@ function createControllerClass($self, $dsFunction = ''): void
         File::delete($self->controller);
     }
 
-    $html = <<<PHP
+    $phpCode = <<<PHP
     <?php
 
     namespace App\Http\Controllers;
@@ -214,5 +243,5 @@ function createControllerClass($self, $dsFunction = ''): void
     }
     PHP;
 
-    File::put($self->controller, $html);
+    File::put($self->controller, $phpCode);
 }
