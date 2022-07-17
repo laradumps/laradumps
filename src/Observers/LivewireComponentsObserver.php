@@ -3,7 +3,7 @@
 namespace LaraDumps\LaraDumps\Observers;
 
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Str;
+use Illuminate\Support\{Carbon, Str};
 use LaraDumps\LaraDumps\LaraDumps;
 use LaraDumps\LaraDumps\Payloads\{LivewirePayload, TablePayload};
 use LaraDumps\LaraDumps\Support\{Dumper, IdeHandle};
@@ -44,7 +44,7 @@ class LivewireComponentsObserver
                 $data['viewPath']    = (string) Str::of($viewPath)->replace(config('livewire.view_path') . '/', '');
                 $data['component']   = get_class($component);
                 $data['id']          = $component->id;
-                $data['dateTime']    = now()->format('m/d/Y H:i:i');
+                $data['dateTime']    = now()->format('H:i:s');
 
                 $dumps = new LaraDumps(notificationId: $data['view']);
 
