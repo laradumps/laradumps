@@ -3,9 +3,9 @@
 namespace LaraDumps\LaraDumps\Observers;
 
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\{Carbon, Str};
+use Illuminate\Support\Str;
 use LaraDumps\LaraDumps\LaraDumps;
-use LaraDumps\LaraDumps\Payloads\{LivewirePayload, TablePayload};
+use LaraDumps\LaraDumps\Payloads\LivewirePayload;
 use LaraDumps\LaraDumps\Support\{Dumper, IdeHandle};
 use ReflectionClass;
 
