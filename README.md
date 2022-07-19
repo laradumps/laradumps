@@ -5,13 +5,13 @@
 <div align="center">
   <br />
   <p align="center">
-    <a href="https://github.com/laradumps/app/releases/download/v1.0.0/LaraDumps-Setup-1.0.0.exe">
+    <a href="https://github.com/laradumps/app/releases/download/v1.1.0/LaraDumps-Setup-1.1.0.exe">
       <img src="./art/os/windows.png" height="60" alt="LaraDumps Windows App" />
     </a>
-    <a href="https://github.com/laradumps/app/releases/download/v1.0.0/LaraDumps-1.0.0.dmg">
+    <a href="https://github.com/laradumps/app/releases/download/v1.1.0/LaraDumps-1.1.0.dmg">
       <img src="./art/os/macos.png" height="60" alt="LaraDumps MacOS App" />
     </a>
-    <a href="https://github.com/laradumps/app/releases/download/v1.0.0/LaraDumps-1.0.0.AppImage">
+    <a href="https://github.com/laradumps/app/releases/download/v1.1.0/LaraDumps-1.1.0.AppImage">
       <img src="./art/os/linux.png" height="60" alt="LaraDumps Linux App" />
     </a>
   </p>
@@ -76,13 +76,8 @@ Learn more at the [Reference Sheet](https://laradumps.dev/#/laravel/debug/refere
 
 #### Usage
 
-1. Download the [LaraDumps](https://github.com/laradumps/app) Desktop App:
-
-  -[Windows](https://github.com/laradumps/app/releases/download/v1.0.0/LaraDumps-Setup-1.0.0.exe)
-
-  -[MacOS](https://github.com/laradumps/app/releases/download/v1.0.0/LaraDumps-1.0.0.dmg)
-
-  -[Linux](https://github.com/laradumps/app/releases/download/v1.0.0/LaraDumps-1.0.0.AppImage)
+1. Download the [LaraDumps](https://github.com/laradumps/app) Desktop App: [Windows](https://github.com/laradumps/app/releases/download/v1.1.0/LaraDumps-Setup-1.1.0.exe) | [MacOS](https://github.com/laradumps/app/releases/download/v1.1.0/LaraDumps-1.1.0.dmg)
+ | [Linux](https://github.com/laradumps/app/releases/download/v1.1.0/LaraDumps-1.1.0.AppImage)
 
 2. Install LaraDumps in your project, run `composer require laradumps/laradumps --dev`.
 
