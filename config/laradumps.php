@@ -224,19 +224,21 @@ return [
 
     'ci_check' => [
         'directories' => [
-            base_path('config'),
+            base_path('app'),
+            base_path('resources'),
         ],
         'ignore_line_when_contains_text' => [
         ],
         'text_to_search' => [
-            ' ds(',
-            ' dsd(',
-            ' ds1(',
-            ' ds2(',
-            ' ds3(',
-            ' ds4(',
-            ' ds5(',
-            '@ds(',
+            'ds(',
+            'dsq(',
+            'dsd(',
+            'ds1(',
+            'ds2(',
+            'ds3(',
+            'ds4(',
+            'ds5(',
+            'dsAutoClearOnPageReload',
         ],
     ],
 

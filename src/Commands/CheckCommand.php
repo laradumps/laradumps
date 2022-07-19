@@ -56,7 +56,13 @@ class CheckCommand extends Command
 
                 /** @var string[] $textToSearch */
                 foreach ($textToSearch as $search) {
-                    if (strpos($lineContent, $search)) {
+                    $search = ' ' . ltrim($search);// mantaining compatiblity with V1.0.2;
+
+                    if (strpos($lineContent, $search)
+                        || strpos($lineContent, '@' . ltrim($search))
+                        || strpos($lineContent, '//' . ltrim($search))
+                        || strpos($lineContent, '->' . ltrim($search))
+                    ) {
                         $contains = true;
 
                         break;
