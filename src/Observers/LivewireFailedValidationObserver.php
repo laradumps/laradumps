@@ -14,6 +14,10 @@ class LivewireFailedValidationObserver
     {
         if (class_exists(\Livewire\Livewire::class)) {
             \Livewire\Livewire::listen('failed-validation', function (Validator $validator, $component) {
+                if (!$this->isEnabled()) {
+                    return;
+                }
+
                 $failedRules = [];
 
                 foreach ($validator->getMessageBag()->messages() as $rule => $messages) {
