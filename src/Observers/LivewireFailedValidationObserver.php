@@ -5,8 +5,7 @@ namespace LaraDumps\LaraDumps\Observers;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Validator;
 use LaraDumps\LaraDumps\LaraDumps;
-use LaraDumps\LaraDumps\Payloads\{LivewirePayload, TablePayload};
-use LaraDumps\LaraDumps\Support\{Dumper, IdeHandle};
+use LaraDumps\LaraDumps\Payloads\TablePayload;
 use ReflectionClass;
 
 class LivewireFailedValidationObserver
