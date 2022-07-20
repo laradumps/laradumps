@@ -1,6 +1,7 @@
 <?php
 
 return [
+
     /*
     |--------------------------------------------------------------------------
     | Host
@@ -8,6 +9,7 @@ return [
     |
     | Dumps App Host address. By default: '127.0.0.1',
     | Uncomment the line below according to your environment.
+    |
     */
 
     'host' => env('DS_APP_HOST', '127.0.0.1'),
@@ -32,8 +34,8 @@ return [
     | Queries
     |--------------------------------------------------------------------------
     |
-    | If true, Dumps will start listening to your database queries and send them to Dumps App whenever
-    | ->showQueries() method is invoked.
+    | If true, Dumps will start listening to your database queries and send
+    | them to Dumps App whenever "->showQueries()" method is invoked.
     |
     */
 
@@ -44,7 +46,8 @@ return [
     | Log Applications
     |--------------------------------------------------------------------------
     |
-    | If true, Dumps will start listening to your application logs and send them to Dumps App.
+    | If true, Dumps will start listening to your application logs and send
+    | them to Dumps App.
     |
     */
 
@@ -55,7 +58,8 @@ return [
     | Color in Screen
     |--------------------------------------------------------------------------
     |
-    | If true, Dumps will separate colors into screens with the name of the submitted color
+    | If true, Dumps will separate colors into screens with the name of the
+    | submitted color.
     |
     */
 
@@ -84,9 +88,11 @@ return [
     | Level Log Colors Map
     |--------------------------------------------------------------------------
     |
-    | If true, Dumps will start listening to your application logs and send them to Dumps App.
+    | If true, Dumps will start listening to your application logs and send
+    | them to Dumps App.
     |
     */
+
     'level_log_colors_map' => [
         'error'     => env('DS_LOG_COLOR_ERROR', 'bg-red-600'),
         'critical'  => env('DS_LOG_COLOR_CRITICAL', 'bg-red-600'),
@@ -102,7 +108,8 @@ return [
     | Livewire Components
     |--------------------------------------------------------------------------
     |
-    | If true, Dumps will start sending the state of the current browser components
+    | If true, Dumps will start sending the state of the current browser
+    | components.
     |
     */
 
@@ -113,7 +120,7 @@ return [
     | Livewire Except Components
     |--------------------------------------------------------------------------
     |
-    | Dumps will ignore all components listed inside the array
+    | Dumps will ignore all components listed inside the array.
     |
     */
 
@@ -126,13 +133,16 @@ return [
     | Livewire Failed Validation
     |--------------------------------------------------------------------------
     |
-    | If true, LaraDumps will start listening for failed validations and send it to a specific screen
+    | If enabled, LaraDumps will start listening for failed validations and
+    | send them to a specific screen.
+    | You can also specify an interval in milliseconds between each dump sent
+    | to the application.
     |
     */
 
     'send_livewire_failed_validation' => [
         'enabled' => env('DS_SEND_LIVEWIRE_FAILED_VALIDATION', false),
-        'sleep'   => env('DS_SEND_LIVEWIRE_FAILED_VALIDATION_SLEEP', 400), // milliseconds
+        'sleep'   => env('DS_SEND_LIVEWIRE_FAILED_VALIDATION_SLEEP', 400),
     ],
 
     /*
@@ -148,7 +158,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    |  IDE Handlers
+    | IDE Handlers
     |--------------------------------------------------------------------------
     |
     | Dumps already ships with pre-configured IDE protocol handlers.
@@ -177,12 +187,14 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    |  Ignore Route Contains
+    | Ignore Route Contains
     |--------------------------------------------------------------------------
     |
-    |  You can specify a list of words that a route can count. Can specify part of a text
+    | You can specify a list of words that a route can count. Can specify part
+    | of a text
     |
     */
+
     'ignore_route_contains' => [
         'debugbar',
         'ignition',
@@ -192,10 +204,11 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    |  Sleep
+    | Sleep
     |--------------------------------------------------------------------------
     |
-    | You can specify an interval in 'seconds' between each dump sent to the app
+    | You can specify an interval in 'seconds' between each dump sent to the
+    | app.
     |
     */
 
@@ -203,22 +216,23 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    |  Auto Invoke App
+    | Auto Invoke App
     |--------------------------------------------------------------------------
     |
     | By default the LaraDumps app will always be invoked on every dump.
-    | Set 'false' to disable this behavior
+    | Set 'false' to disable this behavior.
     |
     */
 
     'auto_invoke_app' => env('DS_AUTO_INVOKE_APP', true),
 
-    /**
-    |  CI Check
+    /*
+    |--------------------------------------------------------------------------
+    | CI Check
     |--------------------------------------------------------------------------
     |
     | Check if you forgot any ds() in your files,
-    | run "php artisan ds:check" in your pipeline
+    | run "php artisan ds:check" in your pipeline.
     |
     */
 
@@ -242,15 +256,18 @@ return [
         ],
     ],
 
-    /**
-    |  Auto-Clear on page reload
+    /*
+    |--------------------------------------------------------------------------
+    | Auto-Clear on page reload
     |--------------------------------------------------------------------------
     |
     | When debugging Livewire, you need to clear your LaraDumps APP history
     | every time the page is reloaded to keep track of your components.
-    | Set auto_clear_on_page_reload to true so LaraDumps will clear history automatically on page reload.
+    | Set auto_clear_on_page_reload to true so LaraDumps will clear history
+    | automatically on page reload.
     |
-     */
+    */
 
     'auto_clear_on_page_reload' => env('DS_AUTO_CLEAR_ON_PAGE_RELOAD', false),
+
 ];
