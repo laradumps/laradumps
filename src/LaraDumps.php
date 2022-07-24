@@ -80,9 +80,13 @@ class LaraDumps
      *
      * @param int $raiseIn Delay in seconds for the app to raise and focus
      */
-    public function toScreen(string $screen, bool $classAttr = false, int $raiseIn = 0): LaraDumps
-    {
-        $payload = new ScreenPayload($screen, $classAttr, $raiseIn);
+    public function toScreen(
+        string $screen,
+        bool $classAttr = false,
+        int $raiseIn = 0,
+        string $screenName = ''
+    ): LaraDumps {
+        $payload = new ScreenPayload($screen, $classAttr, $raiseIn, $screenName);
         $this->send($payload);
 
         return $this;
@@ -136,7 +140,7 @@ class LaraDumps
      * Checks if content contains string.
      *
      * @param string $content
-     * @param boolean $caseSensitive Search is case sensitive
+     * @param boolean $caseSensitive Search is case-sensitive
      * @param boolean $wholeWord Search for the whole words
      * @return LaraDumps
      */

@@ -19,14 +19,14 @@ class IdeHandle
 
         if (str_contains($file, 'Laravel Kit')) {
             $fileHandle = '';
-            $file = 'Laravel Kit';
-            $line = '';
+            $file       = 'Laravel Kit';
+            $line       = '';
         }
 
         if (str_contains($file, 'eval()')) {
             $fileHandle = '';
-            $file = 'Tinker';
-            $line = '';
+            $file       = 'Tinker';
+            $line       = '';
         }
 
         $file = str_replace(base_path() . '/', '', strval($file));
@@ -37,8 +37,8 @@ class IdeHandle
 
         return [
             'handler' => $fileHandle,
-            'path' => $file,
-            'line' => $line,
+            'path'    => $file,
+            'line'    => $line,
         ];
     }
 
@@ -51,12 +51,13 @@ class IdeHandle
 
         $ide = $handlers[$preferredIde] ?? $handlers['vscode'];
 
-        if (!empty($ide['local_path'] ?? false)) {
-            $file = $ide['local_path'] . $file;
+        if (!empty(strval($ide['local_path']))) {
+            $localPath = str_replace($ide['local_path'], '{{ base_app() }}', base_path());
+            $file      = $localPath . $file;
         }
 
-        if (!empty($ide['remote_path'] ?? false)) {
-            $file = str_replace(search: $ide['remote_path'], replace: '', subject: $file);
+        if (!empty(strval($ide['remote_path']))) {
+            $file = str_replace(search: $ide['remote_path'], replace: '', subject: strval($file));
         }
 
         if (!empty($ide['line_separator'])) {

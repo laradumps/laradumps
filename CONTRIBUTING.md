@@ -1,14 +1,16 @@
 # How to contribute with LaraDumps
 
-Thank you for your interesting in contributing with LaraDumps.
+Thank you for your interesting in contributing to LaraDumps.
 
 If you have any questions, do not hesitate to reach the community in the repository [Discussions](https://github.com/laradumps/laradumps/discussions) tab.
 
-> You can fix a bug or even submit a feature. Note that sometimes it will be necessary to send a PR to both repositories
+<br/>
 
-* App - https://github.com/laradumps/app
+👉 **Important:**  Your feature or bug fix might also require changes in the [LaraDumps App](https://github.com/laradumps/app).
 
-## Steps
+<br/>
+
+## Get Started
 
 1 .**Fork**
 
@@ -20,12 +22,6 @@ Install all dependencies with composer and NPM.
 
 ```shell
 composer install
-```
-
-Then run:
-
-```shell
-yarn
 ```
 
 <br/>
