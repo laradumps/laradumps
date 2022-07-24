@@ -51,13 +51,16 @@ class IdeHandle
 
         $ide = $handlers[$preferredIde] ?? $handlers['vscode'];
 
-        if (!empty(strval($ide['local_path']))) {
-            $localPath = str_replace($ide['local_path'], '{{ base_app() }}', base_path());
+        $localPath  = $ide['local_path']  ?? null;
+        $remotePath = $ide['remote_path'] ?? null;
+
+        if (!empty($localPath)) {
+            $localPath = str_replace($localPath, '{{ base_app() }}', base_path());
             $file      = $localPath . $file;
         }
 
-        if (!empty(strval($ide['remote_path']))) {
-            $file = str_replace(search: $ide['remote_path'], replace: '', subject: strval($file));
+        if (!empty($remotePath)) {
+            $file = str_replace(search: $remotePath, replace: '', subject: strval($file));
         }
 
         if (!empty($ide['line_separator'])) {
