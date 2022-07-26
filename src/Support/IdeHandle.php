@@ -54,8 +54,6 @@ class IdeHandle
         $remotePath = $ide['remote_path']      ?? null;
 
         if (!empty($localPath)) {
-            $localPath = str_replace('/{{ base_path() }}', base_path(), $localPath);
-            $file      = str_replace(base_path(), '', strval($file));
             $file      = $localPath . $file;
         }
 
