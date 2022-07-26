@@ -11,47 +11,7 @@ use ReflectionClass;
 
 class LivewireComponentsObserver
 {
-    public function register(): void
-    {
-        if (class_exists(\Livewire\Livewire::class)) {
-            \Livewire\Livewire::listen('view:render', function (View $view) {
-                if (!$this->isEnabled()) {
-                    return;
-                }
-
-                $component = $view->getData()['_instance'];
-
-                if (in_array(get_class($component), (array) (config('laradumps.ignore_livewire_components')))) {
-                    return;
-                }
-
-                $properties = $component->getPublicPropertiesDefinedBySubClass() +
-                    $component->getProtectedOrPrivatePropertiesDefinedBySubClass();
-
-                $data = [
-                    'data' => Dumper::dump($properties),
-                ];
-
-                $viewPath = $this->getViewPath($view);
-
-                $data['name']        = $component->getName();
-                $data['view']        = Str::of($view->name())->replace('livewire.', '');
-                $data['viewHandler'] = [
-                    'handler' => IdeHandle::makeFileHandler($viewPath, '1'),
-                    'path'    => (string) Str::of($viewPath)->replace(config('livewire.view_path') . '/', ''),
-                    'line'    => 1,
-                ];
-                $data['viewPath']    = (string) Str::of($viewPath)->replace(config('livewire.view_path') . '/', '');
-                $data['component']   = get_class($component);
-                $data['id']          = $component->id;
-                $data['dateTime']    = now()->format('H:i:s');
-
-                $dumps = new LaraDumps(notificationId: $data['view']);
-
-                $dumps->send(new LivewirePayload($data));
-
-                $dumps->toScreen(
-                    <<<HTML
+    private string $screen = <<<HTML
 <div class="w-full flex justify-between items-center space-x-2">
 <span class="w-[1rem]">
 <svg class="w-20 h-20" viewBox="0 0 234 54" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -91,7 +51,55 @@ class LivewireComponentsObserver
 </span>
 <span>Livewire</span>
 </div>
-HTML,
+HTML;
+
+    public function register(): void
+    {
+        if (class_exists(\Livewire\Livewire::class)) {
+            \Livewire\Livewire::listen('view:render', function (View $view) {
+                if (!$this->isEnabled()) {
+                    return;
+                }
+
+                $component = $view->getData()['_instance'];
+
+                if (filled(config('laradumps.livewire_components'))) {
+                    if (!Str::contains(strval(get_class($component)), explode(',', strval(config('laradumps.livewire_components'))))) {
+                        return;
+                    }
+                }
+
+                if (in_array(get_class($component), (array) (config('laradumps.ignore_livewire_components')))) {
+                    return;
+                }
+
+                $properties = $component->getPublicPropertiesDefinedBySubClass() +
+                    $component->getProtectedOrPrivatePropertiesDefinedBySubClass();
+
+                $data = [
+                    'data' => Dumper::dump($properties),
+                ];
+
+                $viewPath = $this->getViewPath($view);
+
+                $data['name']        = $component->getName();
+                $data['view']        = Str::of($view->name())->replace('livewire.', '');
+                $data['viewHandler'] = [
+                    'handler' => IdeHandle::makeFileHandler($viewPath, '1'),
+                    'path'    => (string) Str::of($viewPath)->replace(config('livewire.view_path') . '/', ''),
+                    'line'    => 1,
+                ];
+                $data['viewPath']    = (string) Str::of($viewPath)->replace(config('livewire.view_path') . '/', '');
+                $data['component']   = get_class($component);
+                $data['id']          = $component->id;
+                $data['dateTime']    = now()->format('H:i:s');
+
+                $dumps = new LaraDumps(notificationId: $data['view']);
+
+                $dumps->send(new LivewirePayload($data));
+
+                $dumps->toScreen(
+                    $this->screen,
                     false,
                     0,
                     'Livewire'
