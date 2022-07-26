@@ -47,20 +47,20 @@ class IdeHandle
         /** @var string $preferredIde */
         $preferredIde = config('laradumps.preferred_ide');
         /** @var array $handlers */
-        $handlers = config('laradumps.ide_handlers');
+        $handlers   = config('laradumps.ide_handlers');
 
-        $ide = $handlers[$preferredIde] ?? $handlers['vscode'];
-
-        $localPath  = $ide['local_path']  ?? null;
-        $remotePath = $ide['remote_path'] ?? null;
+        $ide        = $handlers[$preferredIde] ?? $handlers['vscode'];
+        $localPath  = $ide['local_path']       ?? null;
+        $remotePath = $ide['remote_path']      ?? null;
 
         if (!empty($localPath)) {
-            $localPath = str_replace($localPath, '{{ base_app() }}', base_path());
+            $localPath = str_replace('/{{ base_path() }}', base_path(), $localPath);
+            $file      = str_replace(base_path(), '', strval($file));
             $file      = $localPath . $file;
         }
 
         if (!empty($remotePath)) {
-            $file = str_replace(search: $remotePath, replace: '', subject: strval($file));
+            $file = str_replace($remotePath, '', strval($file));
         }
 
         if (!empty($ide['line_separator'])) {
