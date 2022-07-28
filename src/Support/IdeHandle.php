@@ -12,20 +12,21 @@ class IdeHandle
     public function ideHandle(): array
     {
         $file = $this->backtrace['file'];
+
         $line = $this->backtrace['line'];
 
         $fileHandle = $this->makeFileHandler($file, $line);
 
         if (str_contains($file, 'Laravel Kit')) {
-            $fileHandle       = '';
-            $file             = 'Laravel Kit';
-            $line             = '';
+            $fileHandle = '';
+            $file       = 'Laravel Kit';
+            $line       = '';
         }
 
         if (str_contains($file, 'eval()')) {
-            $fileHandle       = '';
-            $file             = 'Tinker';
-            $line             = '';
+            $fileHandle = '';
+            $file       = 'Tinker';
+            $line       = '';
         }
 
         $file = str_replace(base_path() . '/', '', strval($file));
@@ -46,9 +47,19 @@ class IdeHandle
         /** @var string $preferredIde */
         $preferredIde = config('laradumps.preferred_ide');
         /** @var array $handlers */
-        $handlers      = config('laradumps.ide_handlers');
+        $handlers   = config('laradumps.ide_handlers');
 
-        $ide           = $handlers[$preferredIde] ?? $handlers['vscode'];
+        $ide        = $handlers[$preferredIde] ?? $handlers['vscode'];
+        $localPath  = $ide['local_path']       ?? null;
+        $remotePath = $ide['remote_path']      ?? null;
+
+        if (!empty($localPath)) {
+            $file      = $localPath . $file;
+        }
+
+        if (!empty($remotePath)) {
+            $file = str_replace($remotePath, '', strval($file));
+        }
 
         if (!empty($ide['line_separator'])) {
             $line = $ide['line_separator'] . $line;

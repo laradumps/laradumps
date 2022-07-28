@@ -183,6 +183,12 @@ return [
             'handler'        => 'vscode://file/',
             'line_separator' => ':',
         ],
+        'vscode_remote' => [
+            'handler'        => 'vscode://vscode-remote/',
+            'line_separator' => ':',
+            'local_path'     => 'wsl+' . env('DS_PREFERRED_WSL_DISTRO', 'Ubuntu20.04LTS'),
+            'remote_path'    => '/var/www/html',
+        ],
     ],
 
     /*
