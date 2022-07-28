@@ -88,8 +88,7 @@ return [
     | Level Log Colors Map
     |--------------------------------------------------------------------------
     |
-    | If true, Dumps will start listening to your application logs and send
-    | them to Dumps App.
+    | Definition of Tailwind CSS class for LaraDumps color tag.
     |
     */
 
@@ -120,13 +119,24 @@ return [
     | Livewire Except Components
     |--------------------------------------------------------------------------
     |
-    | Dumps will ignore all components listed inside the array.
+    | LaraDumps will not listen to the Livewire Components listed here.
     |
     */
 
     'ignore_livewire_components' => [
         // \App\Http\Livewire\Counter::class,
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Livewire Components
+    |--------------------------------------------------------------------------
+    |
+    | List of Livewire Components allowed to be Dumped to the Desktop App.
+    |
+    */
+
+    'livewire_components' => env('DS_LIVEWIRE_COMPONENTS', ''),
 
     /*
     |--------------------------------------------------------------------------
