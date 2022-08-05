@@ -52,13 +52,14 @@ class IdeHandle
         $ide        = $handlers[$preferredIde] ?? $handlers['vscode'];
         $localPath  = $ide['local_path']       ?? null;
         $remotePath = $ide['remote_path']      ?? null;
+        $workDir    = $ide['work_dir']         ?? null;
 
         if (!empty($localPath)) {
             $file      = $localPath . $file;
         }
 
         if (!empty($remotePath)) {
-            $file = str_replace($remotePath, '', strval($file));
+            $file = str_replace($workDir, $remotePath, strval($file));
         }
 
         if (!empty($ide['line_separator'])) {
