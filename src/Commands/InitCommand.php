@@ -43,9 +43,13 @@ class InitCommand extends Command
 
     private function publishConfig(): void
     {
-        if (!File::exists(config_path('laradumps.php'))) {
-            $this->call('vendor:publish', ['--tag' => 'laradumps-config']);
+        if ($this->isInteractive  && File::exists(config_path('laradumps.php'))) {
+            if ($this->confirm('The file <comment>laradumps.php</comment> already exists. Delete it?') === true) {
+                File::delete(config_path('laradumps.php'));
+            }
         }
+
+        $this->call('vendor:publish', ['--tag' => 'laradumps-config']);
     }
 
     private function welcome(): void
@@ -58,7 +62,7 @@ class InitCommand extends Command
 
         $this->line('Welcome & thank you for installing LaraDumps. This wizard will guide you through the basic setup.');
         $this->line("\nDownload LaraDumps app at: <comment>https://github.com/laradumps/app/releases</comment>");
-        $this->line("\nFor more information and detailed setup instructions, access our <comment>documentation</comment> at: <comment>http://laradumps.dev/</comment> \n");
+        $this->line("\nFor more information and detailed setup instructions, access our <comment>documentation</comment> at: <comment>https://laradumps.dev/</comment> \n");
     }
 
     private function thanks(): void
@@ -82,7 +86,7 @@ class InitCommand extends Command
                     . ' --ide=' . config('laradumps.preferred_ide')
                     . "</>\n\n");
 
-        $this->line("⭐ Please consider <comment>starring</comment> our repository at <comment>https://github.com/laradumps/laradumps</comment>\n");
+        $this->line("\n\n⭐ Please consider <comment>starring</comment> our repository at <comment>https://github.com/laradumps/laradumps</comment>\n");
 
         ds('It works! Thank you for using LaraDumps!')->toScreen('🤖 Setup');
     }
@@ -120,7 +124,7 @@ class InitCommand extends Command
             }
 
             if ($host ==  'host.docker.internal' && PHP_OS_FAMILY ==  'Linux') {
-                $this->line("\n❗ You need to perform some extra configuration for Docker in Linux host. Read more at: http://laradumps.dev/#/laravel/get-started/configuration?id=host\n");
+                $this->line("\n❗<error>  IMPORTANT  </error>❗ You need to perform some extra configuration for Docker in Linux host. Read more at: http://laradumps.dev/#/laravel/get-started/configuration?id=host\n");
             }
         }
 
@@ -240,11 +244,24 @@ class InitCommand extends Command
         return $this;
     }
 
+    private function ideConfigList(): array
+    {
+        $configFilePath = __DIR__ . '/../../config/laradumps.php';
+
+        if (!File::exists($configFilePath)) {
+            throw new Exception("LaraDumps config file doesn't exist.");
+        }
+
+        $ideList = include($configFilePath);
+
+        return array_keys((array) $ideList['ide_handlers']);
+    }
+
     private function setPreferredIde(): self
     {
         $ide =  $this->option('ide');
 
-        $ideList = array_keys((array) config('laradumps.ide_handlers'));
+        $ideList = $this->ideConfigList();
 
         if (empty($ide) && $this->isInteractive) {
             $ide = $this->choice(
@@ -256,6 +273,10 @@ class InitCommand extends Command
 
         if (!in_array($ide, $ideList)) {
             throw new Exception('Invalid IDE');
+        }
+
+        if ($ide == 'vscode_remote') {
+            $this->line("\n❗<error>  IMPORTANT  </error>❗ You need to perform some extra configuration for VS Code Remote to work properly. Read more at: <comment>https://laradumps.dev/#/laravel/get-started/configuration?id=remote-vscode-wsl2</comment>\n");
         }
 
         config()->set('laradumps.preferred_ide', $ide);
