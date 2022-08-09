@@ -12,9 +12,10 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
         php: [ 8.1, 8.0 ]
         laravel: [ 9.*, ^8.75 ]
         dependency-version: [ prefer-stable ]
@@ -24,8 +25,7 @@ jobs:
           - laravel: ^8.75
             testbench: 6.*
 
-    name: PHP:${{ matrix.php }} / L:${{ matrix.laravel }}(${{ matrix.dependency-version }})
-
+    name: "PHP: ${{ matrix.php }} /  ${{ matrix.os }} / Lrvl: ${{ matrix.laravel }} (${{ matrix.dependency-version }})"
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -34,7 +34,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick, fileinfo
           tools: composer:v2
           coverage: none
 
