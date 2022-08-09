@@ -247,6 +247,7 @@ class InitCommand extends Command
     private function ideConfigList(): array
     {
         $configFilePath = __DIR__ . '/../../config/laradumps.php';
+        $configFilePath = str_replace('/', DIRECTORY_SEPARATOR, $configFilePath);
 
         if (!File::exists($configFilePath)) {
             throw new Exception("LaraDumps config file doesn't exist.");
