@@ -44,7 +44,7 @@ class InitCommand extends Command
     private function publishConfig(): void
     {
         if ($this->isInteractive  && File::exists(config_path('laradumps.php'))) {
-            if ($this->confirm('The file <comment>laradumps.php</comment> already exists. Delete it?') === true) {
+            if ($this->confirm('The config file <comment>laradumps.php</comment> already exists. Delete it?') === true) {
                 File::delete(config_path('laradumps.php'));
             }
         }

@@ -43,7 +43,7 @@ it('updates the config non-interactively', function () {
 
 it('updates the config through the wizard', function () {
     $this->artisan('ds:init')
-        ->expectsQuestion('The file <comment>laradumps.php</comment> already exists. Delete it?', true)
+        ->expectsQuestion('The config file <comment>laradumps.php</comment> already exists. Delete it?', true)
         ->expectsQuestion('Select the App host address', '0.0.0.1')
         ->expectsQuestion('Enter the App Port', '1212')
         ->expectsQuestion('Allow dumping <comment>SQL Queries</comment> to the App?', true)
@@ -65,7 +65,7 @@ it('updates the config through the wizard', function () {
     expect(config('laradumps.preferred_ide'))->toBe('phpstorm');
 
     $this->artisan('ds:init')
-        ->expectsQuestion('The file <comment>laradumps.php</comment> already exists. Delete it?', true)
+        ->expectsQuestion('The config file <comment>laradumps.php</comment> already exists. Delete it?', true)
         ->expectsQuestion('Select the App host address', 'other')
         ->expectsQuestion('Enter the App Host', '5.7.9.11')
         ->expectsQuestion('Enter the App Port', '5555')
