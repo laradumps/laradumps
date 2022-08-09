@@ -52,7 +52,7 @@ it('updates the config through the wizard', function () {
         ->expectsQuestion('Allow dumping <comment>Livewire failed validation</comment> to the App?', true)
         ->expectsQuestion('Enable <comment>Auto-clear</comment> APP History on page reload?', true)
         ->expectsQuestion('Would you like to invoke the App window on every Dump?', true)
-        ->expectsQuestion('What is your preferred for this project?', 'phpstorm');
+        ->expectsQuestion('What is your preferred IDE for this project?', 'phpstorm');
 
     expect(config('laradumps.host'))->toBe('0.0.0.1');
     expect(config('laradumps.port'))->toBe('1212');
@@ -75,7 +75,7 @@ it('updates the config through the wizard', function () {
         ->expectsQuestion('Allow dumping <comment>Livewire failed validation</comment> to the App?', false)
         ->expectsQuestion('Enable <comment>Auto-clear</comment> APP History on page reload?', false)
         ->expectsQuestion('Would you like to invoke the App window on every Dump?', false)
-        ->expectsQuestion('What is your preferred for this project?', 'atom');
+        ->expectsQuestion('What is your preferred IDE for this project?', 'atom');
 
     expect(config('laradumps.host'))->toBe('5.7.9.11');
     expect(config('laradumps.port'))->toBe('5555');

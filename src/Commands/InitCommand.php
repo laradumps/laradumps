@@ -265,7 +265,7 @@ class InitCommand extends Command
 
         if (empty($ide) && $this->isInteractive) {
             $ide = $this->choice(
-                'What is your preferred for this project?',
+                'What is your preferred IDE for this project?',
                 $ideList,
                 'phpstorm'
             );
