@@ -86,5 +86,6 @@ $finder = Finder::create()
 return (new Config())
     ->setFinder($finder)
     ->setRules($rules)
+    ->setLineEnding(PHP_EOL)
     ->setRiskyAllowed(false)
     ->setUsingCache(true);
