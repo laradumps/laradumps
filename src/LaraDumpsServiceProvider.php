@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\{ServiceProvider, Str};
 use LaraDumps\LaraDumps\Commands\{CheckCommand, InitCommand};
 use LaraDumps\LaraDumps\Observers\{LivewireComponentsObserver,
+    LivewireDispatchObserver,
+    LivewireEventsObserver,
     LivewireFailedValidationObserver,
     LogObserver,
     QueryObserver};
@@ -122,6 +124,8 @@ HTML;
     {
         app(LogObserver::class)->register();
         app(QueryObserver::class)->register();
+        app(LivewireEventsObserver::class)->register();
+        app(LivewireDispatchObserver::class)->register();
         app(LivewireComponentsObserver::class)->register();
         app(LivewireFailedValidationObserver::class)->register();
     }
