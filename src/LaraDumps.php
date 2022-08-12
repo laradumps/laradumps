@@ -18,6 +18,7 @@ use LaraDumps\LaraDumps\Payloads\{ClearPayload,
     RoutesPayload,
     ScreenPayload,
     TablePayload,
+    TimeTrackPayload,
     ValidateStringPayload};
 
 class LaraDumps
@@ -252,5 +253,27 @@ class LaraDumps
         $this->send($payload);
 
         return $this;
+    }
+
+    /**
+     * Starts clocking a code block execution time
+     *
+     * @param string $reference Unique name for this time clocking
+     */
+    public function time(string $reference): void
+    {
+        $payload = new TimeTrackPayload($reference);
+        $this->send($payload);
+    }
+
+    /**
+     * Stops clocking a code block execution time
+     *
+     * @param string $reference Unique name called on ds()->time()
+     */
+    public function stopTime(string $reference): void
+    {
+        $payload = new TimeTrackPayload($reference);
+        $this->send($payload);
     }
 }
