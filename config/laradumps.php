@@ -34,7 +34,7 @@ return [
     | Queries
     |--------------------------------------------------------------------------
     |
-    | If true, Dumps will start listening to your database queries and send
+    | If true, LaraDumps will start listening to your database queries and send
     | them to Dumps App whenever "->showQueries()" method is invoked.
     |
     */
@@ -46,7 +46,7 @@ return [
     | Log Applications
     |--------------------------------------------------------------------------
     |
-    | If true, Dumps will start listening to your application logs and send
+    | If true, LaraDumps will start listening to your application logs and send
     | them to Dumps App.
     |
     */
@@ -58,7 +58,7 @@ return [
     | Color in Screen
     |--------------------------------------------------------------------------
     |
-    | If true, Dumps will separate colors into screens with the name of the
+    | If true, LaraDumps will separate colors into screens with the name of the
     | submitted color.
     |
     */
@@ -107,9 +107,8 @@ return [
     | Livewire Components
     |--------------------------------------------------------------------------
     |
-    | If true, Dumps will start sending the state of the current browser
-    | components.
-    |
+    | if true, LaraDumps will also send private and protected properties
+    | the desktop app.
     */
 
     'send_livewire_components' => env('DS_SEND_LIVEWIRE_COMPONENTS', false),
@@ -140,6 +139,17 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Livewire Components
+    |--------------------------------------------------------------------------
+    |
+    | List of Livewire Components allowed to be Dumped to the Desktop App.
+    |
+    */
+
+    'send_livewire_protected_properties' => env('DS_LIVEWIRE_PROTECTED_PROPERTIES', false),
+
+    /*
+    |--------------------------------------------------------------------------
     | Livewire Failed Validation
     |--------------------------------------------------------------------------
     |
@@ -155,6 +165,21 @@ return [
         'sleep'   => env('DS_SEND_LIVEWIRE_FAILED_VALIDATION_SLEEP', 400),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Livewire Events
+    |--------------------------------------------------------------------------
+    |
+    */
+    'send_livewire_events' => env('DS_LIVEWIRE_EVENTS', false),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Livewire Events
+    |--------------------------------------------------------------------------
+    |
+    */
+    'send_livewire_dispatch' => env('DS_LIVEWIRE_DISPATCH', false),
     /*
     |--------------------------------------------------------------------------
     | Preferred IDE
