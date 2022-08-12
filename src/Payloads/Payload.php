@@ -64,6 +64,11 @@ abstract class Payload
             $ideHandle = $this->ideHandle();
         }
 
+        $pusherConfig = '';
+        if (boolval(config('laradumps.send_livewire_components_highlight'))) {
+            $pusherConfig = config('broadcasting.connections.pusher');
+        }
+
         return [
             'id'   => $this->notificationId,
             'type' => $this->type(),
@@ -74,6 +79,7 @@ abstract class Payload
             'content'   => $this->content(),
             'ideHandle' => $ideHandle,
             'dateTime'  => now()->format('H:i:s'),
+            'pusher'    => $pusherConfig,
         ];
     }
 

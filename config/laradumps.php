@@ -180,6 +180,16 @@ return [
     |
     */
     'send_livewire_dispatch' => env('DS_LIVEWIRE_DISPATCH', false),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Livewire Components HighLight
+    |--------------------------------------------------------------------------
+    |
+    */
+
+    'send_livewire_components_highlight' => env('DS_LIVEWIRE_COMPONENTS_HIGHLIGHT', false),
+
     /*
     |--------------------------------------------------------------------------
     | Preferred IDE
@@ -310,5 +320,4 @@ return [
     */
 
     'auto_clear_on_page_reload' => env('DS_AUTO_CLEAR_ON_PAGE_RELOAD', false),
-
 ];
