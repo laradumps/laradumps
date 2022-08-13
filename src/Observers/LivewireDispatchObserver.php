@@ -6,6 +6,7 @@ use LaraDumps\LaraDumps\LaraDumps;
 use LaraDumps\LaraDumps\Payloads\{LivewireEventsPayload, LivewireEventsReturnedPayload};
 use LaraDumps\LaraDumps\Support\{Dumper, IdeHandle};
 use Livewire\{Component, Response};
+use ReflectionClass;
 
 class LivewireDispatchObserver
 {
@@ -27,11 +28,19 @@ class LivewireDispatchObserver
                     $notificationId = strval(data_get($event, 'event'));
                     $params         = (array) data_get($event, 'data');
 
+                    $reflector         = new ReflectionClass((object) get_class($component));
+                    $componentBasePath = strval($reflector->getFileName());
+
                     $data = [
-                        'event'     => $notificationId,
-                        'dispatch'  => true,
-                        'component' => get_class($component),
-                        'params'    => Dumper::dump($params),
+                        'event'            => $notificationId,
+                        'dispatch'         => true,
+                        'component'        => get_class($component),
+                        'componentHandler' => [
+                            'handler' => IdeHandle::makeFileHandler($componentBasePath, '1'),
+                            'path'    => get_class($component),
+                            'line'    => 1,
+                        ],
+                        'params' => Dumper::dump($params),
                     ];
 
                     $dumps = new LaraDumps(notificationId: $notificationId);
