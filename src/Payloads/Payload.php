@@ -19,6 +19,7 @@ abstract class Payload
         'events',
         'diff',
         'model',
+        'time-track',
     ];
 
     private ?bool $autoInvokeApp = null;
