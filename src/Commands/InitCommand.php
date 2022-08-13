@@ -12,7 +12,7 @@ class InitCommand extends Command
     use RenderAscii;
     use UpdateEnv;
 
-    protected $signature = 'ds:init {--no-interaction?} {--host=} {--port=} {--send_queries=} {--send_logs=} {--send_livewire=}     {--livewire_validation=}  {--livewire_autoclear=} {--auto_invoke=} {--ide=}';
+    protected $signature = 'ds:init {--no-interaction?} {--host=} {--port=} {--send_queries=} {--send_logs=} {--send_livewire=} {--livewire_events=}{--livewire_validation=}  {--livewire_autoclear=} {--auto_invoke=} {--ide=}';
 
     protected $description = 'Initialize LaraDumps configuration';
 
@@ -31,6 +31,7 @@ class InitCommand extends Command
             ->setQueries()
             ->setLogs()
             ->setLivewire()
+            ->setLivewireEvents()
             ->setLivewireValidation()
             ->setLivewireAutoClear()
             ->setAutoInvoke()
@@ -80,6 +81,7 @@ class InitCommand extends Command
                     . ' --send_queries=' . (config('laradumps.send_queries') ? 'true' : 'false')
                     . ' --send_logs=' . (config('laradumps.send_log_applications') ? 'true' : 'false')
                     . ' --send_livewire=' . (config('laradumps.send_livewire_components') ? 'true' : 'false')
+                    . ' --livewire_events=' . (config('laradumps.send_livewire_events') ? 'true' : 'false')
                     . ' --livewire_validation=' . (config('laradumps.send_livewire_failed_validation.enabled') ? 'true' : 'false')
                     . ' --livewire_autoclear=' . (config('laradumps.auto_clear_on_page_reload') ? 'true' : 'false')
                     . ' --auto_invoke=' . (config('laradumps.auto_invoke_app') ? 'true' : 'false')
@@ -192,6 +194,22 @@ class InitCommand extends Command
 
         config()->set('laradumps.send_livewire_components', boolval($sendLivewire));
         $this->updateEnv('DS_SEND_LIVEWIRE_COMPONENTS', ($sendLivewire ? 'true' : 'false'));
+
+        return $this;
+    }
+
+    private function setLivewireEvents(): self
+    {
+        $sendLivewireEvents =  $this->option('livewire_events');
+
+        if (empty($sendLivewireEvents) && $this->isInteractive) {
+            $sendLivewireEvents = $this->confirm('Allow dumping <comment>Livewire Events</comment> to the App?', true);
+        }
+
+        $sendLivewireEvents = filter_var($sendLivewireEvents, FILTER_VALIDATE_BOOLEAN);
+
+        config()->set('laradumps.send_livewire_events', boolval($sendLivewireEvents));
+        $this->updateEnv('DS_LIVEWIRE_EVENTS', ($sendLivewireEvents ? 'true' : 'false'));
 
         return $this;
     }
