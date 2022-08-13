@@ -5,13 +5,13 @@
 <div align="center">
   <br />
   <p align="center">
-    <a href="https://github.com/laradumps/app/releases/download/v1.1.1/LaraDumps-Setup-1.1.1.exe">
+    <a href="https://github.com/laradumps/app/releases/download/v1.2/LaraDumps-Setup-1.2.exe">
       <img src="./art/os/windows.png" height="60" alt="LaraDumps Windows App" />
     </a>
-    <a href="https://github.com/laradumps/app/releases/download/v1.1.1/LaraDumps-1.1.1.dmg">
+    <a href="https://github.com/laradumps/app/releases/download/v1.2/LaraDumps-1.2.dmg">
       <img src="./art/os/macos.png" height="60" alt="LaraDumps MacOS App" />
     </a>
-    <a href="https://github.com/laradumps/app/releases/download/v1.1.1/LaraDumps-1.1.1.AppImage">
+    <a href="https://github.com/laradumps/app/releases/download/v1.2/LaraDumps-1.2.AppImage">
       <img src="./art/os/linux.png" height="60" alt="LaraDumps Linux App" />
     </a>
   </p>
@@ -60,6 +60,7 @@ These are some debug tools available for you:
 - Verify if a string contains a substring.
 - View `phpinfo()` configuration.
 - Debug Livewire components.
+- Debug Livewire Events.
 - List your Laravel routes.
 - Inspect Model attributes.
 - Send your dump to different screens, resulting in a better debugging experience.
@@ -76,16 +77,24 @@ Learn more at the [Reference Sheet](https://laradumps.dev/#/laravel/debug/refere
 
 #### Usage
 
-1. Download the [LaraDumps](https://github.com/laradumps/app) Desktop App: [Windows](https://github.com/laradumps/app/releases/download/v1.1.1/LaraDumps-Setup-1.1.1.exe) | [MacOS](https://github.com/laradumps/app/releases/download/v1.1.1/LaraDumps-1.1.1.dmg)
- | [Linux](https://github.com/laradumps/app/releases/download/v1.1.1/LaraDumps-1.1.1.AppImage)
+1. Download the 🖥️ [LaraDumps](https://github.com/laradumps/app) Desktop App, choose your OS: [Windows](https://github.com/laradumps/app/releases/download/v1.2/LaraDumps-Setup-1.2.exe) | [MacOS](https://github.com/laradumps/app/releases/download/v1.2/LaraDumps-1.2.dmg)
+ | [Linux](https://github.com/laradumps/app/releases/download/v1.2/LaraDumps-1.2.AppImage)
 
-2. Install LaraDumps in your project, run `composer require laradumps/laradumps --dev`.
+2. Install LaraDumps in your Laravel project, run:
 
-3. Configure LaraDumps in your project, run `php artisan ds:init`.
+```shell
+ composer require laradumps/laradumps --dev
+ ```
 
-4. Debug your code using `ds()` instead of Laravel native dump()/dd() tool.
+3. Configure LaraDumps, run:
 
-5. Run your Laravel application and see the debug result in LaraDumps app window.
+```shell
+php artisan ds:init
+ ```
+
+4. Debug your code using `ds()` instead of Laravel native dump() or dd() tool.
+
+5. Run your Laravel application and see the debug dump in LaraDumps App window.
 
 Here's an example:
 
