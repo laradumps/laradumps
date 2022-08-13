@@ -69,7 +69,7 @@ return [
     | Livewire Components
     |--------------------------------------------------------------------------
     |
-    | When `true`, it allows LaraDumps to dump and send Livwire components
+    | When `true`, it allows LaraDumps to dump and send Livewire components
     | private and protected properties to the Desktop App.
     */
 
