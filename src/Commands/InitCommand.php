@@ -12,7 +12,7 @@ class InitCommand extends Command
     use RenderAscii;
     use UpdateEnv;
 
-    protected $signature = 'ds:init {--no-interaction?} {--host=} {--port=} {--send_queries=} {--send_logs=} {--send_livewire=}     {--livewire_validation=}  {--livewire_autoclear=} {--auto_invoke=} {--ide=}';
+    protected $signature = 'ds:init {--no-interaction?} {--host=} {--port=} {--send_queries=} {--send_logs=} {--send_livewire=} {--livewire_events=}{--livewire_validation=}  {--livewire_autoclear=} {--auto_invoke=} {--ide=}';
 
     protected $description = 'Initialize LaraDumps configuration';
 
@@ -31,6 +31,7 @@ class InitCommand extends Command
             ->setQueries()
             ->setLogs()
             ->setLivewire()
+            ->setLivewireEvents()
             ->setLivewireValidation()
             ->setLivewireAutoClear()
             ->setAutoInvoke()
@@ -43,9 +44,13 @@ class InitCommand extends Command
 
     private function publishConfig(): void
     {
-        if (!File::exists(config_path('laradumps.php'))) {
-            $this->call('vendor:publish', ['--tag' => 'laradumps-config']);
+        if ($this->isInteractive  && File::exists(config_path('laradumps.php'))) {
+            if ($this->confirm('The config file <comment>laradumps.php</comment> already exists. Delete it?') === true) {
+                File::delete(config_path('laradumps.php'));
+            }
         }
+
+        $this->call('vendor:publish', ['--tag' => 'laradumps-config']);
     }
 
     private function welcome(): void
@@ -58,7 +63,7 @@ class InitCommand extends Command
 
         $this->line('Welcome & thank you for installing LaraDumps. This wizard will guide you through the basic setup.');
         $this->line("\nDownload LaraDumps app at: <comment>https://github.com/laradumps/app/releases</comment>");
-        $this->line("\nFor more information and detailed setup instructions, access our <comment>documentation</comment> at: <comment>http://laradumps.dev/</comment> \n");
+        $this->line("\nFor more information and detailed setup instructions, access our <comment>documentation</comment> at: <comment>https://laradumps.dev/</comment> \n");
     }
 
     private function thanks(): void
@@ -76,13 +81,14 @@ class InitCommand extends Command
                     . ' --send_queries=' . (config('laradumps.send_queries') ? 'true' : 'false')
                     . ' --send_logs=' . (config('laradumps.send_log_applications') ? 'true' : 'false')
                     . ' --send_livewire=' . (config('laradumps.send_livewire_components') ? 'true' : 'false')
+                    . ' --livewire_events=' . (config('laradumps.send_livewire_events') ? 'true' : 'false')
                     . ' --livewire_validation=' . (config('laradumps.send_livewire_failed_validation.enabled') ? 'true' : 'false')
                     . ' --livewire_autoclear=' . (config('laradumps.auto_clear_on_page_reload') ? 'true' : 'false')
                     . ' --auto_invoke=' . (config('laradumps.auto_invoke_app') ? 'true' : 'false')
                     . ' --ide=' . config('laradumps.preferred_ide')
                     . "</>\n\n");
 
-        $this->line("⭐ Please consider <comment>starring</comment> our repository at <comment>https://github.com/laradumps/laradumps</comment>\n");
+        $this->line("\n\n⭐ Please consider <comment>starring</comment> our repository at <comment>https://github.com/laradumps/laradumps</comment>\n");
 
         ds('It works! Thank you for using LaraDumps!')->toScreen('🤖 Setup');
     }
@@ -120,7 +126,7 @@ class InitCommand extends Command
             }
 
             if ($host ==  'host.docker.internal' && PHP_OS_FAMILY ==  'Linux') {
-                $this->line("\n❗ You need to perform some extra configuration for Docker in Linux host. Read more at: http://laradumps.dev/#/laravel/get-started/configuration?id=host\n");
+                $this->line("\n❗<error>  IMPORTANT  </error>❗ You need to perform some extra configuration for Docker in Linux host. Read more at: http://laradumps.dev/#/laravel/get-started/configuration?id=host\n");
             }
         }
 
@@ -192,6 +198,22 @@ class InitCommand extends Command
         return $this;
     }
 
+    private function setLivewireEvents(): self
+    {
+        $sendLivewireEvents =  $this->option('livewire_events');
+
+        if (empty($sendLivewireEvents) && $this->isInteractive) {
+            $sendLivewireEvents = $this->confirm('Allow dumping <comment>Livewire Events</comment> to the App?', true);
+        }
+
+        $sendLivewireEvents = filter_var($sendLivewireEvents, FILTER_VALIDATE_BOOLEAN);
+
+        config()->set('laradumps.send_livewire_events', boolval($sendLivewireEvents));
+        $this->updateEnv('DS_LIVEWIRE_EVENTS', ($sendLivewireEvents ? 'true' : 'false'));
+
+        return $this;
+    }
+
     private function setLivewireValidation(): self
     {
         $sendLivewireValidation =  $this->option('livewire_validation');
@@ -240,15 +262,29 @@ class InitCommand extends Command
         return $this;
     }
 
+    private function ideConfigList(): array
+    {
+        $configFilePath = __DIR__ . '/../../config/laradumps.php';
+        $configFilePath = str_replace('/', DIRECTORY_SEPARATOR, $configFilePath);
+
+        if (!File::exists($configFilePath)) {
+            throw new Exception("LaraDumps config file doesn't exist.");
+        }
+
+        $ideList = include($configFilePath);
+
+        return array_keys((array) $ideList['ide_handlers']);
+    }
+
     private function setPreferredIde(): self
     {
         $ide =  $this->option('ide');
 
-        $ideList = array_keys((array) config('laradumps.ide_handlers'));
+        $ideList = $this->ideConfigList();
 
         if (empty($ide) && $this->isInteractive) {
             $ide = $this->choice(
-                'What is your preferred for this project?',
+                'What is your preferred IDE for this project?',
                 $ideList,
                 'phpstorm'
             );
@@ -256,6 +292,10 @@ class InitCommand extends Command
 
         if (!in_array($ide, $ideList)) {
             throw new Exception('Invalid IDE');
+        }
+
+        if ($ide == 'vscode_remote') {
+            $this->line("\n❗<error>  IMPORTANT  </error>❗ You need to perform some extra configuration for VS Code Remote to work properly. Read more at: <comment>https://laradumps.dev/#/laravel/get-started/configuration?id=remote-vscode-wsl2</comment>\n");
         }
 
         config()->set('laradumps.preferred_ide', $ide);
