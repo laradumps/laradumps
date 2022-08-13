@@ -105,7 +105,8 @@ return [
     | Livewire - Protected Properties
     |--------------------------------------------------------------------------
     |
-    | List of Livewire Components allowed to be Dumped to the Desktop App.
+    | When `true`, it allows LaraDumps to access and dump protected
+    | and private properties of Livewire components
     |
     */
 
