@@ -31,11 +31,22 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Queries
+    | Auto Invoke Desktop App
     |--------------------------------------------------------------------------
     |
-    | If true, LaraDumps will start listening to your database queries and send
-    | them to Dumps App whenever "->showQueries()" method is invoked.
+    | Invoke LaraDumps Desktop App to gain focus when a new dump arrives.
+    |
+    */
+
+    'auto_invoke_app' => env('DS_AUTO_INVOKE_APP', true),
+
+    /*
+    |--------------------------------------------------------------------------
+    | SQL Query dump
+    |--------------------------------------------------------------------------
+    |
+    | When `true`, it allows to dump database and send them to Desktop App.
+    | Required for: ds()->queriesOn() method.
     |
     */
 
@@ -43,11 +54,11 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Log Applications
+    | Log dump
     |--------------------------------------------------------------------------
     |
-    | If true, LaraDumps will start listening to your application logs and send
-    | them to Dumps App.
+    | When `true`, it allows to dump Laravel logs and send them to Desktop App.
+    | Required for logs dumping.
     |
     */
 
@@ -55,83 +66,35 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Color in Screen
-    |--------------------------------------------------------------------------
-    |
-    | If true, LaraDumps will separate colors into screens with the name of the
-    | submitted color.
-    |
-    */
-
-    'send_color_in_screen' => env('DS_SEND_COLOR_IN_SCREEN', false),
-
-    'screen_btn_colors_map' => [
-        'default' => [
-            'default' => 'btn-white',
-        ],
-        'danger' => [
-            'default' => 'btn-danger',
-        ],
-        'info' => [
-            'default' => 'btn-info',
-        ],
-        'success' => [
-            'default' => 'btn-success',
-        ],
-        'warning' => [
-            'default' => 'btn-warning',
-        ],
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Level Log Colors Map
-    |--------------------------------------------------------------------------
-    |
-    | Definition of Tailwind CSS class for LaraDumps color tag.
-    |
-    */
-
-    'level_log_colors_map' => [
-        'error'     => env('DS_LOG_COLOR_ERROR', 'bg-red-600'),
-        'critical'  => env('DS_LOG_COLOR_CRITICAL', 'bg-red-600'),
-        'alert'     => env('DS_LOG_COLOR_ALERT', 'bg-red-600'),
-        'emergency' => env('DS_LOG_COLOR_EMERGENCY', 'bg-red-600'),
-        'warning'   => env('DS_LOG_COLOR_WARNING', 'bg-orange-300'),
-        'notice'    => env('DS_LOG_COLOR_NOTICE', 'bg-blue-300'),
-        'info'      => env('DS_LOG_COLOR_INFO', 'bg-gray-300'),
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
     | Livewire Components
     |--------------------------------------------------------------------------
     |
-    | if true, LaraDumps will also send private and protected properties
-    | the desktop app.
+    | When `true`, it allows LaraDumps to dump and send Livwire components
+    | private and protected properties to the Desktop App.
     */
 
     'send_livewire_components' => env('DS_SEND_LIVEWIRE_COMPONENTS', false),
 
     /*
     |--------------------------------------------------------------------------
-    | Livewire Except Components
+    | Livewire - Ignore Components
     |--------------------------------------------------------------------------
     |
-    | LaraDumps will not listen to the Livewire Components listed here.
+    | LaraDumps will ignore and not listen to the Livewire Components listed below.
     |
     */
 
     'ignore_livewire_components' => [
-        // \App\Http\Livewire\Counter::class,
+        // \App\Http\Livewire\Example::class,
     ],
 
     /*
     |--------------------------------------------------------------------------
-    | Livewire Components
+    | Livewire - Allowed Components
     |--------------------------------------------------------------------------
     |
-    | List of Livewire Components allowed to be Dumped to the Desktop App.
+    | List of Livewire Components which will be tracked by the Desktop application.
+    | The list must be comma separated. E,g: 'MyComponent,NotesComponent,AttachmentsComponent'
     |
     */
 
@@ -139,7 +102,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Livewire Components
+    | Livewire - Protected Properties
     |--------------------------------------------------------------------------
     |
     | List of Livewire Components allowed to be Dumped to the Desktop App.
@@ -150,7 +113,17 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Livewire Failed Validation
+    | Livewire - Events
+    |--------------------------------------------------------------------------
+    |
+    | When `true`, it allows to dump Livewire Events and send them to Desktop App.
+    |
+    */
+    'send_livewire_events' => env('DS_LIVEWIRE_EVENTS', false),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Livewire - Validation
     |--------------------------------------------------------------------------
     |
     | If enabled, LaraDumps will start listening for failed validations and
@@ -167,28 +140,40 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Livewire Events
+    | Livewire - Dispatch
     |--------------------------------------------------------------------------
     |
-    */
-    'send_livewire_events' => env('DS_LIVEWIRE_EVENTS', false),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Livewire Dispatch
-    |--------------------------------------------------------------------------
+    | When `true`, it allows to dump Livewire Browser Events dispatch
+    | and send them to Desktop App.
     |
     */
     'send_livewire_dispatch' => env('DS_LIVEWIRE_DISPATCH', false),
 
     /*
     |--------------------------------------------------------------------------
-    | Livewire Components HighLight
+    | Livewire - Components HighLight
     |--------------------------------------------------------------------------
+    |
+    | Enables highLighting the component on the page when
+    | it is selected in the Desktop App.
     |
     */
 
     'send_livewire_components_highlight' => env('DS_LIVEWIRE_COMPONENTS_HIGHLIGHT', false),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Livewire - Auto-Clear on page reload
+    |--------------------------------------------------------------------------
+    |
+    | When debugging Livewire, you need to clear your LaraDumps APP history
+    | every time the page is reloaded to keep track of your components.
+    | Set auto_clear_on_page_reload to true so LaraDumps will clear history
+    | automatically on page reload.
+    |
+    */
+
+    'auto_clear_on_page_reload' => env('DS_AUTO_CLEAR_ON_PAGE_RELOAD', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -239,11 +224,11 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Ignore Route Contains
+    | Ignore Routes
     |--------------------------------------------------------------------------
     |
-    | You can specify a list of words that a route can count. Can specify part
-    | of a text
+    | Routes containing the words listed below will NOT be dumped with
+    | ds()->routes() command.
     |
     */
 
@@ -259,8 +244,8 @@ return [
     | Sleep
     |--------------------------------------------------------------------------
     |
-    | You can specify an interval in 'seconds' between each dump sent to the
-    | app.
+    | You can specify an interval in 'seconds' between sending dumps
+    | to the Desktop App.
     |
     */
 
@@ -268,23 +253,11 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Auto Invoke App
-    |--------------------------------------------------------------------------
-    |
-    | By default the LaraDumps app will always be invoked on every dump.
-    | Set 'false' to disable this behavior.
-    |
-    */
-
-    'auto_invoke_app' => env('DS_AUTO_INVOKE_APP', true),
-
-    /*
-    |--------------------------------------------------------------------------
     | CI Check
     |--------------------------------------------------------------------------
     |
-    | Check if you forgot any ds() in your files,
-    | run "php artisan ds:check" in your pipeline.
+    | List of directories and text to be searched when running the
+    |  "php artisan ds:check" command.
     |
     */
 
@@ -294,6 +267,7 @@ return [
             base_path('resources'),
         ],
         'ignore_line_when_contains_text' => [
+            //'ads()'
         ],
         'text_to_search' => [
             'ds(',
@@ -310,15 +284,60 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Auto-Clear on page reload
+    | Color in Screen
     |--------------------------------------------------------------------------
     |
-    | When debugging Livewire, you need to clear your LaraDumps APP history
-    | every time the page is reloaded to keep track of your components.
-    | Set auto_clear_on_page_reload to true so LaraDumps will clear history
-    | automatically on page reload.
+    | If true, LaraDumps will separate colors into screens with the name of the
+    | submitted color.
     |
     */
 
-    'auto_clear_on_page_reload' => env('DS_AUTO_CLEAR_ON_PAGE_RELOAD', false),
+    'send_color_in_screen' => env('DS_SEND_COLOR_IN_SCREEN', false),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Color in Screen - Color Map
+    |--------------------------------------------------------------------------
+    |
+    | Color map for "Color in Screen" feature.
+    |
+    */
+
+    'screen_btn_colors_map' => [
+        'default' => [
+            'default' => 'btn-white',
+        ],
+        'danger' => [
+            'default' => 'btn-danger',
+        ],
+        'info' => [
+            'default' => 'btn-info',
+        ],
+        'success' => [
+            'default' => 'btn-success',
+        ],
+        'warning' => [
+            'default' => 'btn-warning',
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Level Log Colors Map
+    |--------------------------------------------------------------------------
+    |
+    | Definition of Tailwind CSS class for LaraDumps color tag.
+    |
+    */
+
+    'level_log_colors_map' => [
+        'error'     => env('DS_LOG_COLOR_ERROR', 'bg-red-600'),
+        'critical'  => env('DS_LOG_COLOR_CRITICAL', 'bg-red-600'),
+        'alert'     => env('DS_LOG_COLOR_ALERT', 'bg-red-600'),
+        'emergency' => env('DS_LOG_COLOR_EMERGENCY', 'bg-red-600'),
+        'warning'   => env('DS_LOG_COLOR_WARNING', 'bg-orange-300'),
+        'notice'    => env('DS_LOG_COLOR_NOTICE', 'bg-blue-300'),
+        'info'      => env('DS_LOG_COLOR_INFO', 'bg-gray-300'),
+    ],
+
 ];
