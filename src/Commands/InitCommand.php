@@ -217,13 +217,16 @@ class InitCommand extends Command
         $sendLivewireEvents =  $this->option('livewire_events');
 
         if (empty($sendLivewireEvents) && $this->isInteractive) {
-            $sendLivewireEvents = $this->confirm('Allow dumping <comment>Livewire Events</comment> to the App?', true);
+            $sendLivewireEvents = $this->confirm('Allow dumping <comment>Livewire Events</comment> & <comment>Browser Events (dispatch)</comment> to the App?', true);
         }
 
         $sendLivewireEvents = filter_var($sendLivewireEvents, FILTER_VALIDATE_BOOLEAN);
 
         config()->set('laradumps.send_livewire_events', boolval($sendLivewireEvents));
         $this->updateEnv('DS_LIVEWIRE_EVENTS', ($sendLivewireEvents ? 'true' : 'false'));
+
+        config()->set('laradumps.send_livewire_dispatch', boolval($sendLivewireEvents));
+        $this->updateEnv('DS_LIVEWIRE_DISPATCH', ($sendLivewireEvents ? 'true' : 'false'));
 
         return $this;
     }
