@@ -5,6 +5,7 @@ namespace LaraDumps\LaraDumps\Commands;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\{Artisan, File};
+use LaraDumps\LaraDumps\Actions\ConsoleUrl;
 use LaraDumps\LaraDumps\Commands\Concerns\{RenderAscii, UpdateEnv};
 
 class InitCommand extends Command
@@ -125,8 +126,12 @@ class InitCommand extends Command
                 $host = $this->ask('Enter the App Host', $defaultHost);
             }
 
-            if ($host ==  'host.docker.internal' && PHP_OS_FAMILY ==  'Linux') {
-                $this->line("\n❗<error>  IMPORTANT  </error>❗ You need to perform some extra configuration for Docker in Linux host. Read more at: http://laradumps.dev/#/laravel/get-started/configuration?id=host\n");
+            if ($host == 'host.docker.internal' && PHP_OS_FAMILY ==  'Linux') {
+                $docUrl = 'http://laradumps.dev/#/laravel/get-started/configuration?id=host';
+
+                if ($this->confirm("\n❗<error>  IMPORTANT  </error>❗ You need to perform some extra configuration for Docker with Linux host. Read more at: <comment>{$docUrl}</comment>.\n\nBrowse the documentation now?") === true) {
+                    ConsoleUrl::open($docUrl);
+                }
             }
         }
 
@@ -294,8 +299,12 @@ class InitCommand extends Command
             throw new Exception('Invalid IDE');
         }
 
-        if ($ide == 'vscode_remote') {
-            $this->line("\n❗<error>  IMPORTANT  </error>❗ You need to perform some extra configuration for VS Code Remote to work properly. Read more at: <comment>https://laradumps.dev/#/laravel/get-started/configuration?id=remote-vscode-wsl2</comment>\n");
+        if ($ide == 'vscode_remote' && $this->isInteractive) {
+            $docUrl = 'https://laradumps.dev/#/laravel/get-started/configuration?id=remote-vscode-wsl2';
+
+            if ($this->confirm("\n❗<error>  IMPORTANT  </error>❗ You need to perform some extra configuration for VS Code Remote to work properly. Read more at: <comment>{$docUrl}</comment>.\n\nBrowse the documentation now?") === true) {
+                ConsoleUrl::open($docUrl);
+            }
         }
 
         config()->set('laradumps.preferred_ide', $ide);
