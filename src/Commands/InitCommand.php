@@ -296,24 +296,24 @@ class InitCommand extends Command
 
         $ideList = $this->ideConfigList();
 
-        if (empty($ide) && $this->isInteractive) {
+        if ($this->isInteractive && empty($ide)) {
             $ide = $this->choice(
                 'What is your preferred IDE for this project?',
                 $ideList,
                 'phpstorm'
             );
+
+            if ($ide == 'vscode_remote') {
+                $docUrl = 'https://laradumps.dev/#/laravel/get-started/configuration?id=remote-vscode-wsl2';
+
+                if ($this->confirm("\n❗<error>  IMPORTANT  </error>❗ You need to perform some extra configuration for VS Code Remote to work properly. Read more at: <comment>{$docUrl}</comment>.\n\nBrowse the documentation now?") === true) {
+                    ConsoleUrl::open($docUrl);
+                }
+            }
         }
 
         if (!in_array($ide, $ideList)) {
             throw new Exception('Invalid IDE');
-        }
-
-        if ($ide == 'vscode_remote' && $this->isInteractive) {
-            $docUrl = 'https://laradumps.dev/#/laravel/get-started/configuration?id=remote-vscode-wsl2';
-
-            if ($this->confirm("\n❗<error>  IMPORTANT  </error>❗ You need to perform some extra configuration for VS Code Remote to work properly. Read more at: <comment>{$docUrl}</comment>.\n\nBrowse the documentation now?") === true) {
-                ConsoleUrl::open($docUrl);
-            }
         }
 
         config()->set('laradumps.preferred_ide', $ide);
