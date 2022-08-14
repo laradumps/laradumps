@@ -99,6 +99,13 @@ class InitCommand extends Command
         $host = $this->option('host');
 
         if (empty($host) && $this->isInteractive) {
+            $hosts =  [
+                '127.0.0.1',
+                'host.docker.internal',
+                '10.211.55.2',
+                'other',
+            ];
+
             $defaultHost = '127.0.0.1';
 
             //Homestead
@@ -111,16 +118,18 @@ class InitCommand extends Command
                 $defaultHost = 'host.docker.internal';
             }
 
-            $host = $this->choice(
+            //Add blank space to avoid auto-completing suggestion
+            $hosts = array_map(fn ($host) => ' ' . $host, $hosts);
+
+            $host =  $this->choice(
                 'Select the App host address',
-                [
-                    '127.0.0.1',
-                    'host.docker.internal',
-                    '10.211.55.2',
-                    'other',
-                ],
+                $hosts,
                 $defaultHost
             );
+
+            if (is_string($host)) {
+                $host = ltrim($host);
+            }
 
             if ($host == 'other') {
                 $host = $this->ask('Enter the App Host', $defaultHost);
