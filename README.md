@@ -35,6 +35,9 @@
     <a href="https://packagist.org/packages/laradumps/laradumps">
       <img alt="Latest Version" src="https://img.shields.io/packagist/v/laradumps/laradumps">
     </a>
+    <a href="https://github.com/laradumps/laradumps/actions">
+        <img alt="Tests" src="https://github.com/laradumps/laradumps/workflows/LaraDumps%20Tests/badge.svg" />
+    </a>
     <a href="https://packagist.org/packages/laradumps/laradumps">
       <img alt="License" src="https://img.shields.io/github/license/laradumps/laradumps">
     </a>
@@ -92,7 +95,7 @@ Learn more at the [Reference Sheet](https://laradumps.dev/#/laravel/debug/refere
 php artisan ds:init
  ```
 
-4. Debug your code using `ds()` instead of Laravel native dump() or dd() tool.
+4. Debug your code using `ds()` in the same way you would use Laravel native dump() or dd().
 
 5. Run your Laravel application and see the debug dump in LaraDumps App window.
 
