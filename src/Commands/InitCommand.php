@@ -119,6 +119,8 @@ class InitCommand extends Command
             }
 
             //Add blank space to avoid auto-completing suggestion
+            $defaultHost = (string) array_search($defaultHost, $hosts);
+
             $hosts = array_map(fn ($host) => ' ' . $host, $hosts);
 
             $host =  $this->choice(
@@ -132,7 +134,7 @@ class InitCommand extends Command
             }
 
             if ($host == 'other') {
-                $host = $this->ask('Enter the App Host', $defaultHost);
+                $host = $this->ask('Enter the App Host');
             }
 
             if ($host == 'host.docker.internal' && PHP_OS_FAMILY ==  'Linux') {
