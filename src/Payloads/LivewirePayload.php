@@ -21,11 +21,16 @@ class LivewirePayload extends Payload
 
     public function customHandle(): array
     {
-        $component = Str::of(base_path() . '/' . $this->component['component'] . '.php')->replace('\\', '/', )->replace('App', 'app');
+        $component = Str::of(base_path() . '/' . $this->component['component'] . '.php')
+            ->replace('\\', '/', )
+            ->replace('App', 'app');
+
+        $path = Str::of($this->component['component'])
+            ->replace(config('livewire.class_namespace') . '\\', '');
 
         return [
             'handler' => IdeHandle::makeFileHandler($component, '1'),
-            'path'    => $this->component['component'],
+            'path'    => $path,
             'line'    => 1,
         ];
     }
