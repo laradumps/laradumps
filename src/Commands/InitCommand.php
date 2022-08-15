@@ -5,6 +5,7 @@ namespace LaraDumps\LaraDumps\Commands;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\{Artisan, File};
+use LaraDumps\LaraDumps\Actions\ConsoleUrl;
 use LaraDumps\LaraDumps\Commands\Concerns\{RenderAscii, UpdateEnv};
 
 class InitCommand extends Command
@@ -98,6 +99,13 @@ class InitCommand extends Command
         $host = $this->option('host');
 
         if (empty($host) && $this->isInteractive) {
+            $hosts =  [
+                '127.0.0.1',
+                'host.docker.internal',
+                '10.211.55.2',
+                'other',
+            ];
+
             $defaultHost = '127.0.0.1';
 
             //Homestead
@@ -110,23 +118,31 @@ class InitCommand extends Command
                 $defaultHost = 'host.docker.internal';
             }
 
-            $host = $this->choice(
+            //Add blank space to avoid auto-completing suggestion
+            $defaultHost = (string) array_search($defaultHost, $hosts);
+
+            $hosts = array_map(fn ($host) => ' ' . $host, $hosts);
+
+            $host =  $this->choice(
                 'Select the App host address',
-                [
-                    '127.0.0.1',
-                    'host.docker.internal',
-                    '10.211.55.2',
-                    'other',
-                ],
+                $hosts,
                 $defaultHost
             );
 
-            if ($host == 'other') {
-                $host = $this->ask('Enter the App Host', $defaultHost);
+            if (is_string($host)) {
+                $host = ltrim($host);
             }
 
-            if ($host ==  'host.docker.internal' && PHP_OS_FAMILY ==  'Linux') {
-                $this->line("\n❗<error>  IMPORTANT  </error>❗ You need to perform some extra configuration for Docker in Linux host. Read more at: http://laradumps.dev/#/laravel/get-started/configuration?id=host\n");
+            if ($host == 'other') {
+                $host = $this->ask('Enter the App Host');
+            }
+
+            if ($host == 'host.docker.internal' && PHP_OS_FAMILY ==  'Linux') {
+                $docUrl = 'http://laradumps.dev/#/laravel/get-started/configuration?id=host';
+
+                if ($this->confirm("\n❗<error>  IMPORTANT  </error>❗ You need to perform some extra configuration for Docker with Linux host. Read more at: <comment>{$docUrl}</comment>.\n\nBrowse the documentation now?") === true) {
+                    ConsoleUrl::open($docUrl);
+                }
             }
         }
 
@@ -203,13 +219,16 @@ class InitCommand extends Command
         $sendLivewireEvents =  $this->option('livewire_events');
 
         if (empty($sendLivewireEvents) && $this->isInteractive) {
-            $sendLivewireEvents = $this->confirm('Allow dumping <comment>Livewire Events</comment> to the App?', true);
+            $sendLivewireEvents = $this->confirm('Allow dumping <comment>Livewire Events</comment> & <comment>Browser Events (dispatch)</comment> to the App?', true);
         }
 
         $sendLivewireEvents = filter_var($sendLivewireEvents, FILTER_VALIDATE_BOOLEAN);
 
         config()->set('laradumps.send_livewire_events', boolval($sendLivewireEvents));
         $this->updateEnv('DS_LIVEWIRE_EVENTS', ($sendLivewireEvents ? 'true' : 'false'));
+
+        config()->set('laradumps.send_livewire_dispatch', boolval($sendLivewireEvents));
+        $this->updateEnv('DS_LIVEWIRE_DISPATCH', ($sendLivewireEvents ? 'true' : 'false'));
 
         return $this;
     }
@@ -282,20 +301,24 @@ class InitCommand extends Command
 
         $ideList = $this->ideConfigList();
 
-        if (empty($ide) && $this->isInteractive) {
+        if ($this->isInteractive && empty($ide)) {
             $ide = $this->choice(
                 'What is your preferred IDE for this project?',
                 $ideList,
                 'phpstorm'
             );
+
+            if ($ide == 'vscode_remote') {
+                $docUrl = 'https://laradumps.dev/#/laravel/get-started/configuration?id=remote-vscode-wsl2';
+
+                if ($this->confirm("\n❗<error>  IMPORTANT  </error>❗ You need to perform some extra configuration for VS Code Remote to work properly. Read more at: <comment>{$docUrl}</comment>.\n\nBrowse the documentation now?") === true) {
+                    ConsoleUrl::open($docUrl);
+                }
+            }
         }
 
         if (!in_array($ide, $ideList)) {
             throw new Exception('Invalid IDE');
-        }
-
-        if ($ide == 'vscode_remote') {
-            $this->line("\n❗<error>  IMPORTANT  </error>❗ You need to perform some extra configuration for VS Code Remote to work properly. Read more at: <comment>https://laradumps.dev/#/laravel/get-started/configuration?id=remote-vscode-wsl2</comment>\n");
         }
 
         config()->set('laradumps.preferred_ide', $ide);
