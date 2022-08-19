@@ -81,7 +81,7 @@ class LaraDumpsServiceProvider extends ServiceProvider
         });
 
         Blade::directive('dsAutoClearOnPageReload', function ($args) {
-            if (boolval(config('laradumps.auto_clear_on_page_reload')) === false
+            if (boolval(config('laradumps.auto_clear_on_page_reload'))   === false
                 && boolval(config('laradumps.send_livewire_components')) === false) {
                 return '';
             }
