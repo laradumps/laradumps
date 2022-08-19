@@ -37,6 +37,8 @@ class LivewireComponentsObserver
                     $properties + $component->getProtectedOrPrivatePropertiesDefinedBySubClass();
                 }
 
+                $properties['id'] = $component->id;
+
                 $data = [
                     'data' => Dumper::dump($properties),
                 ];
