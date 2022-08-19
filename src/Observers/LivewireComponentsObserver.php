@@ -37,6 +37,8 @@ class LivewireComponentsObserver
                     $properties + $component->getProtectedOrPrivatePropertiesDefinedBySubClass();
                 }
 
+                $properties['id'] = $component->id;
+
                 $data = [
                     'data' => Dumper::dump($properties),
                 ];
@@ -59,11 +61,7 @@ class LivewireComponentsObserver
 
                 $dumps->send(new LivewirePayload($data));
 
-                $dumps->toScreen(
-                    'Livewire',
-                    false,
-                    0,
-                );
+                $dumps->toScreen('Livewire');
             });
         }
     }
