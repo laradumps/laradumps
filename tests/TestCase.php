@@ -47,7 +47,7 @@ class TestCase extends BaseTestCase
     }
 
     /**
-     * Delete PowerGrid cached views
+     * Delete cached views
      *
      * @return void
      */
