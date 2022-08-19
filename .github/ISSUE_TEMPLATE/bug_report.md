@@ -1,3 +1,12 @@
+---
+name: Bug report
+about: Create a report to help us improve
+title: "[BUG]"
+labels: ''
+assignees: ''
+
+---
+
 <!-- ===================================================================================================== -->
 <!-- ====== YOU *MUST* READ THE GUIDELINES & USE THIS TEMPLATE OR YOUR ISSUE WILL BE CLOSED ============== -->
 <!-- ===================================================================================================== -->
