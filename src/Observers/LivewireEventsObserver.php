@@ -2,10 +2,10 @@
 
 namespace LaraDumps\LaraDumps\Observers;
 
+use Illuminate\Support\Str;
 use LaraDumps\LaraDumps\LaraDumps;
 use LaraDumps\LaraDumps\Payloads\{LivewireEventsPayload, LivewireEventsReturnedPayload};
 use LaraDumps\LaraDumps\Support\{Dumper, IdeHandle};
-use Livewire\{Component, Response};
 use ReflectionClass;
 
 class LivewireEventsObserver
@@ -22,11 +22,13 @@ class LivewireEventsObserver
                     $reflector         = new ReflectionClass((object) get_class($component));
                     $componentBasePath = strval($reflector->getFileName());
 
+                    $component = get_class($component);
+
                     $data = [
-                        'component'        => get_class($component),
+                        'component'        => $component,
                         'componentHandler' => [
                             'handler' => IdeHandle::makeFileHandler($componentBasePath, '1'),
-                            'path'    => get_class($component),
+                            'path'    => Str::of(strval($component))->replace(config('livewire.class_namespace') . '\\', ''),
                             'line'    => 1,
                         ],
                         'event'    => $eventName,
@@ -84,7 +86,10 @@ class LivewireEventsObserver
                     $notificationId = strval(data_get($event, 'event'));
                     $params         = (array) data_get($event, 'params');
 
-                    $reflector         = new ReflectionClass((object) get_class($component));
+                    $component         = get_class($component);
+
+                    /** @phpstan-ignore-next-line */
+                    $reflector         = new ReflectionClass($component);
                     $componentBasePath = strval($reflector->getFileName());
 
                     $data = [
@@ -93,7 +98,7 @@ class LivewireEventsObserver
                         'method'           => strval(data_get($update, 'method')),
                         'componentHandler' => [
                             'handler' => IdeHandle::makeFileHandler($componentBasePath, '1'),
-                            'path'    => get_class($component),
+                            'path'    => Str::of(strval($component))->replace(config('livewire.class_namespace') . '\\', ''),
                             'line'    => 1,
                         ],
                         'params'   => Dumper::dump($params),

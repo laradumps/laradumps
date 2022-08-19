@@ -2,10 +2,10 @@
 
 namespace LaraDumps\LaraDumps\Observers;
 
+use Illuminate\Support\Str;
 use LaraDumps\LaraDumps\LaraDumps;
-use LaraDumps\LaraDumps\Payloads\{LivewireEventsPayload, LivewireEventsReturnedPayload};
+use LaraDumps\LaraDumps\Payloads\LivewireEventsPayload;
 use LaraDumps\LaraDumps\Support\{Dumper, IdeHandle};
-use Livewire\{Component, Response};
 use ReflectionClass;
 
 class LivewireDispatchObserver
@@ -28,16 +28,19 @@ class LivewireDispatchObserver
                     $notificationId = strval(data_get($event, 'event'));
                     $params         = (array) data_get($event, 'data');
 
-                    $reflector         = new ReflectionClass((object) get_class($component));
+                    $component         = get_class($component);
+
+                    /** @phpstan-ignore-next-line */
+                    $reflector         = new ReflectionClass($component);
                     $componentBasePath = strval($reflector->getFileName());
 
                     $data = [
                         'event'            => $notificationId,
                         'dispatch'         => true,
-                        'component'        => get_class($component),
+                        'component'        => $component,
                         'componentHandler' => [
                             'handler' => IdeHandle::makeFileHandler($componentBasePath, '1'),
-                            'path'    => get_class($component),
+                            'path'    => Str::of(strval($component))->replace(config('livewire.class_namespace') . '\\', ''),
                             'line'    => 1,
                         ],
                         'params' => Dumper::dump($params),
