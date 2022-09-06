@@ -67,8 +67,16 @@ These are some debug tools available for you:
 - List your Laravel routes.
 - Inspect Model attributes.
 - Send your dump to different screens, resulting in a better debugging experience.
+- Learn more in our [Reference Sheet](https://laradumps.dev/#/laravel/debug/reference-sheet")...
 
-Learn more at the [Reference Sheet](https://laradumps.dev/#/laravel/debug/reference-sheet).
+<br/>
+<table>
+  <tr>
+    <td>
+      <p>🔥 Run <a href="https://laradumps.dev/#/laravel/debug/deploying-to-production" target="_blank">artisan ds:check()</a> in your CI Pipeline to make sure there is no <a href="https://laradumps.dev/#/laravel/debug/reference-sheet" target="_blank">ds()</a> shipped to Production.</p>
+    </td>
+  </tr>
+</table>
 
 <br>
 
