@@ -54,20 +54,19 @@ When using LaraDumps, you can see the result of your debug displayed in a standa
 
 These are some debug tools available for you:
 
-- Dump single or multiple variables at once.
-- Dump values in a table format, with a built-in search feature.
-- Send your code dump to different screens, resulting in a better debugging experience.
-- Monitor SQL Queries.
-- Track Laravel Logs.
-- Validate JSON strings.
-- Compare strings with `diff`.
-- Verify if a string contains a substring.
+- [Dump](https://laradumps.dev/#/laravel/debug/usage?id=dump) single or multiple variables at once.
+- See your dumped values in a [Table](https://laradumps.dev/#/laravel/debug/usage?id=table), with a built-in search feature.
+- Improve your debugging experience using different [screens](https://laradumps.dev/#/laravel/debug/usage?id=screens).
+- Watch [SQL Queries](https://laradumps.dev/#/laravel/debug/usage?id=sql-queries).
+- Monitor [Laravel Logs](https://laravel.com/docs/9.x/logging).
+- Validate [JSON strings](https://laradumps.dev/#/laravel/debug/usage?id=json).
+- Compare strings with [diff](https://laradumps.dev/#/laravel/debug/usage?id=diff).
+- Verify if a string [contains](https://laradumps.dev/#/laravel/debug/usage?id=contains) a substring.
 - View `phpinfo()` configuration.
-- Debug [Livewire](https://laravel-livewire.com) components.
-- Debug [Livewire](https://laravel-livewire.com) Events.
-- List your Laravel [Routes](https://laravel.com/docs/9.x/routing).
+- Debug [Livewire](https://laravel-livewire.com) Components & Events.
+- List your [Laravel Routes](https://laravel.com/docs/9.x/routing).
 - Inspect [Model](https://laravel.com/docs/9.x/eloquent) attributes.
-- Learn more in our [Reference Sheet](https://laradumps.dev/#/laravel/debug/reference-sheet").
+- Learn more in our [Reference Sheet](https://laradumps.dev/#/laravel/debug/reference-sheet).
 
 <br/>
 <table>
