@@ -56,18 +56,18 @@ These are some debug tools available for you:
 
 - Dump single or multiple variables at once.
 - Dump values in a table format, with a built-in search feature.
+- Send your code dump to different screens, resulting in a better debugging experience.
 - Monitor SQL Queries.
-- View Laravel Logs.
+- Track Laravel Logs.
 - Validate JSON strings.
 - Compare strings with `diff`.
 - Verify if a string contains a substring.
 - View `phpinfo()` configuration.
-- Debug Livewire components.
-- Debug Livewire Events.
-- List your Laravel routes.
-- Inspect Model attributes.
-- Send your dump to different screens, resulting in a better debugging experience.
-- Learn more in our [Reference Sheet](https://laradumps.dev/#/laravel/debug/reference-sheet")...
+- Debug [Livewire](https://laravel-livewire.com) components.
+- Debug [Livewire](https://laravel-livewire.com) Events.
+- List your Laravel [Routes](https://laravel.com/docs/9.x/routing).
+- Inspect [Model](https://laravel.com/docs/9.x/eloquent) attributes.
+- Learn more in our [Reference Sheet](https://laradumps.dev/#/laravel/debug/reference-sheet").
 
 <br/>
 <table>
