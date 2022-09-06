@@ -8,6 +8,18 @@ beforeEach(function () {
     $this->bladeHtml     =  '<div>@ds(\'Hello\') </div>';
 });
 
+afterEach(function () {
+    createBlade();
+    createControllerClass();
+});
+
+test('views exist', function (string $view) {
+    expect(view()->exists($view))
+        ->toBeTrue();
+})
+->with(['laradumps::output', 'laradumps::summary'])
+->requiresLaravel9();
+
 it('display "No ds() found" when not ds found', function () {
     if (File::exists($this->view)) {
         File::delete($this->view);
@@ -26,7 +38,7 @@ it('display "No ds() found" when not ds found', function () {
 })->requiresLaravel9();
 
 it('displays error when found on resources path', function () {
-    createBlade($this);
+    createBlade();
 
     $this->assertFileExists($this->view);
 
@@ -41,7 +53,7 @@ it('displays error when found on resources path', function () {
 })->requiresLaravel9();
 
 it('does not display error when found on resources path when not specified in config', function () {
-    createBlade($this);
+    createBlade();
 
     $this->assertFileExists($this->view);
 
@@ -55,7 +67,7 @@ it('does not display error when found on resources path when not specified in co
 })->requiresLaravel9();
 
 it('displays error when found on controller', function ($dsFunction) {
-    createControllerClass($this, $dsFunction);
+    createControllerClass($dsFunction);
 
     $this->assertFileExists($this->controller);
 
@@ -87,7 +99,7 @@ it('displays error when ds macro has line breaks', function () {
         ->get();
     PHP;
 
-    createControllerClass($this, $dsFunction);
+    createControllerClass($dsFunction);
 
     $this->assertFileExists($this->controller);
 
@@ -107,7 +119,7 @@ it('does displays error when found on controller when not specified in config', 
         File::delete($this->view);
     }
 
-    createControllerClass($this, '//Nothing here');
+    createControllerClass('//Nothing here');
 
     $this->assertFileExists($this->controller);
 
@@ -126,7 +138,7 @@ it('will not match a partial function', function () {
         File::delete($this->view);
     }
 
-    createControllerClass($this, 'blablads(\'test\');');
+    createControllerClass('blablads(\'test\');');
 
     $this->assertFileExists($this->controller);
 
@@ -141,8 +153,8 @@ it('will not match a partial function', function () {
 })->requiresLaravel9();
 
 it('displays errors when found on controller and resources path', function () {
-    createBlade($this);
-    createControllerClass($this, "ds('Hello from Controller')->label('label');");
+    createBlade();
+    createControllerClass("ds('Hello from Controller')->label('label');");
 
     $this->assertFileExists($this->view);
     $this->assertFileExists($this->controller);
@@ -169,7 +181,7 @@ it('displays errors when for dsAutoClearOnPageReload directive', function () {
         </body>
     HTML;
 
-    createBlade($this, $html);
+    createBlade($html);
 
     $this->assertFileExists($this->view);
 
@@ -184,8 +196,8 @@ it('displays errors when for dsAutoClearOnPageReload directive', function () {
 })->requiresLaravel9();
 
 it('ignore an error when encountering specific text on the line', function () {
-    createBlade($this);
-    createControllerClass($this, '//Hello from');
+    createBlade();
+    createControllerClass('//Hello from');
 
     $this->assertFileExists($this->view);
     $this->assertFileExists($this->controller);
@@ -208,23 +220,23 @@ it('ignore an error when encountering specific text on the line', function () {
 
 //Helpers
 
-function createBlade($self, string $bladeHtml = ''): void
+function createBlade(string $bladeHtml = ''): void
 {
-    if (File::exists($self->view)) {
-        File::delete($self->view);
+    if (File::exists(test()->view)) {
+        File::delete(test()->view);
     }
 
     if (empty($bladeHtml)) {
-        $bladeHtml = $self->bladeHtml;
+        $bladeHtml = test()->bladeHtml;
     }
 
-    File::put($self->view, $bladeHtml);
+    File::put(test()->view, $bladeHtml);
 }
 
-function createControllerClass($self, $dsFunction = ''): void
+function createControllerClass($dsFunction = ''): void
 {
-    if (File::exists($self->controller)) {
-        File::delete($self->controller);
+    if (File::exists(test()->controller)) {
+        File::delete(test()->controller);
     }
 
     $phpCode = <<<PHP
@@ -243,5 +255,5 @@ function createControllerClass($self, $dsFunction = ''): void
     }
     PHP;
 
-    File::put($self->controller, $phpCode);
+    File::put(test()->controller, $phpCode);
 }
