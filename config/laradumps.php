@@ -203,7 +203,7 @@ return [
             'line_separator' => '&line=',
         ],
         'phpstorm' => [
-            'handler'        => 'phpstorm://open?url=file://',
+            'handler'        => 'phpstorm://open?file=',
             'line_separator' => '&line=',
         ],
         'sublime' => [
