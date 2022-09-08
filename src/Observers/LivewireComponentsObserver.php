@@ -22,7 +22,9 @@ class LivewireComponentsObserver
                 $component = $view->getData()['_instance'];
 
                 if (filled(config('laradumps.livewire_components'))) {
-                    if (!Str::contains(strval(get_class($component)), explode(',', strval(config('laradumps.livewire_components'))))) {
+                    $livewireComponents = Str::of(strval(config('laradumps.livewire_components')))->explode(',');
+
+                    if (!Str::contains(strval(get_class($component)), $livewireComponents)) {
                         return;
                     }
                 }
