@@ -26,7 +26,7 @@ it('should return the correct payload to dump', function () {
         ->id->toBe($notificationId)
         ->type->toBe('dump')
         ->ideHandle->toMatchArray([
-            'handler' => 'phpstorm://open?url=file://Test&line=1',
+            'handler' => 'phpstorm://open?file=Test&line=1',
             'path'    => 'Test',
             'line'    => 1,
         ])
@@ -54,7 +54,7 @@ it('should return the correct payload to model', function () {
         ->id->toBe($notificationId)
         ->type->toBe('model')
         ->ideHandle->toMatchArray([
-            'handler' => 'phpstorm://open?url=file://Test&line=1',
+            'handler' => 'phpstorm://open?file=Test&line=1',
             'path'    => 'Test',
             'line'    => 1,
         ])
