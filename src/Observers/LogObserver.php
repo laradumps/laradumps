@@ -34,6 +34,8 @@ class LogObserver
             ];
 
             $dumps->send(new LogPayload($log));
+
+            $dumps->toScreen('Logs');
         });
     }
 
