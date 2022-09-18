@@ -20,6 +20,7 @@ abstract class Payload
         'diff',
         'model',
         'time-track',
+        'coffee',
     ];
 
     private ?bool $autoInvokeApp = null;
