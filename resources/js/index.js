@@ -1,7 +1,13 @@
 import Pusher from 'pusher-js';
 
-const APP_KEY = process.env.MIX_PUSHER_APP_KEY ?? process.env.VITE_PUSHER_APP_KEY;
-const CLUSTER = process.env.MIX_PUSHER_APP_CLUSTER ?? process.env.VITE_PUSHER_APP_CLUSTER;
+let APP_KEY, CLUSTER;
+if(typeof process != "undefined") {
+    APP_KEY = process.env.MIX_PUSHER_APP_KEY;
+    CLUSTER = process.env.MIX_PUSHER_APP_CLUSTER;
+} else {
+    APP_KEY = import.meta.env.VITE_PUSHER_APP_KEY;
+    CLUSTER = import.meta.env.VITE_PUSHER_APP_CLUSTER;
+}
 
 const pusher = new Pusher(APP_KEY, {
     cluster: CLUSTER,
