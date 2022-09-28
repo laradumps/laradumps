@@ -3,8 +3,8 @@
 namespace LaraDumps\LaraDumps;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\{Collection, Str};
+use LaraDumps\LaraDumps\Actions\SendPayload;
 use LaraDumps\LaraDumps\Concerns\Colors;
 use LaraDumps\LaraDumps\Observers\QueryObserver;
 use LaraDumps\LaraDumps\Payloads\{ClearPayload,
@@ -46,10 +46,7 @@ class LaraDumps
             $payload->notificationId($this->notificationId);
             $payload = $payload->toArray();
 
-            try {
-                Http::post($this->fullUrl, $payload);
-            } catch (\Throwable) {
-            }
+            SendPayload::handle($this->fullUrl, $payload);
         }
 
         return $payload;
