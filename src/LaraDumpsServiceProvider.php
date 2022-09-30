@@ -5,6 +5,7 @@ namespace LaraDumps\LaraDumps;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\{ServiceProvider, Str};
+use LaraDumps\LaraDumps\Actions\GetPackageDir;
 use LaraDumps\LaraDumps\Commands\{CheckCommand, InitCommand};
 use LaraDumps\LaraDumps\Observers\{LivewireComponentsObserver,
     LivewireDispatchObserver,
@@ -24,7 +25,7 @@ class LaraDumpsServiceProvider extends ServiceProvider
         $this->bootMacros();
         $this->bootObservers();
 
-        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'laradumps');
+        $this->loadViewsFrom(GetPackageDir::handle('resources/views'), 'laradumps');
 
         if ($this->app->runningInConsole()) {
             $this->commands([InitCommand::class]);
@@ -34,12 +35,10 @@ class LaraDumpsServiceProvider extends ServiceProvider
 
     public function register(): void
     {
-        $this->mergeConfigFrom(
-            __DIR__ . '/../config/laradumps.php',
-            'laradumps'
-        );
+        $this->mergeConfigFrom(GetPackageDir::handle('config/laradumps.php'), 'laradumps');
 
-        $file = __DIR__ . './functions.php';
+        $file = GetPackageDir::handle('src/functions.php');
+
         if (file_exists($file)) {
             require_once($file);
         }
@@ -68,10 +67,9 @@ class LaraDumpsServiceProvider extends ServiceProvider
     private function loadConfigs(): void
     {
         $this->publishes([
-            __DIR__ . '/../config/laradumps.php' => config_path('laradumps.php'),
-        ], 'laradumps-config');
+            GetPackageDir::handle('config/laradumps.php') => config_path('laradumps.php'), ], 'laradumps-config');
 
-        $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
+        $this->loadRoutesFrom(GetPackageDir::handle('routes/web.php'));
     }
 
     private function createDirectives(): void

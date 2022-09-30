@@ -199,22 +199,27 @@ return [
 
     'ide_handlers' => [
         'atom' => [
+            'name'           => 'Atom',
             'handler'        => 'atom://core/open/file?filename=',
             'line_separator' => '&line=',
         ],
         'phpstorm' => [
+            'name'           => 'PhpStorm',
             'handler'        => 'phpstorm://open?file=',
             'line_separator' => '&line=',
         ],
         'sublime' => [
+            'name'           => 'Sublime',
             'handler'        => 'subl://open?url=file://',
             'line_separator' => '&line=',
         ],
         'vscode' => [
+            'name'           => 'VS Code',
             'handler'        => 'vscode://file/',
             'line_separator' => ':',
         ],
         'vscode_remote' => [
+            'name'           => 'VS Code (Remote/WSL)',
             'handler'        => 'vscode://vscode-remote/',
             'line_separator' => ':',
             'local_path'     => 'wsl+' . env('DS_PREFERRED_WSL_DISTRO', 'Ubuntu20.04LTS'),

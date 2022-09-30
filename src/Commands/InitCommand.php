@@ -5,7 +5,7 @@ namespace LaraDumps\LaraDumps\Commands;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\{Artisan, File};
-use LaraDumps\LaraDumps\Actions\ConsoleUrl;
+use LaraDumps\LaraDumps\Actions\{ConsoleUrl, ListCodeEditors};
 use LaraDumps\LaraDumps\Commands\Concerns\{RenderAscii, UpdateEnv};
 
 class InitCommand extends Command
@@ -281,25 +281,10 @@ class InitCommand extends Command
         return $this;
     }
 
-    private function ideConfigList(): array
-    {
-        $configFilePath = __DIR__ . '/../../config/laradumps.php';
-        $configFilePath = str_replace('/', DIRECTORY_SEPARATOR, $configFilePath);
-
-        if (!File::exists($configFilePath)) {
-            throw new Exception("LaraDumps config file doesn't exist.");
-        }
-
-        $ideList = include($configFilePath);
-
-        return array_keys((array) $ideList['ide_handlers']);
-    }
-
     private function setPreferredIde(): self
     {
-        $ide =  $this->option('ide');
-
-        $ideList = $this->ideConfigList();
+        $ide     =  $this->option('ide');
+        $ideList =  ListCodeEditors::handle();
 
         if ($this->isInteractive && empty($ide)) {
             $ide = $this->choice(
@@ -317,7 +302,7 @@ class InitCommand extends Command
             }
         }
 
-        if (!in_array($ide, $ideList)) {
+        if (!in_array($ide, array_keys($ideList))) {
             throw new Exception('Invalid IDE');
         }
 
