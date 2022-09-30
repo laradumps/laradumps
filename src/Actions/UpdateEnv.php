@@ -1,25 +1,34 @@
 <?php
 
-namespace LaraDumps\LaraDumps\Commands\Concerns;
+namespace LaraDumps\LaraDumps\Actions;
 
 use Illuminate\Support\Facades\File;
 
-trait UpdateEnv
+final class UpdateEnv
 {
     // Based on https://stackoverflow.com/questions/32307426/how-to-change-variables-in-the-env-file-dynamically-in-laravel
 
-    public function updateEnv(string $key, string $value): void
+    public static function handle(string $key, string|int|bool $value, string $filename = '.env'): void
     {
-        $filePath  = base_path('.env');
+        $filePath  = base_path($filename);
 
         if (!File::exists($filePath)) {
             return;
+        }
+
+        if (is_string($value)) {
+            $value = '"' . str_replace('"', '\"', $value) . '"';
+        }
+
+        if (is_bool($value)) {
+            $value = $value ? 'true' : 'false';
         }
 
         $fileContent = File::get($filePath);
 
         //Store the key
         $original = [];
+        $key      = strtoupper($key);
 
         if (preg_match("/^$key=(.+)$/m", $fileContent, $original)) {
             //Update
