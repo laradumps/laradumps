@@ -34,18 +34,18 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "LaraDumps\\LaraDumps\\Tests\\" : "tests"
+            "LaraDumps\\LaraDumps\\Tests\\": "tests"
         }
     },
     "scripts": {
-        "cs-fixer": "./vendor/bin/php-cs-fixer fix --verbose --dry-run --using-cache=no --stop-on-violation",
-        "fix": "./vendor/bin/php-cs-fixer fix",
-        "test:types": "./vendor/bin/phpstan analyse --ansi --memory-limit=-1",
-        "test:tests": "./vendor/bin/pest --order-by random",
+        "lint": "./vendor/bin/php-cs-fixer fix --allow-risky=yes",
+        "test:lint": "./vendor/bin/php-cs-fixer fix --dry-run --allow-risky=yes",
+        "test:types": "./vendor/bin/phpstan analyse",
+        "test:unit": "./vendor/bin/pest --order-by random",
         "verify": [
-            "@cs-fixer",
+            "@test:lint",
             "@test:types",
-            "@test:tests"
+            "@test:unit"
         ]
     },
     "extra": {
