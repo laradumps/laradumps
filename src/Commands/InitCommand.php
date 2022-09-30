@@ -177,7 +177,7 @@ class InitCommand extends Command
         $sendQueries = filter_var($sendQueries, FILTER_VALIDATE_BOOLEAN);
 
         config()->set('laradumps.send_queries', boolval($sendQueries));
-        UpdateEnv::handle('DS_SEND_QUERIES', ($sendQueries ? 'true' : 'false'));
+        UpdateEnv::handle('DS_SEND_QUERIES', $sendQueries);
 
         return $this;
     }
@@ -193,7 +193,7 @@ class InitCommand extends Command
         $sendLogs = filter_var($sendLogs, FILTER_VALIDATE_BOOLEAN);
 
         config()->set('laradumps.send_log_applications', boolval($sendLogs));
-        UpdateEnv::handle('DS_SEND_LOGS', ($sendLogs ? 'true' : 'false'));
+        UpdateEnv::handle('DS_SEND_LOGS', $sendLogs);
 
         return $this;
     }
@@ -209,7 +209,7 @@ class InitCommand extends Command
         $sendLivewire = filter_var($sendLivewire, FILTER_VALIDATE_BOOLEAN);
 
         config()->set('laradumps.send_livewire_components', boolval($sendLivewire));
-        UpdateEnv::handle('DS_SEND_LIVEWIRE_COMPONENTS', ($sendLivewire ? 'true' : 'false'));
+        UpdateEnv::handle('DS_SEND_LIVEWIRE_COMPONENTS', $sendLivewire);
 
         return $this;
     }
@@ -225,10 +225,10 @@ class InitCommand extends Command
         $sendLivewireEvents = filter_var($sendLivewireEvents, FILTER_VALIDATE_BOOLEAN);
 
         config()->set('laradumps.send_livewire_events', boolval($sendLivewireEvents));
-        UpdateEnv::handle('DS_LIVEWIRE_EVENTS', ($sendLivewireEvents ? 'true' : 'false'));
+        UpdateEnv::handle('DS_LIVEWIRE_EVENTS', $sendLivewireEvents);
 
         config()->set('laradumps.send_livewire_dispatch', boolval($sendLivewireEvents));
-        UpdateEnv::handle('DS_LIVEWIRE_DISPATCH', ($sendLivewireEvents ? 'true' : 'false'));
+        UpdateEnv::handle('DS_LIVEWIRE_DISPATCH', $sendLivewireEvents);
 
         return $this;
     }
@@ -244,7 +244,7 @@ class InitCommand extends Command
         $sendLivewireValidation = filter_var($sendLivewireValidation, FILTER_VALIDATE_BOOLEAN);
 
         config()->set('laradumps.send_livewire_failed_validation.enabled', boolval($sendLivewireValidation));
-        UpdateEnv::handle('DS_SEND_LIVEWIRE_FAILED_VALIDATION', ($sendLivewireValidation ? 'true' : 'false'));
+        UpdateEnv::handle('DS_SEND_LIVEWIRE_FAILED_VALIDATION', $sendLivewireValidation);
 
         return $this;
     }
@@ -260,7 +260,7 @@ class InitCommand extends Command
         $allowLivewireAutoClear = filter_var($allowLivewireAutoClear, FILTER_VALIDATE_BOOLEAN);
 
         config()->set('laradumps.auto_clear_on_page_reload', boolval($allowLivewireAutoClear));
-        UpdateEnv::handle('DS_AUTO_CLEAR_ON_PAGE_RELOAD', ($allowLivewireAutoClear ? 'true' : 'false'));
+        UpdateEnv::handle('DS_AUTO_CLEAR_ON_PAGE_RELOAD', $allowLivewireAutoClear);
 
         return $this;
     }
@@ -276,7 +276,7 @@ class InitCommand extends Command
         $autoInvoke = filter_var($autoInvoke, FILTER_VALIDATE_BOOLEAN);
 
         config()->set('laradumps.auto_invoke_app', boolval($autoInvoke));
-        UpdateEnv::handle('DS_AUTO_INVOKE_APP', ($autoInvoke ? 'true' : 'false'));
+        UpdateEnv::handle('DS_AUTO_INVOKE_APP', $autoInvoke);
 
         return $this;
     }

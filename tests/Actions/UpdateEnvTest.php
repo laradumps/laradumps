@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\File;
 use LaraDumps\LaraDumps\Actions\UpdateEnv;
 
 beforeEach(function () {
-    $this->filename = str()->random();
+    $this->filename = md5(uniqid(rand(), true));
     $this->filePath = base_path($this->filename);
 });
 

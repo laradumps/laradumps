@@ -5,7 +5,6 @@ namespace LaraDumps\LaraDumps\Tests;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\File;
 use LaraDumps\LaraDumps\LaraDumpsServiceProvider;
-use LaraDumps\LaraDumps\Tests\Actions\TestDatabase;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
