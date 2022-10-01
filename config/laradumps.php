@@ -332,13 +332,14 @@ return [
     */
 
     'level_log_colors_map' => [
-        'error'     => env('DS_LOG_COLOR_ERROR', 'bg-red-600'),
-        'critical'  => env('DS_LOG_COLOR_CRITICAL', 'bg-red-600'),
-        'alert'     => env('DS_LOG_COLOR_ALERT', 'bg-red-600'),
-        'emergency' => env('DS_LOG_COLOR_EMERGENCY', 'bg-red-600'),
-        'warning'   => env('DS_LOG_COLOR_WARNING', 'bg-orange-300'),
-        'notice'    => env('DS_LOG_COLOR_NOTICE', 'bg-blue-300'),
-        'info'      => env('DS_LOG_COLOR_INFO', 'bg-gray-300'),
+        'error'     => env('DS_LOG_COLOR_ERROR', 'border-red-600'),
+        'critical'  => env('DS_LOG_COLOR_CRITICAL', 'border-red-900'),
+        'alert'     => env('DS_LOG_COLOR_ALERT', 'border-red-500'),
+        'emergency' => env('DS_LOG_COLOR_EMERGENCY', 'border-red-600'),
+        'warning'   => env('DS_LOG_COLOR_WARNING', 'border-orange-300'),
+        'notice'    => env('DS_LOG_COLOR_NOTICE', 'border-green-300'),
+        'info'      => env('DS_LOG_COLOR_INFO', 'border-blue-300'),
+        'debug'     => env('DS_LOG_COLOR_INFO', 'border-black'),
     ],
 
 ];
