@@ -10,10 +10,12 @@ final class UpdateConfigFromForm
      * Update config from page form
      *
      * @param array<string,string> $updatedConfig
+     * @throws \Exception
      */
     public static function handle(array $updatedConfig): void
     {
         $configKeys  = ListConfigKeys::handle();
+
         collect($updatedConfig)->each(
             function ($value, $field) use ($configKeys) {
                 $originalKey = $configKeys->firstWhere('env_key', $field);

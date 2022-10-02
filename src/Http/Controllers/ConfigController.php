@@ -2,15 +2,16 @@
 
 namespace LaraDumps\LaraDumps\Http\Controllers;
 
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controller;
-use Illuminate\View\View;
+use LaraDumps\LaraDumps\Actions\UpdateConfigFromForm;
 use LaraDumps\LaraDumps\Actions\{GetConfigFileLink, ListConfigKeys, MakeConfigValidatonRules};
-use LaraDumps\LaraDumps\Actions\{UpdateConfigFromForm, UpdateEnv};
 
 final class ConfigController extends Controller
 {
-    public function index(): View
+    public function index(): Application|Factory|\Illuminate\Contracts\View\View
     {
         abort_if(boolval(app()->environment('production')), 404);
 
@@ -26,6 +27,6 @@ final class ConfigController extends Controller
 
         UpdateConfigFromForm::handle($validKeys);
 
-        return redirect(route('laradumps.index'));
+        return redirect(route('laradumps.index'))->with('success', 'Config has Updated successfully');
     }
 }
