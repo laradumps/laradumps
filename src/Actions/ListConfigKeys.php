@@ -18,6 +18,15 @@ final class ListConfigKeys
     {
         return collect([
             [
+                'config_key'    => 'laradumps.host',
+                'env_key'       => 'DS_APP_HOST',
+                'title'         => 'Desktop App Host',
+                'description'   => 'The host setting allows your project to communicate with LaraDumps Desktop app.',
+                'doc_link'      => 'host',
+                'default_value' => true,
+                'type'          => 'text',
+            ],
+            [
                 'config_key'    => 'laradumps.auto_invoke_app',
                 'env_key'       => 'DS_AUTO_INVOKE_APP',
                 'title'         => 'Auto-Invoke',
