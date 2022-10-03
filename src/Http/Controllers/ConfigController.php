@@ -27,6 +27,6 @@ final class ConfigController extends Controller
 
         UpdateConfigFromForm::handle($validKeys);
 
-        return redirect(route('laradumps.index'))->with('success', 'Config has Updated successfully');
+        return redirect(route('laradumps.index'))->with('success', 'Configuration updated successfully!');
     }
 }
