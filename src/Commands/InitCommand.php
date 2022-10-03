@@ -5,8 +5,7 @@ namespace LaraDumps\LaraDumps\Commands;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\{Artisan, File};
-use LaraDumps\LaraDumps\Actions\{ConsoleUrl, ListCodeEditors};
-use LaraDumps\LaraDumps\Actions\{SuggestAppHost, UpdateEnv};
+use LaraDumps\LaraDumps\Actions\{ConsoleUrl, ExportConfigToCommand, ListCodeEditors, SuggestAppHost, UpdateEnv};
 use LaraDumps\LaraDumps\Commands\Concerns\{RenderAscii};
 
 class InitCommand extends Command
@@ -77,17 +76,7 @@ class InitCommand extends Command
 
         $this->line("\n🎉 <fg=green>Setup completed successfully!</> If you want to re-use this same configuration in other Laravel projects, simply run:\n");
 
-        $this->line('<fg=cyan>   php artisan ds:init --no-interaction --host=' . config('laradumps.host')
-                    . ' --port=' . config('laradumps.port')
-                    . ' --send_queries=' . (config('laradumps.send_queries') ? 'true' : 'false')
-                    . ' --send_logs=' . (config('laradumps.send_log_applications') ? 'true' : 'false')
-                    . ' --send_livewire=' . (config('laradumps.send_livewire_components') ? 'true' : 'false')
-                    . ' --livewire_events=' . (config('laradumps.send_livewire_events') ? 'true' : 'false')
-                    . ' --livewire_validation=' . (config('laradumps.send_livewire_failed_validation.enabled') ? 'true' : 'false')
-                    . ' --livewire_autoclear=' . (config('laradumps.auto_clear_on_page_reload') ? 'true' : 'false')
-                    . ' --auto_invoke=' . (config('laradumps.auto_invoke_app') ? 'true' : 'false')
-                    . ' --ide=' . config('laradumps.preferred_ide')
-                    . "</>\n\n");
+        $this->line(PHP_EOL . '<fg=cyan>' . ExportConfigToCommand::handle() . '</>' . PHP_EOL);
 
         $this->line("\n\n⭐ Please consider <comment>starring</comment> our repository at <comment>https://github.com/laradumps/laradumps</comment>\n");
 
