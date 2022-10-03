@@ -5,8 +5,8 @@ namespace LaraDumps\LaraDumps\Commands;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\{Artisan, File};
-use LaraDumps\LaraDumps\Actions\UpdateEnv;
 use LaraDumps\LaraDumps\Actions\{ConsoleUrl, ListCodeEditors};
+use LaraDumps\LaraDumps\Actions\{SuggestAppHost, UpdateEnv};
 use LaraDumps\LaraDumps\Commands\Concerns\{RenderAscii};
 
 class InitCommand extends Command
@@ -106,20 +106,8 @@ class InitCommand extends Command
                 'other',
             ];
 
-            $defaultHost = '127.0.0.1';
-
-            //Homestead
-            if (File::exists(base_path('Homestead.yaml'))) {
-                $defaultHost = '10.211.55.2';
-            }
-
-            //Docker
-            if (File::exists(base_path('docker-compose.yml'))) {
-                $defaultHost = 'host.docker.internal';
-            }
-
             //Add blank space to avoid auto-completing suggestion
-            $defaultHost = (string) array_search($defaultHost, $hosts);
+            $defaultHost = (string) array_search(SuggestAppHost::handle(), $hosts);
 
             $hosts = array_map(fn ($host) => ' ' . $host, $hosts);
 
