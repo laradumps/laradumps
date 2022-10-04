@@ -4,6 +4,7 @@
 <h1 align="center">LaraDumps</h1>
 <div align="center">
   <br />
+  <!--LaraDumpsVersion-->
   <p align="center">
     <a href="https://github.com/laradumps/app/releases/download/v1.2.3/LaraDumps-Setup-1.2.3.exe">
       <img src="./art/os/windows.png" height="60" alt="LaraDumps Windows App" />
@@ -15,7 +16,8 @@
       <img src="./art/os/linux.png" height="60" alt="LaraDumps Linux App" />
     </a>
   </p>
-  <h3>Click on your OS logo to download the Desktop App.</h3>
+  <!--EndOfLaraDumpsVersion-->
+  <h3>Click to Download the App</h3>
   <sub>Available for Windows, Linux and macOS.</sub>
   <br />
   <br />
@@ -86,9 +88,10 @@ These are some debug tools available for you:
  PHP 8.0+ and Laravel 8.75+
 
 #### Usage
-
-1. Download the 🖥️ [LaraDumps](https://github.com/laradumps/app) Desktop App, choose your OS: [Windows](https://github.com/laradumps/app/releases/download/v1.2.3/LaraDumps-Setup-1.2.3.exe) | [MacOS](https://github.com/laradumps/app/releases/download/v1.2.3/LaraDumps-1.2.3.dmg)
+<!--LaraDumpsVersion-->
+1. Download the 🖥️ [LaraDumps](https://github.com/laradumps/app) Desktop App here: [Windows](https://github.com/laradumps/app/releases/download/v1.2.3/LaraDumps-Setup-1.2.3.exe) | [MacOS](https://github.com/laradumps/app/releases/download/v1.2.3/LaraDumps-1.2.3.dmg)
  | [Linux](https://github.com/laradumps/app/releases/download/v1.2.3/LaraDumps-1.2.3.AppImage)
+<!--EndOfLaraDumpsVersion-->
 
 2. Install LaraDumps in your Laravel project, run:
 
@@ -102,18 +105,30 @@ These are some debug tools available for you:
 php artisan ds:init
  ```
 
-4. Debug your code using `ds()` in the same way you would use Laravel native dump() or dd().
+4. Debug your code using `ds()` in the same way you would use Laravel's native functions dump() or dd().
 
 5. Run your Laravel application and see the debug dump in LaraDumps App window.
+
+### Example
 
 Here's an example:
 
 ```php
+// File: routes/web.php
+
+<?php 
+
 Route::get('/', function () {
     ds('Home page accessed!');
     return view('home');
 });
 ```
+
+The Desktop App receives:
+
+<p align="center">
+  <img src="./art/example.png" height="500" alt="" />
+</p>
 
 ### Credits
 
