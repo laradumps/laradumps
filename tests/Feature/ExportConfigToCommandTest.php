@@ -15,5 +15,5 @@ it('can generate the config command', function () {
     config()->set('laradumps.auto_invoke_app', true);
     config()->set('laradumps.preferred_ide', 'phpstorm');
 
-    expect(ExportConfigToCommand::handle())->toBe('php artisan ds:init --no-interaction  --host=127.0.0.1  --port=8181  --send_queries=false  --send_logs=false  --send_livewire=false  --livewire_events=false  --livewire_validation=false  --livewire_autoclear=false  --auto_invoke=true  --ide=phpstorm');
+    expect(ExportConfigToCommand::handle())->toBe('php artisan ds:init --no-interaction  --host=127.0.0.1  --auto_invoke=true  --send_queries=false  --send_logs=false  --send_livewire=false  --livewire_events=false  --livewire_dispatch=false  --livewire_validation=false  --livewire_autoclear=false  --ide=phpstorm');
 });

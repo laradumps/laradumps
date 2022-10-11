@@ -5,6 +5,7 @@ namespace LaraDumps\LaraDumps\Commands;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\{Artisan, File};
+use LaraDumps\LaraDumps\Actions\ListConfigKeys;
 use LaraDumps\LaraDumps\Actions\{ConsoleUrl, ExportConfigToCommand, ListCodeEditors, SuggestAppHost, UpdateEnv};
 use LaraDumps\LaraDumps\Commands\Concerns\{RenderAscii};
 
@@ -12,30 +13,33 @@ class InitCommand extends Command
 {
     use RenderAscii;
 
-    protected $signature = 'ds:init {--no-interaction?} {--host=} {--port=} {--send_queries=} {--send_logs=} {--send_livewire=} {--livewire_events=}{--livewire_validation=}  {--livewire_autoclear=} {--auto_invoke=} {--ide=}';
+    protected $signature = 'ds:init {--no-interaction?}';
 
     protected $description = 'Initialize LaraDumps configuration';
 
     protected bool $isInteractive = true;
 
+    public function __construct()
+    {
+        $this->configKeys = ListConfigKeys::handle();
+
+        // Add arguments to signature
+        $this->configKeys->each(function ($key) {
+            $this->signature .=  " {--{$key['param']}=} ";
+        });
+
+        parent::__construct();
+    }
+
     public function handle(): int
     {
         $this->isInteractive = empty($this->option('no-interaction'));
 
-        $this->publishConfig();
-
         $this->welcome();
 
-        $this->setHost()
-            ->setPort()
-            ->setQueries()
-            ->setLogs()
-            ->setLivewire()
-            ->setLivewireEvents()
-            ->setLivewireValidation()
-            ->setLivewireAutoClear()
-            ->setAutoInvoke()
-            ->setPreferredIde();
+        $this->publishConfig();
+
+        $this->setup();
 
         $this->thanks();
 
@@ -45,6 +49,10 @@ class InitCommand extends Command
     private function publishConfig(): void
     {
         if ($this->isInteractive  && File::exists(config_path('laradumps.php'))) {
+            $this->line(PHP_EOL);
+
+            $this->line('Publishing config file...');
+
             if ($this->confirm('The config file <comment>laradumps.php</comment> already exists. Delete it?') === true) {
                 File::delete(config_path('laradumps.php'));
             }
@@ -62,8 +70,6 @@ class InitCommand extends Command
         $this->renderLogo();
 
         $this->line('Welcome & thank you for installing LaraDumps. This wizard will guide you through the basic setup.');
-        $this->line("\nDownload LaraDumps app at: <comment>https://github.com/laradumps/app/releases</comment>");
-        $this->line("\nFor more information and detailed setup instructions, access our <comment>documentation</comment> at: <comment>https://laradumps.dev/</comment> \n");
     }
 
     private function thanks(): void
@@ -72,15 +78,30 @@ class InitCommand extends Command
             return;
         }
 
-        $this->line("\n📝 The <comment>.env</comment> file has been updated.\n");
-
-        $this->line("\n🎉 <fg=green>Setup completed successfully!</> If you want to re-use this same configuration in other Laravel projects, simply run:\n");
-
-        $this->line(PHP_EOL . '<fg=cyan>' . ExportConfigToCommand::handle() . '</>' . PHP_EOL);
-
-        $this->line("\n\n⭐ Please consider <comment>starring</comment> our repository at <comment>https://github.com/laradumps/laradumps</comment>\n");
-
         ds('It works! Thank you for using LaraDumps!')->toScreen('🤖 Setup');
+
+        $this->line(PHP_EOL . '🎉 <info>Setup completed successfully!</info> To configure LaraDumps vist: <comment>' . config('app.url') . '/laradumps</comment>');
+
+        $this->line(PHP_EOL . "⭐ <info>Support LaraDumps!</info> Star our repository at: <comment>https://github.com/laradumps/laradumps</comment>\n");
+    }
+
+    private function setUp(): self
+    {
+        $this->configKeys->each(function ($key) {
+            $value = $this->option($key['param']) ?? $value = $key['default_value'];
+
+            if (is_bool($key['default_value'])) {
+                $value = boolval(filter_var($value, FILTER_VALIDATE_BOOLEAN));
+            }
+
+            config()->set($key['config_key'], $value);
+
+            UpdateEnv::handle($key['env_key'], $value);
+        });
+
+        $this->setHost()->setIde();
+
+        return $this;
     }
 
     private function setHost(): self
@@ -129,136 +150,7 @@ class InitCommand extends Command
         return $this;
     }
 
-    private function setPort(): self
-    {
-        $port = $this->option('port');
-
-        if (empty($port) && $this->isInteractive) {
-            $port = $this->ask('Enter the App Port', '9191');
-        }
-
-        config()->set('laradumps.port', $port);
-        UpdateEnv::handle('DS_APP_PORT', strval($port));
-
-        return $this;
-    }
-
-    private function setQueries(): self
-    {
-        $sendQueries =  $this->option('send_queries');
-
-        if (empty($sendQueries) && $this->isInteractive) {
-            $sendQueries = $this->confirm('Allow dumping <comment>SQL Queries</comment> to the App?', true);
-        }
-
-        $sendQueries = filter_var($sendQueries, FILTER_VALIDATE_BOOLEAN);
-
-        config()->set('laradumps.send_queries', boolval($sendQueries));
-        UpdateEnv::handle('DS_SEND_QUERIES', $sendQueries);
-
-        return $this;
-    }
-
-    private function setLogs(): self
-    {
-        $sendLogs =  $this->option('send_logs');
-
-        if (empty($sendLogs) && $this->isInteractive) {
-            $sendLogs = $this->confirm('Allow dumping <comment>Laravel Logs</comment> to the App?', true);
-        }
-
-        $sendLogs = filter_var($sendLogs, FILTER_VALIDATE_BOOLEAN);
-
-        config()->set('laradumps.send_log_applications', boolval($sendLogs));
-        UpdateEnv::handle('DS_SEND_LOGS', $sendLogs);
-
-        return $this;
-    }
-
-    private function setLivewire(): self
-    {
-        $sendLivewire =  $this->option('send_livewire');
-
-        if (empty($sendLivewire) && $this->isInteractive) {
-            $sendLivewire = $this->confirm('Allow dumping <comment>Livewire components</comment> to the App?', true);
-        }
-
-        $sendLivewire = filter_var($sendLivewire, FILTER_VALIDATE_BOOLEAN);
-
-        config()->set('laradumps.send_livewire_components', boolval($sendLivewire));
-        UpdateEnv::handle('DS_SEND_LIVEWIRE_COMPONENTS', $sendLivewire);
-
-        return $this;
-    }
-
-    private function setLivewireEvents(): self
-    {
-        $sendLivewireEvents =  $this->option('livewire_events');
-
-        if (empty($sendLivewireEvents) && $this->isInteractive) {
-            $sendLivewireEvents = $this->confirm('Allow dumping <comment>Livewire Events</comment> & <comment>Browser Events (dispatch)</comment> to the App?', true);
-        }
-
-        $sendLivewireEvents = filter_var($sendLivewireEvents, FILTER_VALIDATE_BOOLEAN);
-
-        config()->set('laradumps.send_livewire_events', boolval($sendLivewireEvents));
-        UpdateEnv::handle('DS_LIVEWIRE_EVENTS', $sendLivewireEvents);
-
-        config()->set('laradumps.send_livewire_dispatch', boolval($sendLivewireEvents));
-        UpdateEnv::handle('DS_LIVEWIRE_DISPATCH', $sendLivewireEvents);
-
-        return $this;
-    }
-
-    private function setLivewireValidation(): self
-    {
-        $sendLivewireValidation =  $this->option('livewire_validation');
-
-        if (empty($sendLivewireValidation) && $this->isInteractive) {
-            $sendLivewireValidation = $this->confirm('Allow dumping <comment>Livewire failed validation</comment> to the App?', true);
-        }
-
-        $sendLivewireValidation = filter_var($sendLivewireValidation, FILTER_VALIDATE_BOOLEAN);
-
-        config()->set('laradumps.send_livewire_failed_validation.enabled', boolval($sendLivewireValidation));
-        UpdateEnv::handle('DS_SEND_LIVEWIRE_FAILED_VALIDATION', $sendLivewireValidation);
-
-        return $this;
-    }
-
-    private function setLivewireAutoClear(): self
-    {
-        $allowLivewireAutoClear =  $this->option('livewire_autoclear');
-
-        if (empty($allowLivewireAutoClear) && $this->isInteractive) {
-            $allowLivewireAutoClear = $this->confirm('Enable <comment>Auto-clear</comment> APP History on page reload?', false);
-        }
-
-        $allowLivewireAutoClear = filter_var($allowLivewireAutoClear, FILTER_VALIDATE_BOOLEAN);
-
-        config()->set('laradumps.auto_clear_on_page_reload', boolval($allowLivewireAutoClear));
-        UpdateEnv::handle('DS_AUTO_CLEAR_ON_PAGE_RELOAD', $allowLivewireAutoClear);
-
-        return $this;
-    }
-
-    private function setAutoInvoke(): self
-    {
-        $autoInvoke =  $this->option('auto_invoke');
-
-        if (empty($autoInvoke) && $this->isInteractive) {
-            $autoInvoke = $this->confirm('Would you like to invoke the App window on every Dump?', true);
-        }
-
-        $autoInvoke = filter_var($autoInvoke, FILTER_VALIDATE_BOOLEAN);
-
-        config()->set('laradumps.auto_invoke_app', boolval($autoInvoke));
-        UpdateEnv::handle('DS_AUTO_INVOKE_APP', $autoInvoke);
-
-        return $this;
-    }
-
-    private function setPreferredIde(): self
+    private function setIde(): self
     {
         $ide     =  $this->option('ide');
         $ideList =  ListCodeEditors::handle();

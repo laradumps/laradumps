@@ -24,6 +24,7 @@ test('matches the config keys snapshot', function () {
                 'current_value' => null,
                 'type'          => 'text',
                 'tab'           => 'general',
+                'param'         => 'host',
             ],
             [
                 'config_key'    => 'laradumps.auto_invoke_app',
@@ -35,6 +36,7 @@ test('matches the config keys snapshot', function () {
                 'current_value' => null,
                 'type'          => 'toggle',
                 'tab'           => 'general',
+                'param'         => 'auto_invoke',
             ],
             [
                 'config_key'    => 'laradumps.send_queries',
@@ -42,10 +44,11 @@ test('matches the config keys snapshot', function () {
                 'title'         => 'Dump SQL',
                 'description'   => 'Send SQL queries to the Desktop App',
                 'doc_link'      => 'https://laradumps.dev/#/laravel/get-started/configuration?id=sql-queries',
-                'default_value' => true,
+                'default_value' => false,
                 'current_value' => null,
                 'type'          => 'toggle',
                 'tab'           => 'general',
+                'param'         => 'send_queries',
             ],
             [
                 'config_key'    => 'laradumps.send_log_applications',
@@ -53,11 +56,11 @@ test('matches the config keys snapshot', function () {
                 'title'         => 'Dump Logs',
                 'description'   => 'Send Laravel Logs to the Desktop App',
                 'doc_link'      => 'https://laradumps.dev/#/laravel/get-started/configuration?id=laravel-logs',
-                'default_value' => true,
+                'default_value' => false,
                 'current_value' => null,
                 'type'          => 'toggle',
                 'tab'           => 'general',
-
+                'param'         => 'send_logs',
             ],
             [
                 'config_key'    => 'laradumps.send_livewire_components',
@@ -69,7 +72,7 @@ test('matches the config keys snapshot', function () {
                 'current_value' => null,
                 'type'          => 'toggle',
                 'tab'           => 'livewire',
-
+                'param'         => 'send_livewire',
             ],
             [
                 'config_key'    => 'laradumps.send_livewire_events',
@@ -81,7 +84,7 @@ test('matches the config keys snapshot', function () {
                 'current_value' => null,
                 'type'          => 'toggle',
                 'tab'           => 'livewire',
-
+                'param'         => 'livewire_events',
             ],
             [
                 'config_key'    => 'laradumps.send_livewire_dispatch',
@@ -93,7 +96,7 @@ test('matches the config keys snapshot', function () {
                 'current_value' => null,
                 'type'          => 'toggle',
                 'tab'           => 'livewire',
-
+                'param'         => 'livewire_dispatch',
             ],
             [
                 'config_key'    => 'laradumps.send_livewire_failed_validation.enabled',
@@ -105,7 +108,7 @@ test('matches the config keys snapshot', function () {
                 'current_value' => null,
                 'type'          => 'toggle',
                 'tab'           => 'livewire',
-
+                'param'         => 'livewire_validation',
             ],
             [
                 'config_key'    => 'laradumps.auto_clear_on_page_reload',
@@ -117,6 +120,7 @@ test('matches the config keys snapshot', function () {
                 'current_value' => null,
                 'type'          => 'toggle',
                 'tab'           => 'livewire',
+                'param'         => 'livewire_autoclear',
             ],
             [
                 'config_key'    => 'laradumps.preferred_ide',
@@ -129,7 +133,7 @@ test('matches the config keys snapshot', function () {
                 'type'          => 'select',
                 'current_value' => null,
                 'tab'           => 'general',
-
+                'param'         => 'ide',
             ],
         ]
     );

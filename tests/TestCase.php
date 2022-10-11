@@ -30,7 +30,7 @@ class TestCase extends BaseTestCase
     {
         $app['config']->set('laradumps.sleep', null);
         $app['config']->set('laradumps.host', '127.0.0.1');
-        $app['config']->set('laradumps.port', 8181);
+        $app['config']->set('laradumps.port', 9191);
 
         $app['config']->set('app.key', 'base64:RygUQvaR926QuH4d5G6ZDf9ToJEEeO2p8qDSCq6emPk=');
         $app['config']->set('database.default', 'testbench');

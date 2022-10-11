@@ -5,6 +5,7 @@ use LaraDumps\LaraDumps\Actions\ListCodeEditors;
 return [
     [
         'config_key'    => 'laradumps.host',
+        'param'         => 'host',
         'env_key'       => 'DS_APP_HOST',
         'title'         => 'Desktop App Host',
         'description'   => 'LaraDumps Desktop App address',
@@ -15,6 +16,7 @@ return [
     ],
     [
         'config_key'    => 'laradumps.auto_invoke_app',
+        'param'         => 'auto_invoke',
         'env_key'       => 'DS_AUTO_INVOKE_APP',
         'title'         => 'Auto-Invoke',
         'description'   => 'Auto-invoke and focus Desktop App on new dumps',
@@ -25,26 +27,29 @@ return [
     ],
     [
         'config_key'    => 'laradumps.send_queries',
+        'param'         => 'send_queries',
         'env_key'       => 'DS_SEND_QUERIES',
         'title'         => 'Dump SQL',
         'description'   => 'Send SQL queries to the Desktop App',
         'doc_link'      => 'sql-queries',
-        'default_value' => true,
+        'default_value' => false,
         'type'          => 'toggle',
         'tab'           => 'general',
     ],
     [
         'config_key'    => 'laradumps.send_log_applications',
+        'param'         => 'send_logs',
         'env_key'       => 'DS_SEND_LOGS',
         'title'         => 'Dump Logs',
         'description'   => 'Send Laravel Logs to the Desktop App',
         'doc_link'      => 'laravel-logs',
-        'default_value' => true,
+        'default_value' => false,
         'type'          => 'toggle',
         'tab'           => 'general',
     ],
     [
         'config_key'    => 'laradumps.send_livewire_components',
+        'param'         => 'send_livewire',
         'env_key'       => 'DS_SEND_LIVEWIRE_COMPONENTS',
         'title'         => 'Livewire components',
         'description'   => 'Track and dump Livewire components',
@@ -55,6 +60,7 @@ return [
     ],
     [
         'config_key'    => 'laradumps.send_livewire_events',
+        'param'         => 'livewire_events',
         'env_key'       => 'DS_LIVEWIRE_EVENTS',
         'title'         => 'Livewire Events',
         'description'   => 'Track and dump Livewire events',
@@ -65,6 +71,7 @@ return [
     ],
     [
         'config_key'    => 'laradumps.send_livewire_dispatch',
+        'param'         => 'livewire_dispatch',
         'env_key'       => 'DS_LIVEWIRE_DISPATCH',
         'title'         => 'Livewire Browser Events',
         'description'   => 'Track and dump Livewire Browser Events',
@@ -75,6 +82,7 @@ return [
     ],
     [
         'config_key'    => 'laradumps.send_livewire_failed_validation.enabled',
+        'param'         => 'livewire_validation',
         'env_key'       => 'DS_SEND_LIVEWIRE_FAILED_VALIDATION',
         'title'         => 'Livewire failed validation',
         'description'   => 'Track and dump Livewire failed validations',
@@ -85,6 +93,7 @@ return [
     ],
     [
         'config_key'    => 'laradumps.auto_clear_on_page_reload',
+        'param'         => 'livewire_autoclear',
         'env_key'       => 'DS_AUTO_CLEAR_ON_PAGE_RELOAD',
         'title'         => 'Auto-clear App',
         'description'   => 'Enable Auto-clear the Dektop App when page is reloaded',
@@ -95,6 +104,7 @@ return [
     ],
     [
         'config_key'    => 'laradumps.preferred_ide',
+        'param'         => 'ide',
         'env_key'       => 'DS_PREFERRED_IDE',
         'title'         => 'Default IDE',
         'description'   => 'Select your preferred IDE for this project',
