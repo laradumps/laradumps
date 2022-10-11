@@ -23,16 +23,18 @@ test('matches the config keys snapshot', function () {
                 'default_value' => '127.0.0.1',
                 'current_value' => null,
                 'type'          => 'text',
+                'tab'           => 'general',
             ],
             [
                 'config_key'    => 'laradumps.auto_invoke_app',
                 'env_key'       => 'DS_AUTO_INVOKE_APP',
                 'title'         => 'Auto-Invoke',
-                'description'   => 'Auto-invoke and focus Desktop App on new dumps/events',
+                'description'   => 'Auto-invoke and focus Desktop App on new dumps',
                 'doc_link'      => 'https://laradumps.dev/#/laravel/get-started/configuration?id=auto-invoke',
                 'default_value' => true,
                 'current_value' => null,
                 'type'          => 'toggle',
+                'tab'           => 'general',
             ],
             [
                 'config_key'    => 'laradumps.send_queries',
@@ -43,6 +45,7 @@ test('matches the config keys snapshot', function () {
                 'default_value' => true,
                 'current_value' => null,
                 'type'          => 'toggle',
+                'tab'           => 'general',
             ],
             [
                 'config_key'    => 'laradumps.send_log_applications',
@@ -53,6 +56,8 @@ test('matches the config keys snapshot', function () {
                 'default_value' => true,
                 'current_value' => null,
                 'type'          => 'toggle',
+                'tab'           => 'general',
+
             ],
             [
                 'config_key'    => 'laradumps.send_livewire_components',
@@ -63,6 +68,8 @@ test('matches the config keys snapshot', function () {
                 'default_value' => true,
                 'current_value' => null,
                 'type'          => 'toggle',
+                'tab'           => 'livewire',
+
             ],
             [
                 'config_key'    => 'laradumps.send_livewire_events',
@@ -73,6 +80,8 @@ test('matches the config keys snapshot', function () {
                 'default_value' => true,
                 'current_value' => null,
                 'type'          => 'toggle',
+                'tab'           => 'livewire',
+
             ],
             [
                 'config_key'    => 'laradumps.send_livewire_dispatch',
@@ -83,6 +92,8 @@ test('matches the config keys snapshot', function () {
                 'default_value' => true,
                 'current_value' => null,
                 'type'          => 'toggle',
+                'tab'           => 'livewire',
+
             ],
             [
                 'config_key'    => 'laradumps.send_livewire_failed_validation.enabled',
@@ -93,6 +104,8 @@ test('matches the config keys snapshot', function () {
                 'default_value' => true,
                 'current_value' => null,
                 'type'          => 'toggle',
+                'tab'           => 'livewire',
+
             ],
             [
                 'config_key'    => 'laradumps.auto_clear_on_page_reload',
@@ -103,6 +116,7 @@ test('matches the config keys snapshot', function () {
                 'default_value' => false,
                 'current_value' => null,
                 'type'          => 'toggle',
+                'tab'           => 'livewire',
             ],
             [
                 'config_key'    => 'laradumps.preferred_ide',
@@ -114,6 +128,8 @@ test('matches the config keys snapshot', function () {
                 'options'       => ListCodeEditors::handle(),
                 'type'          => 'select',
                 'current_value' => null,
+                'tab'           => 'general',
+
             ],
         ]
     );
