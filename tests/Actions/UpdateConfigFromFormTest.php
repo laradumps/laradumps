@@ -1,3 +1,0 @@
-<?php
-
-test('updates config');
