@@ -63,9 +63,14 @@ it('updates the config through the wizard', function () {
     expect(config('laradumps.preferred_ide'))->toBe('atom');
 });
 
-test('wizard setts default parameters', function () {
+test('init sets default parameters', function () {
+    $configFile = config_path('laradumps.php');
+
+    if (File::exists($configFile)) {
+        File::delete($configFile);
+    }
+
     $this->artisan('ds:init')
-        ->expectsQuestion('The config file <comment>laradumps.php</comment> already exists. Delete it?', true)
         ->expectsQuestion('Select the App host address', '0.0.0.1')
         ->expectsQuestion('What is your preferred IDE for this project?', 'phpstorm');
 

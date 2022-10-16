@@ -2,6 +2,8 @@
 
 namespace LaraDumps\LaraDumps\Actions;
 
+use Exception;
+
 final class ExportConfigToCommand
 {
     /**
@@ -14,7 +16,18 @@ final class ExportConfigToCommand
 
         // Set arguments
         $arguments = $configKeys->mapWithKeys(function ($key) {
-            return [$key['param'] => config($key['config_key'])];
+            if (empty($key['param']) || empty($key['config_key'])) {
+                throw new Exception('missing param or config_key value');
+            }
+
+            $param = strval($key['param']);
+            $value = strval(config(strval($key['config_key'])));
+
+            if (is_bool($key['default_value'])) {
+                $value = boolval(filter_var($value, FILTER_VALIDATE_BOOLEAN));
+            }
+
+            return [(string) $param => $value];
         })->toArray();
 
         return self::makeCommand($arguments);

@@ -18,10 +18,11 @@ final class ListConfigKeys
     {
         $keys = include GetPackageDir::handle('config/config_keys.php');
 
-        return collect($keys)
-        ->transform(function ($config, $key) {
+        $config = new Collection($keys);
+
+        return $config->transform(function ($config, $key) {
             $config['doc_link']       = strval(Str::of(strval($config['doc_link']))->prepend(self::DOC_URL));
-            $config['current_value']  = env($config['env_key']); /** @phpstan-ignore-line */
+            $config['current_value']  = env($config['env_key']);
 
             return $config;
         });

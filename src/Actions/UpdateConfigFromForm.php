@@ -31,6 +31,8 @@ final class UpdateConfigFromForm
 
                 UpdateEnv::handle($field, $value);
 
+                config()->set(strval($originalKey['config_key']), $value);
+
                 Artisan::call('config:clear');
             }
         );

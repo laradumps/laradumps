@@ -4,9 +4,10 @@ namespace LaraDumps\LaraDumps\Commands;
 
 use Exception;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\{Artisan, File};
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\File;
 use LaraDumps\LaraDumps\Actions\ListConfigKeys;
-use LaraDumps\LaraDumps\Actions\{ConsoleUrl, ExportConfigToCommand, ListCodeEditors, SuggestAppHost, UpdateEnv};
+use LaraDumps\LaraDumps\Actions\{ConsoleUrl, ListCodeEditors, SuggestAppHost, UpdateEnv};
 use LaraDumps\LaraDumps\Commands\Concerns\{RenderAscii};
 
 class InitCommand extends Command
@@ -19,12 +20,16 @@ class InitCommand extends Command
 
     protected bool $isInteractive = true;
 
+    /*** @var $configKeys Collection<int, non-empty-array<string, array|bool|string>> */
+    protected Collection $configKeys;
+
     public function __construct()
     {
         $this->configKeys = ListConfigKeys::handle();
 
         // Add arguments to signature
         $this->configKeys->each(function ($key) {
+            $key['param'] = strval($key['param']);
             $this->signature .=  " {--{$key['param']}=} ";
         });
 
@@ -85,19 +90,27 @@ class InitCommand extends Command
         $this->line(PHP_EOL . "⭐ <info>Support LaraDumps!</info> Star our repository at: <comment>https://github.com/laradumps/laradumps</comment>\n");
     }
 
-    private function setUp(): self
+    private function setup(): self
     {
-        $this->configKeys->each(function ($key) {
-            $value = $this->option($key['param']) ?? $value = $key['default_value'];
+        $this->configKeys->each(
+            function ($key) {
+                if (is_array($key)
+                    && key_exists('param', $key)
+                    && key_exists('config_key', $key)
+                    && key_exists('default_value', $key)
+                ) {
+                    $value = $this->option(strval($key['param'])) ?? $value = $key['default_value'];
 
-            if (is_bool($key['default_value'])) {
-                $value = boolval(filter_var($value, FILTER_VALIDATE_BOOLEAN));
+                    if (is_bool($key['default_value'])) {
+                        $value = boolval(filter_var($value, FILTER_VALIDATE_BOOLEAN));
+                    }
+
+                    config()->set(strval($key['config_key']), $value);
+
+                    UpdateEnv::handle(strval($key['env_key']), $value);
+                }
             }
-
-            config()->set($key['config_key'], $value);
-
-            UpdateEnv::handle($key['env_key'], $value);
-        });
+        );
 
         $this->setHost()->setIde();
 
