@@ -10,4 +10,3 @@ parameters:
     checkGenericClassInNonGenericObjectType: false
 
     ignoreErrors:
-        - '#arameter \#1 $view of function view expects view-string|null, string given#'

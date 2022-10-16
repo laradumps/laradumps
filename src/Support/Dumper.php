@@ -16,7 +16,6 @@ class Dumper
 
         $htmlDumper = (string) $dumper->dump($varCloner->cloneVar($arguments), true);
 
-        /** @phpstan-ignore-next-line */
         return Str::cut($htmlDumper, '<pre ', '</pre>');
     }
 }
