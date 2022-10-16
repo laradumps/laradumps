@@ -10,5 +10,3 @@ parameters:
     checkGenericClassInNonGenericObjectType: false
 
     ignoreErrors:
-        - '#Call to an undefined static method .*Str::cut\(\)#'
-        - '#Parameter \#1 \$view of function view expects view-string\|null, string given\.#'
