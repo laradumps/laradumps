@@ -1,12 +1,8 @@
 includes:
     - ./vendor/nunomaduro/larastan/extension.neon
 parameters:
-    excludePaths:
-        - src/Observers/LivewireObserver.php
     paths:
         - src
     level: max
     checkMissingIterableValueType: false
     checkGenericClassInNonGenericObjectType: false
-
-    ignoreErrors:
