@@ -7,7 +7,9 @@ use Illuminate\Support\{Collection, Str};
 use LaraDumps\LaraDumps\Actions\SendPayload;
 use LaraDumps\LaraDumps\Concerns\Colors;
 use LaraDumps\LaraDumps\Observers\QueryObserver;
-use LaraDumps\LaraDumps\Payloads\{ClearPayload,
+use LaraDumps\LaraDumps\Payloads\{
+    ClearPayload,
+    CoffeePayload,
     ColorPayload,
     DiffPayload,
     DumpPayload,
@@ -19,7 +21,8 @@ use LaraDumps\LaraDumps\Payloads\{ClearPayload,
     ScreenPayload,
     TablePayload,
     TimeTrackPayload,
-    ValidateStringPayload};
+    ValidateStringPayload
+};
 
 class LaraDumps
 {
@@ -116,6 +119,17 @@ class LaraDumps
     public function clear(): LaraDumps
     {
         $this->send(new ClearPayload());
+
+        return $this;
+    }
+
+    /**
+     * Grab a coffee!
+     *
+     */
+    public function coffee(): LaraDumps
+    {
+        $this->send(new CoffeePayload());
 
         return $this;
     }
