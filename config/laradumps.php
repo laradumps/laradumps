@@ -342,4 +342,15 @@ return [
         'debug'     => env('DS_LOG_COLOR_INFO', 'border-black'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Auto Start With Deeplink
+    |--------------------------------------------------------------------------
+    |
+    | Will launch the app automatically using deeplink when there is no
+    | connection on the first try
+    |
+    */
+
+    'auto_start_with_deeplink' => true,
 ];

@@ -49,7 +49,17 @@ class LaraDumps
             $payload->notificationId($this->notificationId);
             $payload = $payload->toArray();
 
-            SendPayload::handle($this->fullUrl, $payload);
+            $response = SendPayload::handle($this->fullUrl, $payload);
+
+            if (!$response) {
+                if (!boolval(config('laradumps.auto_start_with_deeplink')) || app()->runningInConsole()) {
+                    echo 'Could not connect to LaraDumps app. Is it closed?';
+
+                    exit;
+                }
+
+                echo "<script>Object.assign(document.createElement('a'), { href: 'laradumps://' }).click(); </script>";
+            }
         }
 
         return $payload;
