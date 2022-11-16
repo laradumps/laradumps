@@ -352,5 +352,9 @@ return [
     |
     */
 
-    'auto_start_with_deeplink' => true,
+    'auto_start_with_deeplink' => [
+        'enabled' => true,
+        'timout'  => 10, // The timeout in seconds to execute with Symphony Process
+        'command' => null, // Custom command, ex: cmd.exe /c start
+    ],
 ];
