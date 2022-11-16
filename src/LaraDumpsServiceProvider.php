@@ -5,7 +5,7 @@ namespace LaraDumps\LaraDumps;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\{ServiceProvider, Str};
-use LaraDumps\LaraDumps\Commands\{CheckCommand, InitCommand, OpenLaraDumpsCommand};
+use LaraDumps\LaraDumps\Commands\{CheckCommand, InitCommand};
 use LaraDumps\LaraDumps\Observers\{LivewireComponentsObserver,
     LivewireDispatchObserver,
     LivewireEventsObserver,
@@ -30,7 +30,6 @@ class LaraDumpsServiceProvider extends ServiceProvider
             $this->commands([
                 InitCommand::class,
                 CheckCommand::class,
-                OpenLaraDumpsCommand::class,
             ]);
         }
     }

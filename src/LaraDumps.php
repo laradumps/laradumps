@@ -4,7 +4,7 @@ namespace LaraDumps\LaraDumps;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\{Collection, Facades\Artisan, Str};
-use LaraDumps\LaraDumps\Actions\SendPayload;
+use LaraDumps\LaraDumps\Actions\{OpenLaraDumps, SendPayload};
 use LaraDumps\LaraDumps\Concerns\Colors;
 use LaraDumps\LaraDumps\Observers\QueryObserver;
 use LaraDumps\LaraDumps\Payloads\{
@@ -59,7 +59,7 @@ class LaraDumps
                     exit;
                 }
 
-                Artisan::call('ds:open');
+                OpenLaraDumps::execute();
             }
         }
 

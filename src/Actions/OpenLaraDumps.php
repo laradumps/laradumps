@@ -1,30 +1,26 @@
 <?php
 
-namespace LaraDumps\LaraDumps\Commands;
+namespace LaraDumps\LaraDumps\Actions;
 
-use Illuminate\Console\Command;
-use Symfony\Component\Process\{Exception\ProcessTimedOutException, ExecutableFinder, Process};
+use Symfony\Component\Process\Exception\ProcessTimedOutException;
+use Symfony\Component\Process\{ExecutableFinder, Process};
 
-class OpenLaraDumpsCommand extends Command
+class OpenLaraDumps
 {
-    protected $signature = 'ds:open';
+    protected static string $url = 'laradumps://';
 
-    protected string $url = 'laradumps://';
-
-    protected string $systemOs = PHP_OS_FAMILY;
-
-    protected $description = 'Open Laradumps app automatically';
-
-    public function handle(): int
+    public static function execute(): void
     {
         $defaultMessage = 'Could not open LaraDumps app automatically.';
 
         try {
             $timeout = intval(config('laradumps.auto_start_with_deeplink.timout', 10));
 
-            $binary = $this->getCommand();
+            $binary = self::getCommand();
 
-            $process = tap(Process::fromShellCommandline(command: escapeshellcmd("{$binary} {$this->url}"), timeout: $timeout))->run();
+            $url = self::$url;
+
+            $process = tap(Process::fromShellCommandline(command: escapeshellcmd("{$binary} {$url}"), timeout: $timeout))->run();
 
             if (!$process->isSuccessful()) {
                 echo $defaultMessage;
@@ -32,11 +28,9 @@ class OpenLaraDumpsCommand extends Command
         } catch (ProcessTimedOutException) {
             echo $defaultMessage;
         }
-
-        return Command::SUCCESS;
     }
 
-    private function getCommand(): ?string
+    private static function getCommand(): ?string
     {
         $customCommand = strval(config('laradumps.auto_start_with_deeplink.command'));
 
