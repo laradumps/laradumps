@@ -39,10 +39,10 @@ class OpenLaraDumps
         }
 
         return collect(match (PHP_OS_FAMILY) {
-            'Windows'          => ['start'],
-            'Darwin'           => ['open'],
-            'Linux'            => ['xdg-open', 'wslview'],
-            default            => ['xdg-open'],
+            'Windows' => ['start'],
+            'Darwin'  => ['open'],
+            'Linux'   => ['xdg-open', 'wslview'],
+            default   => ['xdg-open'],
         })->first(fn ($binary) => (new ExecutableFinder())->find($binary) !== null);
     }
 }
