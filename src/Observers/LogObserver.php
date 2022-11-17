@@ -18,6 +18,10 @@ class LogObserver
                 return;
             }
 
+            if (str_contains($message->message, '/vendor/laravel/framework')) {
+                return;
+            }
+
             $dumps = new LaraDumps();
 
             /** @var array $config */

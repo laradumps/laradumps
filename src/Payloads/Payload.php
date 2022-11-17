@@ -8,7 +8,7 @@ abstract class Payload
 {
     private string $notificationId;
 
-    private array $backtrace = [];
+    private array $trace = [];
 
     protected array $typesWithTrace = [
         'table',
@@ -27,9 +27,9 @@ abstract class Payload
 
     abstract public function type(): string;
 
-    public function trace(array $backtrace): void
+    public function trace(array $trace): void
     {
-        $this->backtrace = $backtrace;
+        $this->trace = $trace;
     }
 
     public function notificationId(string $notificationId): void
@@ -44,7 +44,7 @@ abstract class Payload
 
     public function ideHandle(): array
     {
-        $trace = new IdeHandle(backtrace: $this->backtrace);
+        $trace = new IdeHandle(trace: $this->trace);
 
         return $trace->ideHandle();
     }

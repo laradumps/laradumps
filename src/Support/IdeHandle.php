@@ -5,15 +5,15 @@ namespace LaraDumps\LaraDumps\Support;
 class IdeHandle
 {
     public function __construct(
-        public array $backtrace = [],
+        public array $trace = [],
     ) {
     }
 
     public function ideHandle(): array
     {
-        $file = $this->backtrace['file'];
+        $file = strval(data_get($this->trace, 'file', ''));
 
-        $line = $this->backtrace['line'];
+        $line = strval(data_get($this->trace, 'line', ''));
 
         $fileHandle = $this->makeFileHandler($file, $line);
 
