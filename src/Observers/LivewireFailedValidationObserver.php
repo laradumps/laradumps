@@ -32,7 +32,7 @@ class LivewireFailedValidationObserver
 
                 $reflectionClass = new ReflectionClass($component);
 
-                $dumps = new LaraDumps(notificationId: strtolower($notificationId), backtrace: [
+                $dumps = new LaraDumps(notificationId: strtolower($notificationId), trace: [
                     'file' => $reflectionClass->getFileName(),
                     'line' => 1,
                 ]);

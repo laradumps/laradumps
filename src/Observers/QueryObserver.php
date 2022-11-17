@@ -13,27 +13,45 @@ class QueryObserver
 
     private ?string $label = null;
 
-    private array $trace;
+    private array $trace = [];
+
+    protected array $backtraceExcludePaths = [
+        '/vendor/laravel/framework/src/Illuminate/Support',
+        '/vendor/laravel/framework/src/Illuminate/Database',
+        '/vendor/laravel/framework/src/Illuminate/Events',
+        '/vendor/barryvdh',
+        '/vendor/symfony',
+        '/artisan',
+        '/vendor/livewire',
+        '/packages/laradumps',
+        '/vendor/laradumps',
+    ];
 
     public function register(): void
     {
         DB::listen(function (QueryExecuted $query) {
-            if (!$this->enabled || !$this->isEnabled()) {
+            if (!$this->isEnabled()) {
                 return;
             }
 
             $sqlQuery = str_replace(['?'], ['\'%s\''], $query->sql);
             $sqlQuery = vsprintf($sqlQuery, $query->bindings);
 
+            if (str_contains($sqlQuery, 'telescope')) {
+                return;
+            }
+
             $queries = [
-                'sql'            => $sqlQuery,
-                'time'           => $query->time,
-                'database'       => $query->connection->getDatabaseName(),
-                'connectionName' => $query->connectionName,
-                'query'          => $query,
+                'sql'                       => $sqlQuery,
+                'time'                      => $query->time,
+                'database'                  => $query->connection->getDatabaseName(),
+                'connectionName'            => $query->connectionName,
+                'query'                     => $query,
+                'formatted'                 => boolval(config('laradumps.send_queries.formatted', true)),
+                'showConnectionInformation' => boolval(config('laradumps.send_queries.show_connection_information', false)),
             ];
 
-            $dumps = new LaraDumps(backtrace: $this->trace);
+            $dumps = new LaraDumps(trace: $this->trace);
 
             $dumps->send(new QueriesPayload($queries));
 
@@ -46,19 +64,16 @@ class QueryObserver
     public function enable(string $label = null): void
     {
         $this->label = $label;
-        if (!$this->isEnabled()) {
-            ds('🤐 It looks like you tried to dump SQL with "send_queries disabled". \nTo protect your information, listening to SQL Queries is disabled by default. \nChange  "send_queries disabled" = true in the config/laradumps.php file.');
-
-            return;
-        }
 
         DB::enableQueryLog();
+
         $this->enabled    = true;
     }
 
     public function disable(): void
     {
         DB::disableQueryLog();
+
         $this->enabled    = false;
     }
 
@@ -69,6 +84,50 @@ class QueryObserver
 
     public function isEnabled(): bool
     {
-        return (bool) config('laradumps.send_queries');
+        if (!boolval(config('laradumps.send_queries.enabled'))) {
+            return $this->enabled;
+        };
+
+        $this->trace   = array_slice($this->findSource(), 0, 5)[0] ?? [];
+
+        return true;
+    }
+
+    protected function findSource(): array
+    {
+        $stack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 50);
+
+        $sources = [];
+
+        foreach ($stack as $trace) {
+            $sources[] = $this->parseTrace($trace);
+        }
+
+        return array_filter($sources);
+    }
+
+    protected function parseTrace(array $trace): array
+    {
+        if (
+            isset($trace['class']) && isset($trace['file']) &&
+            !$this->fileIsInExcludedPath($trace['file'])
+        ) {
+            return $trace;
+        }
+
+        return [];
+    }
+
+    protected function fileIsInExcludedPath(string $file): bool
+    {
+        $normalizedPath = str_replace('\\', '/', $file);
+
+        foreach ($this->backtraceExcludePaths as $excludedPath) {
+            if (str_contains($normalizedPath, $excludedPath)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

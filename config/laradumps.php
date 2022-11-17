@@ -50,7 +50,11 @@ return [
     |
     */
 
-    'send_queries' => env('DS_SEND_QUERIES', false),
+    'send_queries' => [
+        'enabled'                     => env('DS_SEND_QUERIES', false),
+        'formatted'                   => false,
+        'show_connection_information' => false,
+    ],
 
     /*
     |--------------------------------------------------------------------------

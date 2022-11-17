@@ -32,7 +32,7 @@ class LaraDumps
     public function __construct(
         public string  $notificationId = '',
         private string $fullUrl = '',
-        private array $backtrace = [],
+        private array $trace = [],
     ) {
         if (config('laradumps.sleep')) {
             $sleep = intval(config('laradumps.sleep'));
@@ -46,7 +46,7 @@ class LaraDumps
     public function send(array|Payload $payload): array|Payload
     {
         if ($payload instanceof Payload) {
-            $payload->trace($this->backtrace);
+            $payload->trace($this->trace);
             $payload->notificationId($this->notificationId);
             $payload = $payload->toArray();
 
@@ -246,9 +246,9 @@ class LaraDumps
      */
     public function queriesOn(string $label = null): void
     {
-        $backtrace   = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
+        $trace   = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
 
-        app(QueryObserver::class)->setTrace($backtrace);
+        app(QueryObserver::class)->setTrace($trace);
         app(QueryObserver::class)->enable($label);
     }
 

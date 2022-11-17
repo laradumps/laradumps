@@ -49,9 +49,9 @@ class LaraDumpsServiceProvider extends ServiceProvider
         $this->app->singleton(QueryObserver::class);
 
         Builder::macro('ds', function () {
-            $backtrace   = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+            $trace   = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
 
-            $backtrace = collect($backtrace)
+            $trace = collect($trace)
                 ->filter(function ($trace) {
                     /** @var string $file */
                     $file = $trace['file'];
@@ -59,7 +59,7 @@ class LaraDumpsServiceProvider extends ServiceProvider
                     return !str_contains($file, 'vendor');
                 });
 
-            $ds = new LaraDumps(backtrace: (array) $backtrace->first());
+            $ds = new LaraDumps(trace: (array) $trace->first());
             /** @phpstan-ignore-next-line  */
             $ds->send(new QueryPayload($this));
 

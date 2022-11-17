@@ -14,12 +14,12 @@ it('should return the correct payload to dump', function () {
     $args           = Dumper::dump($args);
     $notificationId = Str::uuid()->toString();
 
-    $backtrace      = [
+    $trace      = [
         'file' => 'Test',
         'line' => 1,
     ];
 
-    $laradumps      = new LaraDumps(notificationId: $notificationId, backtrace: $backtrace);
+    $laradumps      = new LaraDumps(notificationId: $notificationId, trace: $trace);
     $payload        = $laradumps->send(new DumpPayload($args));
 
     expect($payload)
@@ -42,12 +42,12 @@ it('should return the correct payload to model', function () {
 
     $notificationId = Str::uuid()->toString();
 
-    $backtrace      = [
+    $trace      = [
         'file' => 'Test',
         'line' => 1,
     ];
 
-    $laradumps      = new LaraDumps($notificationId, backtrace: $backtrace);
+    $laradumps      = new LaraDumps($notificationId, trace: $trace);
     $payload        = $laradumps->send(new ModelPayload($dish));
 
     expect($payload)
