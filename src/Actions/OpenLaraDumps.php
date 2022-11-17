@@ -14,7 +14,7 @@ class OpenLaraDumps
         $defaultMessage = 'Could not open LaraDumps app automatically.';
 
         try {
-            $timeout = intval(config('laradumps.auto_start_with_deeplink.timout', 10));
+            $timeout = intval(config('laradumps.auto_start_with_deeplink.timeout', 10));
 
             $binary = self::getCommand();
 
@@ -39,10 +39,10 @@ class OpenLaraDumps
         }
 
         return collect(match (PHP_OS_FAMILY) {
-            'Windows' => ['start'],
-            'Darwin'  => ['open'],
-            'Linux'   => ['xdg-open', 'wslview'],
-            default   => ['xdg-open'],
+            'Windows'          => ['start'],
+            'Darwin'           => ['open'],
+            'Linux'            => ['xdg-open', 'wslview'],
+            default            => ['xdg-open'],
         })->first(fn ($binary) => (new ExecutableFinder())->find($binary) !== null);
     }
 }
