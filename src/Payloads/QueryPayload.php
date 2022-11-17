@@ -17,7 +17,8 @@ class QueryPayload extends Payload
         $toSql = vsprintf($toSql, $this->query->getBindings());
 
         return [
-            'sql' => $toSql,
+            'sql'       => $toSql,
+            'formatted' => boolval(config('laradumps.send_queries.formatted', false)),
         ];
     }
 

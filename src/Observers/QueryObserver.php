@@ -47,7 +47,7 @@ class QueryObserver
                 'database'                  => $query->connection->getDatabaseName(),
                 'connectionName'            => $query->connectionName,
                 'query'                     => $query,
-                'formatted'                 => boolval(config('laradumps.send_queries.formatted', true)),
+                'formatted'                 => boolval(config('laradumps.send_queries.formatted', false)),
                 'showConnectionInformation' => boolval(config('laradumps.send_queries.show_connection_information', false)),
             ];
 
