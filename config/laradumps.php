@@ -342,4 +342,19 @@ return [
         'debug'     => env('DS_LOG_COLOR_INFO', 'border-black'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Auto Start With Deeplink
+    |--------------------------------------------------------------------------
+    |
+    | Will launch the app automatically using deeplink when there is no
+    | connection on the first try
+    |
+    */
+
+    'auto_start_with_deeplink' => [
+        'enabled' => true,
+        'timeout' => 10, // The timeout in seconds to execute with Symphony Process
+        'command' => null, // Custom command, ex: cmd.exe /c start
+    ],
 ];

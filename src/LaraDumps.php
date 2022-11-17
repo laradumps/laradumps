@@ -3,8 +3,8 @@
 namespace LaraDumps\LaraDumps;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\{Collection, Str};
-use LaraDumps\LaraDumps\Actions\SendPayload;
+use Illuminate\Support\{Collection, Facades\Artisan, Str};
+use LaraDumps\LaraDumps\Actions\{OpenLaraDumps, SendPayload};
 use LaraDumps\LaraDumps\Concerns\Colors;
 use LaraDumps\LaraDumps\Observers\QueryObserver;
 use LaraDumps\LaraDumps\Payloads\{
@@ -23,6 +23,7 @@ use LaraDumps\LaraDumps\Payloads\{
     TimeTrackPayload,
     ValidateStringPayload
 };
+use Symfony\Component\Process\{ExecutableFinder, Process};
 
 class LaraDumps
 {
@@ -49,7 +50,17 @@ class LaraDumps
             $payload->notificationId($this->notificationId);
             $payload = $payload->toArray();
 
-            SendPayload::handle($this->fullUrl, $payload);
+            $response = SendPayload::handle($this->fullUrl, $payload);
+
+            if (!$response) {
+                if (!boolval(config('laradumps.auto_start_with_deeplink.enabled'))) {
+                    echo 'Could not connect to LaraDumps app. Is it closed?';
+
+                    exit;
+                }
+
+                OpenLaraDumps::execute();
+            }
         }
 
         return $payload;

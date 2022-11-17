@@ -27,8 +27,10 @@ class LaraDumpsServiceProvider extends ServiceProvider
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'laradumps');
 
         if ($this->app->runningInConsole()) {
-            $this->commands([InitCommand::class]);
-            $this->commands([CheckCommand::class]);
+            $this->commands([
+                InitCommand::class,
+                CheckCommand::class,
+            ]);
         }
     }
 
