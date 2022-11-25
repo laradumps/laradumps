@@ -23,10 +23,10 @@ class OpenLaraDumps
             $process = tap(Process::fromShellCommandline(command: escapeshellcmd("{$binary} {$url}"), timeout: $timeout))->run();
 
             if (!$process->isSuccessful()) {
-                echo $defaultMessage;
+                dump($defaultMessage);
             }
         } catch (ProcessTimedOutException) {
-            echo $defaultMessage;
+            dump($defaultMessage);
         }
     }
 
