@@ -25,8 +25,6 @@ abstract class Payload
 
     private ?bool $autoInvokeApp = null;
 
-    private ?string $dumpId = null;
-
     abstract public function type(): string;
 
     public function trace(array $trace): void
@@ -61,11 +59,6 @@ abstract class Payload
         $this->autoInvokeApp = $enable;
     }
 
-    public function dumpId(string $id): void
-    {
-        $this->dumpId = $id;
-    }
-
     public function toArray(): array
     {
         $ideHandle = $this->customHandle();
@@ -79,11 +72,9 @@ abstract class Payload
         }
 
         return [
-            'id'         => $this->notificationId,
-            'request_id' => LARADUMPS_REQUEST_ID,
-            'dumpId'     => $this->dumpId,
-            'type'       => $this->type(),
-            'meta'       => [
+            'id'   => $this->notificationId,
+            'type' => $this->type(),
+            'meta' => [
                 'laradumps_version' => $this->getInstalledVersion(),
                 'auto_invoke_app'   => $this->autoInvokeApp ?? boolval(config('laradumps.auto_invoke_app')),
             ],

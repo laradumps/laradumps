@@ -18,10 +18,6 @@ class LaraDumpsServiceProvider extends ServiceProvider
 {
     public function boot(): void
     {
-        if (!defined('LARADUMPS_REQUEST_ID')) {
-            define('LARADUMPS_REQUEST_ID', uniqid());
-        }
-
         $this->loadConfigs();
         $this->createDirectives();
 
