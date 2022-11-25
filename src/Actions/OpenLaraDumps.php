@@ -9,7 +9,7 @@ class OpenLaraDumps
 {
     protected static string $url = 'laradumps://';
 
-    public static function execute()
+    public static function execute(): void
     {
         $defaultMessage = 'Could not open LaraDumps app automatically.';
 
