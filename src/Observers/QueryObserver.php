@@ -58,6 +58,8 @@ class QueryObserver
             if ($this->label) {
                 $dumps->label($this->label);
             }
+
+            $dumps->toScreen('Queries');
         });
     }
 
