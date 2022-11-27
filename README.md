@@ -9,7 +9,7 @@
     <a href="https://github.com/laradumps/app/releases/download/v1.5.0/LaraDumps-Setup-1.5.0.exe">
       <img src="./art/os/windows.png" height="60" alt="LaraDumps Windows App" />
     </a>
-    <a href="https://github.com/laradumps/app/releases/download/v1.5.0/LaraDumps-1.5.0.dmg">
+    <a href="https://github.com/laradumps/app/releases/download/v1.5.0/LaraDumps-1.5.0-universal.dmg">
       <img src="./art/os/macos.png" height="60" alt="LaraDumps MacOS App" />
     </a>
     <a href="https://github.com/laradumps/app/releases/download/v1.5.0/LaraDumps-1.5.0.AppImage">
