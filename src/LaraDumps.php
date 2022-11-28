@@ -7,12 +7,12 @@ use Illuminate\Support\{Collection, Facades\Artisan, Str};
 use LaraDumps\LaraDumps\Actions\{OpenLaraDumps, SendPayload};
 use LaraDumps\LaraDumps\Concerns\Colors;
 use LaraDumps\LaraDumps\Observers\QueryObserver;
-use LaraDumps\LaraDumps\Payloads\{
-    ClearPayload,
+use LaraDumps\LaraDumps\Payloads\{ClearPayload,
     CoffeePayload,
     ColorPayload,
     DiffPayload,
     DumpPayload,
+    JsonPayload,
     LabelPayload,
     ModelPayload,
     Payload,
@@ -21,8 +21,7 @@ use LaraDumps\LaraDumps\Payloads\{
     ScreenPayload,
     TablePayload,
     TimeTrackPayload,
-    ValidateStringPayload
-};
+    ValidateStringPayload};
 use Symfony\Component\Process\{ExecutableFinder, Process};
 
 class LaraDumps
@@ -50,6 +49,7 @@ class LaraDumps
             $payload->notificationId($this->notificationId);
             $payload = $payload->toArray();
 
+            dump($payload);
             $response = SendPayload::handle($this->fullUrl, $payload);
 
             if (!$response) {
@@ -214,10 +214,21 @@ class LaraDumps
     public function write(mixed $args = null, ?bool $autoInvokeApp = null): LaraDumps
     {
         $originalContent    = $args;
-        [$pre, $id]         = Support\Dumper::dump($args);
+
+        if (is_string($args) && str($args)->isJson()) {
+            $pre                = '';
+            $id                 = uniqid();
+        } else {
+            [$pre, $id]         = Support\Dumper::dump($args);
+        }
 
         if (!empty($args)) {
-            $payload = new DumpPayload($pre, $originalContent);
+            if (is_string($args) && str($args)->isJson()) {
+                $payload = new JsonPayload($args);
+            } else {
+                $payload = new DumpPayload($pre, $originalContent);
+            }
+
             $payload->autoInvokeApp($autoInvokeApp);
             $payload->dumpId($id);
 

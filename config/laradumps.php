@@ -328,26 +328,6 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Level Log Colors Map
-    |--------------------------------------------------------------------------
-    |
-    | Definition of Tailwind CSS class for LaraDumps color tag.
-    |
-    */
-
-    'level_log_colors_map' => [
-        'error'     => env('DS_LOG_COLOR_ERROR', 'border-red-600'),
-        'critical'  => env('DS_LOG_COLOR_CRITICAL', 'border-red-900'),
-        'alert'     => env('DS_LOG_COLOR_ALERT', 'border-red-500'),
-        'emergency' => env('DS_LOG_COLOR_EMERGENCY', 'border-red-600'),
-        'warning'   => env('DS_LOG_COLOR_WARNING', 'border-orange-300'),
-        'notice'    => env('DS_LOG_COLOR_NOTICE', 'border-green-300'),
-        'info'      => env('DS_LOG_COLOR_INFO', 'border-blue-300'),
-        'debug'     => env('DS_LOG_COLOR_INFO', 'border-black'),
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
     | Auto Start With Deeplink
     |--------------------------------------------------------------------------
     |
