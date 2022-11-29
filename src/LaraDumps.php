@@ -49,7 +49,6 @@ class LaraDumps
             $payload->notificationId($this->notificationId);
             $payload = $payload->toArray();
 
-            dump($payload);
             $response = SendPayload::handle($this->fullUrl, $payload);
 
             if (!$response) {
