@@ -3,6 +3,7 @@
 namespace LaraDumps\LaraDumps;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Mail\Mailable;
 use Illuminate\Support\{Collection, Facades\Artisan, Str};
 use LaraDumps\LaraDumps\Actions\{OpenLaraDumps, SendPayload};
 use LaraDumps\LaraDumps\Concerns\Colors;
@@ -14,6 +15,7 @@ use LaraDumps\LaraDumps\Payloads\{
     DiffPayload,
     DumpPayload,
     LabelPayload,
+    MailablePayload,
     ModelPayload,
     Payload,
     PhpInfoPayload,
@@ -296,5 +298,17 @@ class LaraDumps
     {
         $payload = new TimeTrackPayload($reference);
         $this->send($payload);
+    }
+
+    /**
+     * Send rendered mailable
+     *
+     * @param \Illuminate\Mail\Mailable $mailable
+     */
+    public function mailable(Mailable $mailable): void
+    {
+        $payloads = MailablePayload::forMailable($mailable);
+
+        $this->send($payloads);
     }
 }
