@@ -305,10 +305,12 @@ class LaraDumps
      *
      * @param \Illuminate\Mail\Mailable $mailable
      */
-    public function mailable(Mailable $mailable): void
+    public function mailable(Mailable $mailable): self
     {
         $payloads = MailablePayload::forMailable($mailable);
 
         $this->send($payloads);
+
+        return $this;
     }
 }
