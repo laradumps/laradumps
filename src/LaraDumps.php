@@ -303,7 +303,6 @@ class LaraDumps
     /**
      * Send rendered mailable
      *
-     * @param \Illuminate\Mail\Mailable $mailable
      */
     public function mailable(Mailable $mailable, bool $preview = false): self
     {

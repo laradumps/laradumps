@@ -8,14 +8,12 @@ use Throwable;
 
 class MailablePayload extends Payload
 {
-    /** @var boolean */
-    private $preview = false;
-
-    /** @var string */
-    protected $html = '';
-
-    /** @var \Illuminate\Mail\Mailable|null */
-    protected $mailable = null;
+    public function __construct(
+        protected string $html,
+        protected ?Mailable $mailable = null,
+        private bool $preview = false
+    ) {
+    }
 
     public static function forMailableTable(Mailable $mailable): self
     {
@@ -25,13 +23,6 @@ class MailablePayload extends Payload
     public static function forMailable(Mailable $mailable): self
     {
         return new self(self::renderMailable($mailable), $mailable, true);
-    }
-
-    public function __construct(string $html, Mailable $mailable = null, bool $preview = false)
-    {
-        $this->html     = $html;
-        $this->mailable = $mailable;
-        $this->preview  = $preview;
     }
 
     public function type(): string
@@ -65,6 +56,8 @@ class MailablePayload extends Payload
                 'bcc'            => $this->convertToPersons($this->mailable->bcc),
             ]);
         }
+
+        $values = [];
 
         foreach ($content as $key => $value) {
             /** @var array<string> $values */
