@@ -29,9 +29,9 @@ class MailablePayload extends Payload
 
     public function __construct(string $html, Mailable $mailable = null, bool $preview = false)
     {
-        $this->html = $html;
+        $this->html     = $html;
         $this->mailable = $mailable;
-        $this->preview = $preview;
+        $this->preview  = $preview;
     }
 
     public function type(): string
@@ -50,19 +50,19 @@ class MailablePayload extends Payload
         $content = [
             'dump' => $this->html,
             'from' => [],
-            'to' => [],
-            'cc' => [],
-            'bcc' => [],
+            'to'   => [],
+            'cc'   => [],
+            'bcc'  => [],
         ];
 
         if ($this->mailable) {
             $content = array_merge($content, [
                 'mailable_class' => get_class($this->mailable),
-                'from' => $this->convertToPersons($this->mailable->from),
-                'subject' => $this->mailable->subject,
-                'to' => $this->convertToPersons($this->mailable->to),
-                'cc' => $this->convertToPersons($this->mailable->cc),
-                'bcc' => $this->convertToPersons($this->mailable->bcc),
+                'from'           => $this->convertToPersons($this->mailable->from),
+                'subject'        => $this->mailable->subject,
+                'to'             => $this->convertToPersons($this->mailable->to),
+                'cc'             => $this->convertToPersons($this->mailable->cc),
+                'bcc'            => $this->convertToPersons($this->mailable->bcc),
             ]);
         }
 
@@ -70,7 +70,7 @@ class MailablePayload extends Payload
             /** @var array<string> $values */
             $values[] = [
                 'property' => Str::title($key),
-                'value' => $value,
+                'value'    => $value,
             ];
         }
 
