@@ -2,8 +2,9 @@
 
 use Illuminate\Support\Str;
 use LaraDumps\LaraDumps\LaraDumps;
-use LaraDumps\LaraDumps\Payloads\{DumpPayload, ModelPayload};
+use LaraDumps\LaraDumps\Payloads\{DumpPayload, MailablePayload, ModelPayload};
 use LaraDumps\LaraDumps\Support\Dumper;
+use LaraDumps\LaraDumps\Tests\Mail\TestMail;
 use LaraDumps\LaraDumps\Tests\Models\Dish;
 
 it('should return the correct payload to dump', function () {
@@ -69,3 +70,49 @@ it('should return the correct payload to model', function () {
             '<span class=sf-dump-key>active</span>',
         );
 });
+
+it('should return the correct payload to mailable table', function () {
+    $mailable = new TestMail();
+
+    $notificationId = Str::uuid()->toString();
+
+    $trace      = [
+        'file' => 'Test',
+        'line' => 1,
+    ];
+
+    $laradumps      = new LaraDumps($notificationId, trace: $trace);
+    $payload = $laradumps->send(MailablePayload::forMailableTable($mailable));
+
+    expect($payload)
+        ->id->toBe($notificationId)
+        ->type->toBe('table')
+        ->and($payload['content']['label'])
+        ->toBe('Mailable')
+        ->and($payload['content']['values'][0]['value'])
+        ->toContain('test mail')
+        ->and($payload['content']['values'][1]['value'][0])
+        ->toContain('from@example.com')
+        ->and($payload['content']['values'][2]['value'][0])
+        ->toContain('to@example.com');
+})->group('mailable');
+
+it('should return the correct payload to mailable preview', function () {
+    $mailable = new TestMail();
+
+    $notificationId = Str::uuid()->toString();
+
+    $trace      = [
+        'file' => 'Test',
+        'line' => 1,
+    ];
+
+    $laradumps      = new LaraDumps($notificationId, trace: $trace);
+    $payload = $laradumps->send(MailablePayload::forMailable($mailable));
+
+    expect($payload)
+        ->id->toBe($notificationId)
+        ->type->toBe('dump')
+        ->and($payload['content']['dump'])
+        ->toContain('test mail');
+})->group('mailable');

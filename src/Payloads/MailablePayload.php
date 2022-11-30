@@ -17,12 +17,12 @@ class MailablePayload extends Payload
     /** @var \Illuminate\Mail\Mailable|null */
     protected $mailable = null;
 
-    public static function forMailableTable(Mailable $mailable)
+    public static function forMailableTable(Mailable $mailable): self
     {
         return new self(self::renderMailable($mailable), $mailable);
     }
 
-    public static function forMailable(Mailable $mailable)
+    public static function forMailable(Mailable $mailable): self
     {
         return new self(self::renderMailable($mailable), $mailable, true);
     }
