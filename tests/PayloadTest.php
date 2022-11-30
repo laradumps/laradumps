@@ -82,7 +82,7 @@ it('should return the correct payload to mailable table', function () {
     ];
 
     $laradumps      = new LaraDumps($notificationId, trace: $trace);
-    $payload = $laradumps->send(MailablePayload::forMailableTable($mailable));
+    $payload        = $laradumps->send(MailablePayload::forMailableTable($mailable));
 
     expect($payload)
         ->id->toBe($notificationId)
@@ -108,7 +108,7 @@ it('should return the correct payload to mailable preview', function () {
     ];
 
     $laradumps      = new LaraDumps($notificationId, trace: $trace);
-    $payload = $laradumps->send(MailablePayload::forMailable($mailable));
+    $payload        = $laradumps->send(MailablePayload::forMailable($mailable));
 
     expect($payload)
         ->id->toBe($notificationId)
