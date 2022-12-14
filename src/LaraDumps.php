@@ -284,8 +284,9 @@ class LaraDumps
      */
     public function time(string $reference): void
     {
-        $payload = new TimeTrackPayload($reference);
+        $payload = new TimeTrackPayload();
         $this->send($payload);
+        $this->label($reference);
     }
 
     /**
@@ -295,7 +296,8 @@ class LaraDumps
      */
     public function stopTime(string $reference): void
     {
-        $payload = new TimeTrackPayload($reference);
+        $payload = new TimeTrackPayload(true);
         $this->send($payload);
+        $this->label($reference);
     }
 }
