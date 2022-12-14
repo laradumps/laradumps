@@ -37,7 +37,7 @@ class Trace
         return array_filter($sources);
     }
 
-    public function toArray()
+    public function toArray(): array
     {
         return array_slice($this->trace, 0, 5)[0] ?? [];
     }

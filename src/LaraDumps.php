@@ -3,8 +3,8 @@
 namespace LaraDumps\LaraDumps;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\{Collection, Facades\Artisan, Str};
-use LaraDumps\LaraDumps\Actions\{OpenLaraDumps, SendPayload};
+use Illuminate\Support\{Collection, Str};
+use LaraDumps\LaraDumps\Actions\SendPayload;
 use LaraDumps\LaraDumps\Concerns\Colors;
 use LaraDumps\LaraDumps\Observers\QueryObserver;
 use LaraDumps\LaraDumps\Payloads\{ClearPayload,
@@ -21,8 +21,8 @@ use LaraDumps\LaraDumps\Payloads\{ClearPayload,
     ScreenPayload,
     TablePayload,
     TimeTrackPayload,
-    ValidateStringPayload};
-use Symfony\Component\Process\{ExecutableFinder, Process};
+    ValidateStringPayload
+};
 
 class LaraDumps
 {
@@ -202,6 +202,7 @@ class LaraDumps
 
     public function write(mixed $args = null, ?bool $autoInvokeApp = null): LaraDumps
     {
+        /** @phpstan-ignore-next-line  */
         if (is_string($args) && str($args)->isJson()) {
             $pre                = '';
             $id                 = uniqid();
@@ -209,6 +210,7 @@ class LaraDumps
             [$pre, $id]         = Support\Dumper::dump($args);
         }
 
+        /** @phpstan-ignore-next-line  */
         if (is_string($args) && str($args)->isJson()) {
             $payload = new JsonPayload($args);
         } else {
