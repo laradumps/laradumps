@@ -49,17 +49,7 @@ class LaraDumps
             $payload->notificationId($this->notificationId);
             $payload = $payload->toArray();
 
-            $response = SendPayload::handle($this->fullUrl, $payload);
-
-            if (!$response) {
-                if (!boolval(config('laradumps.auto_start_with_deeplink.enabled'))) {
-                    echo 'Could not connect to LaraDumps app. Is it closed?';
-
-                    exit;
-                }
-
-                OpenLaraDumps::execute();
-            }
+            SendPayload::handle($this->fullUrl, $payload);
         }
 
         return $payload;
@@ -212,8 +202,6 @@ class LaraDumps
 
     public function write(mixed $args = null, ?bool $autoInvokeApp = null): LaraDumps
     {
-        $originalContent    = $args;
-
         if (is_string($args) && str($args)->isJson()) {
             $pre                = '';
             $id                 = uniqid();
@@ -221,18 +209,16 @@ class LaraDumps
             [$pre, $id]         = Support\Dumper::dump($args);
         }
 
-        if (!empty($args)) {
-            if (is_string($args) && str($args)->isJson()) {
-                $payload = new JsonPayload($args);
-            } else {
-                $payload = new DumpPayload($pre, $originalContent);
-            }
-
-            $payload->autoInvokeApp($autoInvokeApp);
-            $payload->dumpId($id);
-
-            $this->send($payload);
+        if (is_string($args) && str($args)->isJson()) {
+            $payload = new JsonPayload($args);
+        } else {
+            $payload = new DumpPayload($pre);
         }
+
+        $payload->autoInvokeApp($autoInvokeApp);
+        $payload->dumpId($id);
+
+        $this->send($payload);
 
         return $this;
     }

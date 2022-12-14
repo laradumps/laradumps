@@ -87,6 +87,7 @@ abstract class Payload
             'type'       => $this->type(),
             'meta'       => [
                 'laradumps_version' => $this->getInstalledVersion(),
+                'debugbar_enabled'  => boolval(config('debugbar.collectors.livewire')),
                 'auto_invoke_app'   => $this->autoInvokeApp ?? boolval(config('laradumps.auto_invoke_app')),
             ],
             'content'   => $this->content(),
