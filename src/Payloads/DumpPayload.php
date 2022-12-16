@@ -6,6 +6,7 @@ class DumpPayload extends Payload
 {
     public function __construct(
         public string $dump,
+        public mixed $originalContent,
     ) {
     }
 
@@ -17,7 +18,8 @@ class DumpPayload extends Payload
     public function content(): array
     {
         return [
-            'dump' => $this->dump,
+            'dump'            => $this->dump,
+            'originalContent' => $this->originalContent,
         ];
     }
 }

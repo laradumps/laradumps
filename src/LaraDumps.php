@@ -204,8 +204,7 @@ class LaraDumps
     {
         /** @phpstan-ignore-next-line  */
         if (is_string($args) && str($args)->isJson()) {
-            $pre                = '';
-            $id                 = uniqid();
+            [$pre, $id]         = ['', uniqid()];
         } else {
             [$pre, $id]         = Support\Dumper::dump($args);
         }
@@ -214,7 +213,7 @@ class LaraDumps
         if (is_string($args) && str($args)->isJson()) {
             $payload = new JsonPayload($args);
         } else {
-            $payload = new DumpPayload($pre);
+            $payload = new DumpPayload($pre, $args);
         }
 
         $payload->autoInvokeApp($autoInvokeApp);
