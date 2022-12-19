@@ -11,35 +11,22 @@ class MailablePayload extends Payload
     public function __construct(
         protected string $html,
         protected ?Mailable $mailable = null,
-        private bool $preview = false
     ) {
-    }
-
-    public static function forMailableTable(Mailable $mailable): self
-    {
-        return new self(self::renderMailable($mailable), $mailable);
     }
 
     public static function forMailable(Mailable $mailable): self
     {
-        return new self(self::renderMailable($mailable), $mailable, true);
+        return new self(self::renderMailable($mailable), $mailable);
     }
 
     public function type(): string
     {
-        return $this->preview ? 'dump' : 'table';
+        return 'mailable';
     }
 
     public function content(): array
     {
-        if ($this->preview) {
-            return [
-                'dump' => $this->html,
-            ];
-        }
-
         $content = [
-            'dump' => $this->html,
             'from' => [],
             'to'   => [],
             'cc'   => [],
@@ -68,6 +55,7 @@ class MailablePayload extends Payload
         }
 
         return [
+            'html'   => $this->html,
             'fields' => [
                 'property',
                 'value',

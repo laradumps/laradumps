@@ -71,33 +71,7 @@ it('should return the correct payload to model', function () {
         );
 })->skip('v2');;
 
-it('should return the correct payload to mailable table', function () {
-    $mailable = new TestMail();
-
-    $notificationId = Str::uuid()->toString();
-
-    $trace      = [
-        'file' => 'Test',
-        'line' => 1,
-    ];
-
-    $laradumps      = new LaraDumps($notificationId, trace: $trace);
-    $payload        = $laradumps->send(MailablePayload::forMailableTable($mailable));
-
-    expect($payload)
-        ->id->toBe($notificationId)
-        ->type->toBe('table')
-        ->and($payload['content']['label'])
-        ->toBe('Mailable')
-        ->and($payload['content']['values'][0]['value'])
-        ->toContain('test mail')
-        ->and($payload['content']['values'][1]['value'][0])
-        ->toContain('from@example.com')
-        ->and($payload['content']['values'][2]['value'][0])
-        ->toContain('to@example.com');
-})->group('mailable');
-
-it('should return the correct payload to mailable preview', function () {
+it('should return the correct payload to mailable', function () {
     $mailable = new TestMail();
 
     $notificationId = Str::uuid()->toString();
@@ -112,8 +86,13 @@ it('should return the correct payload to mailable preview', function () {
 
     expect($payload)
         ->id->toBe($notificationId)
-        ->type->toBe('dump')
-        ->and($payload['content']['dump'])
-        ->toContain('test mail');
+        ->type->toBe('mailable')
+        ->and($payload['content']['label'])
+        ->toBe('Mailable')
+        ->and($payload['content']['html'])
+        ->toContain('test mail')
+        ->and($payload['content']['values'][0]['value'][0])
+        ->toContain('from@example.com')
+        ->and($payload['content']['values'][1]['value'][0])
+        ->toContain('to@example.com');
 })->group('mailable');
-
