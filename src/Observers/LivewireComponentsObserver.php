@@ -3,7 +3,6 @@
 namespace LaraDumps\LaraDumps\Observers;
 
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Str;
 use LaraDumps\LaraDumps\LaraDumps;
 use LaraDumps\LaraDumps\Payloads\LivewirePayload;
 use LaraDumps\LaraDumps\Support\{Dumper, IdeHandle};
@@ -22,7 +21,7 @@ class LivewireComponentsObserver
                 $component = $view->getData()['_instance'];
 
                 if (filled(config('laradumps.livewire_components'))) {
-                    $livewireComponents = Str::of(strval(config('laradumps.livewire_components')))->explode(',');
+                    $livewireComponents = str(strval(config('laradumps.livewire_components')))->explode(',');
 
                     if (!Str::contains(strval(get_class($component)), $livewireComponents)) {
                         return;
@@ -47,14 +46,14 @@ class LivewireComponentsObserver
 
                 $viewPath = $this->getViewPath($view);
 
-                $data['name']        = $component->getName();
-                $data['view']        = Str::of($view->name())->replace('livewire.', '');
+                $data['name']        = str($component->getName())->afterLast('.')->studly();
+                $data['view']        = str($view->name())->replace('livewire.', '');
                 $data['viewHandler'] = [
                     'handler' => IdeHandle::makeFileHandler($viewPath, '1'),
-                    'path'    => (string) Str::of($viewPath)->replace(config('livewire.view_path') . '/', ''),
+                    'path'    => (string) str($viewPath)->replace(config('livewire.view_path') . '/', ''),
                     'line'    => 1,
                 ];
-                $data['viewPath']    = (string) Str::of($viewPath)->replace(config('livewire.view_path') . '/', '');
+                $data['viewPath']    = (string) str($viewPath)->replace(config('livewire.view_path') . '/', '');
                 $data['component']   = get_class($component);
                 $data['id']          = $component->id;
                 $data['dateTime']    = now()->format('H:i:s');

@@ -16,6 +16,8 @@ const pusher = new Pusher(APP_KEY, {
     forceTLS: false,
 });
 
+window.pusher = pusher
+
 const channel = pusher.subscribe('laradumps-livewire-channel');
 
 const overlay = document.createElement('div')

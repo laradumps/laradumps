@@ -8,7 +8,7 @@ use Symfony\Component\VarDumper\Dumper\HtmlDumper;
 
 class Dumper
 {
-    public static function dump(mixed $arguments): string
+    public static function dump(mixed $arguments): array
     {
         $varCloner = new VarCloner();
 
@@ -16,6 +16,13 @@ class Dumper
 
         $htmlDumper = (string) $dumper->dump($varCloner->cloneVar($arguments), true);
 
-        return Str::cut($htmlDumper, '<pre ', '</pre>');
+        $pre = Str::cut($htmlDumper, '<pre ', '</pre>');
+
+        $id = Str::between($pre, 'class=sf-dump id=sf-dump-', ' data-indent-pad="  "');
+
+        return [
+            $pre,
+            $id,
+        ];
     }
 }
