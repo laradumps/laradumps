@@ -4,16 +4,16 @@ namespace LaraDumps\LaraDumps;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Mail\Mailable;
-use Illuminate\Support\{Collection, Facades\Artisan, Str};
+use Illuminate\Support\{Collection, Str};
 use LaraDumps\LaraDumps\Actions\{OpenLaraDumps, SendPayload};
 use LaraDumps\LaraDumps\Concerns\Colors;
 use LaraDumps\LaraDumps\Observers\QueryObserver;
-use LaraDumps\LaraDumps\Payloads\{
-    ClearPayload,
+use LaraDumps\LaraDumps\Payloads\{ClearPayload,
     CoffeePayload,
     ColorPayload,
     DiffPayload,
     DumpPayload,
+    JsonPayload,
     LabelPayload,
     MailablePayload,
     ModelPayload,
@@ -25,7 +25,6 @@ use LaraDumps\LaraDumps\Payloads\{
     TimeTrackPayload,
     ValidateStringPayload
 };
-use Symfony\Component\Process\{ExecutableFinder, Process};
 
 class LaraDumps
 {
@@ -52,17 +51,7 @@ class LaraDumps
             $payload->notificationId($this->notificationId);
             $payload = $payload->toArray();
 
-            $response = SendPayload::handle($this->fullUrl, $payload);
-
-            if (!$response) {
-                if (!boolval(config('laradumps.auto_start_with_deeplink.enabled'))) {
-                    echo 'Could not connect to LaraDumps app. Is it closed?';
-
-                    exit;
-                }
-
-                OpenLaraDumps::execute();
-            }
+            SendPayload::handle($this->fullUrl, $payload);
         }
 
         return $payload;
@@ -215,13 +204,24 @@ class LaraDumps
 
     public function write(mixed $args = null, ?bool $autoInvokeApp = null): LaraDumps
     {
-        $originalContent = $args;
-        $args            = Support\Dumper::dump($args);
-        if (!empty($args)) {
-            $payload = new DumpPayload($args, $originalContent);
-            $payload->autoInvokeApp($autoInvokeApp);
-            $this->send($payload);
+        /** @phpstan-ignore-next-line  */
+        if (is_string($args) && str($args)->isJson()) {
+            [$pre, $id]         = ['', uniqid()];
+        } else {
+            [$pre, $id]         = Support\Dumper::dump($args);
         }
+
+        /** @phpstan-ignore-next-line  */
+        if (is_string($args) && str($args)->isJson()) {
+            $payload = new JsonPayload($args);
+        } else {
+            $payload = new DumpPayload($pre, $args);
+        }
+
+        $payload->autoInvokeApp($autoInvokeApp);
+        $payload->dumpId($id);
+
+        $this->send($payload);
 
         return $this;
     }
@@ -285,8 +285,9 @@ class LaraDumps
      */
     public function time(string $reference): void
     {
-        $payload = new TimeTrackPayload($reference);
+        $payload = new TimeTrackPayload();
         $this->send($payload);
+        $this->label($reference);
     }
 
     /**
@@ -296,14 +297,14 @@ class LaraDumps
      */
     public function stopTime(string $reference): void
     {
-        $payload = new TimeTrackPayload($reference);
+        $payload = new TimeTrackPayload(true);
         $this->send($payload);
+        $this->label($reference);
     }
 
     /**
      * Send rendered mailable
      *
-     * @param \Illuminate\Mail\Mailable $mailable
      */
     public function mailable(Mailable $mailable): self
     {

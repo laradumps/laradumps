@@ -6,7 +6,7 @@ class DumpPayload extends Payload
 {
     public function __construct(
         public string $dump,
-        public mixed $originalContent = null,
+        public mixed $originalContent,
     ) {
     }
 

@@ -61,7 +61,7 @@ class MailablePayload extends Payload
     {
         return collect($persons)
             ->map(function (array $person) {
-                return [
+                return  [
                     'email' => $person['address'],
                     'name'  => $person['name'] ?? '',
                 ];
