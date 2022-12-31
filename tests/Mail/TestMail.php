@@ -14,8 +14,9 @@ class TestMail extends Mailable
     public function build()
     {
         return $this->to('to@example.com', 'To Test')
-                ->from('from@example.com', 'From Test')
-                ->html($this->getHTML());
+            ->from('from@example.com', 'From Test')
+            ->subject('An test mail')
+            ->html($this->getHTML());
     }
 
     protected function getHTML()

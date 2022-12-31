@@ -3,52 +3,31 @@
 namespace LaraDumps\LaraDumps\Payloads;
 
 use Illuminate\Mail\Mailable;
-use Illuminate\Support\Str;
 use Throwable;
 
 class MailablePayload extends Payload
 {
-    /** @var boolean */
-    private $preview = false;
-
     /** @var string */
     protected $html = '';
 
     /** @var \Illuminate\Mail\Mailable|null */
     protected $mailable = null;
 
-    public static function forMailableTable(Mailable $mailable): self
+    public function __construct(Mailable $mailable)
     {
-        return new self(self::renderMailable($mailable), $mailable);
-    }
-
-    public static function forMailable(Mailable $mailable): self
-    {
-        return new self(self::renderMailable($mailable), $mailable, true);
-    }
-
-    public function __construct(string $html, Mailable $mailable = null, bool $preview = false)
-    {
-        $this->html     = $html;
+        $this->html     = self::renderMailable($mailable);
         $this->mailable = $mailable;
-        $this->preview  = $preview;
     }
 
     public function type(): string
     {
-        return $this->preview ? 'dump' : 'table';
+        return 'mailable';
     }
 
     public function content(): array
     {
-        if ($this->preview) {
-            return [
-                'dump' => $this->html,
-            ];
-        }
-
         $content = [
-            'dump' => $this->html,
+            'html' => $this->html,
             'from' => [],
             'to'   => [],
             'cc'   => [],
@@ -66,26 +45,7 @@ class MailablePayload extends Payload
             ]);
         }
 
-        foreach ($content as $key => $value) {
-            /** @var array<string> $values */
-            $values[] = [
-                'property' => Str::title($key),
-                'value'    => $value,
-            ];
-        }
-
-        return [
-            'fields' => [
-                'property',
-                'value',
-            ],
-            'values' => $values,
-            'header' => [
-                'Property',
-                'Value',
-            ],
-            'label' => 'Mailable',
-        ];
+        return $content;
     }
 
     protected static function renderMailable(Mailable $mailable): string
@@ -101,10 +61,10 @@ class MailablePayload extends Payload
     {
         return collect($persons)
             ->map(function (array $person) {
-                $name = $person['name'] ?? '';
-
-                return "email: {$person['address']}, name: {$name}";
-            })
-            ->toArray();
+                return [
+                    'email' => $person['address'],
+                    'name'  => $person['name'] ?? '',
+                ];
+            })->toArray();
     }
 }

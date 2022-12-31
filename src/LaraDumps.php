@@ -305,15 +305,10 @@ class LaraDumps
      *
      * @param \Illuminate\Mail\Mailable $mailable
      */
-    public function mailable(Mailable $mailable, bool $preview = false): self
+    public function mailable(Mailable $mailable): self
     {
-        $tablePayload = MailablePayload::forMailableTable($mailable);
-        $this->send($tablePayload);
-
-        if ($preview) {
-            $payload = MailablePayload::forMailable($mailable);
-            $this->label('Mailable Preview')->send($payload);
-        }
+        $mailablePayload = new MailablePayload($mailable);
+        $this->send($mailablePayload);
 
         return $this;
     }
