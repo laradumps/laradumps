@@ -12,7 +12,7 @@ return [
     |
     */
 
-    'host' => env('DS_APP_HOST', '127.0.0.1'),
+    'host'                               => env('DS_APP_HOST', '127.0.0.1'),
 
     //'host' => 'host.docker.internal',    //Docker on Mac or Windows
     //'host' => '127.0.0.1',               //Homestead with the VirtualBox provider,
@@ -27,7 +27,7 @@ return [
     |
     */
 
-    'port' => env('DS_APP_PORT', 9191),
+    'port'                               => env('DS_APP_PORT', 9191),
 
     /*
     |--------------------------------------------------------------------------
@@ -38,7 +38,7 @@ return [
     |
     */
 
-    'auto_invoke_app' => env('DS_AUTO_INVOKE_APP', true),
+    'auto_invoke_app'                    => env('DS_AUTO_INVOKE_APP', true),
 
     /*
     |--------------------------------------------------------------------------
@@ -50,11 +50,7 @@ return [
     |
     */
 
-    'send_queries' => [
-        'enabled'                     => env('DS_SEND_QUERIES', false),
-        'formatted'                   => false,
-        'show_connection_information' => false,
-    ],
+    'send_queries'                       => env('DS_SEND_QUERIES', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -66,7 +62,7 @@ return [
     |
     */
 
-    'send_log_applications' => env('DS_SEND_LOGS', false),
+    'send_log_applications'              => env('DS_SEND_LOGS', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -77,7 +73,7 @@ return [
     | private and protected properties to the Desktop App.
     */
 
-    'send_livewire_components' => env('DS_SEND_LIVEWIRE_COMPONENTS', false),
+    'send_livewire_components'           => env('DS_SEND_LIVEWIRE_COMPONENTS', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -88,7 +84,7 @@ return [
     |
     */
 
-    'ignore_livewire_components' => [
+    'ignore_livewire_components'         => [
         // \App\Http\Livewire\Example::class,
     ],
 
@@ -102,7 +98,7 @@ return [
     |
     */
 
-    'livewire_components' => env('DS_LIVEWIRE_COMPONENTS', ''),
+    'livewire_components'                => env('DS_LIVEWIRE_COMPONENTS', ''),
 
     /*
     |--------------------------------------------------------------------------
@@ -124,7 +120,7 @@ return [
     | When `true`, it allows to dump Livewire Events and send them to Desktop App.
     |
     */
-    'send_livewire_events' => env('DS_LIVEWIRE_EVENTS', false),
+    'send_livewire_events'               => env('DS_LIVEWIRE_EVENTS', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -138,7 +134,7 @@ return [
     |
     */
 
-    'send_livewire_failed_validation' => [
+    'send_livewire_failed_validation'    => [
         'enabled' => env('DS_SEND_LIVEWIRE_FAILED_VALIDATION', false),
         'sleep'   => env('DS_SEND_LIVEWIRE_FAILED_VALIDATION_SLEEP', 400),
     ],
@@ -152,7 +148,7 @@ return [
     | and send them to Desktop App.
     |
     */
-    'send_livewire_dispatch' => env('DS_LIVEWIRE_DISPATCH', false),
+    'send_livewire_dispatch'             => env('DS_LIVEWIRE_DISPATCH', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -178,7 +174,7 @@ return [
     |
     */
 
-    'auto_clear_on_page_reload' => env('DS_AUTO_CLEAR_ON_PAGE_RELOAD', false),
+    'auto_clear_on_page_reload'          => env('DS_AUTO_CLEAR_ON_PAGE_RELOAD', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -189,7 +185,7 @@ return [
     |
     */
 
-    'preferred_ide' => env('DS_PREFERRED_IDE', 'phpstorm'),
+    'preferred_ide'                      => env('DS_PREFERRED_IDE', 'phpstorm'),
 
     /*
     |--------------------------------------------------------------------------
@@ -201,20 +197,20 @@ return [
     |
     */
 
-    'ide_handlers' => [
-        'atom' => [
+    'ide_handlers'                       => [
+        'atom'          => [
             'handler'        => 'atom://core/open/file?filename=',
             'line_separator' => '&line=',
         ],
-        'phpstorm' => [
+        'phpstorm'      => [
             'handler'        => 'phpstorm://open?file=',
             'line_separator' => '&line=',
         ],
-        'sublime' => [
+        'sublime'       => [
             'handler'        => 'subl://open?url=file://',
             'line_separator' => '&line=',
         ],
-        'vscode' => [
+        'vscode'        => [
             'handler'        => 'vscode://file/',
             'line_separator' => ':',
         ],
@@ -237,7 +233,7 @@ return [
     |
     */
 
-    'ignore_route_contains' => [
+    'ignore_route_contains'              => [
         'debugbar',
         'ignition',
         'horizon',
@@ -254,7 +250,7 @@ return [
     |
     */
 
-    'sleep' => env('DS_SLEEP'),
+    'sleep'                              => env('DS_SLEEP'),
 
     /*
     |--------------------------------------------------------------------------
@@ -266,15 +262,15 @@ return [
     |
     */
 
-    'ci_check' => [
-        'directories' => [
+    'ci_check'                           => [
+        'directories'                    => [
             base_path('app'),
             base_path('resources'),
         ],
         'ignore_line_when_contains_text' => [
             //'ads()'
         ],
-        'text_to_search' => [
+        'text_to_search'                 => [
             'ds(',
             'dsq(',
             'dsd(',
@@ -297,7 +293,7 @@ return [
     |
     */
 
-    'send_color_in_screen' => env('DS_SEND_COLOR_IN_SCREEN', false),
+    'send_color_in_screen'               => env('DS_SEND_COLOR_IN_SCREEN', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -308,14 +304,14 @@ return [
     |
     */
 
-    'screen_btn_colors_map' => [
+    'screen_btn_colors_map'              => [
         'default' => [
             'default' => 'btn-white',
         ],
-        'danger' => [
+        'danger'  => [
             'default' => 'btn-danger',
         ],
-        'info' => [
+        'info'    => [
             'default' => 'btn-info',
         ],
         'success' => [
@@ -327,15 +323,15 @@ return [
     ],
 
     /*
-    |--------------------------------------------------------------------------
-    | Level Log Colors Map
-    |--------------------------------------------------------------------------
-    |
-    | Definition of Tailwind CSS class for LaraDumps color tag.
-    |
-    */
+   |--------------------------------------------------------------------------
+   | Level Log Colors Map
+   |--------------------------------------------------------------------------
+   |
+   | Definition of Tailwind CSS class for LaraDumps color tag.
+   |
+   */
 
-    'level_log_colors_map' => [
+    'level_log_colors_map'               => [
         'error'     => env('DS_LOG_COLOR_ERROR', 'border-red-600'),
         'critical'  => env('DS_LOG_COLOR_CRITICAL', 'border-red-900'),
         'alert'     => env('DS_LOG_COLOR_ALERT', 'border-red-500'),

@@ -53,8 +53,9 @@ class LaraDumpsServiceProvider extends ServiceProvider
 
             $trace = collect($trace)
                 ->filter(function ($trace) {
+                    /** @var array $trace */
                     /** @var string $file */
-                    $file = $trace['file'];
+                    $file = $trace['file'] ?? '';
 
                     return !str_contains($file, 'vendor');
                 });

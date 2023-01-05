@@ -132,6 +132,7 @@ if (!function_exists('dsBlade')) {
     {
         $trace = collect(debug_backtrace())
             ->filter(function ($trace) {
+                /** @var array $trace */
                 return $trace['function'] === 'render' && $trace['class'] === 'Illuminate\View\View';
             })->first();
 

@@ -21,6 +21,7 @@ abstract class Payload
         'model',
         'time-track',
         'coffee',
+        'mailable',
     ];
 
     private ?bool $autoInvokeApp = null;
@@ -72,9 +73,9 @@ abstract class Payload
         }
 
         return [
-            'id'   => $this->notificationId,
-            'type' => $this->type(),
-            'meta' => [
+            'id'        => $this->notificationId,
+            'type'      => $this->type(),
+            'meta'      => [
                 'laradumps_version' => $this->getInstalledVersion(),
                 'auto_invoke_app'   => $this->autoInvokeApp ?? boolval(config('laradumps.auto_invoke_app')),
             ],

@@ -3,17 +3,18 @@
 namespace LaraDumps\LaraDumps;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Mail\Mailable;
 use Illuminate\Support\{Collection, Str};
 use LaraDumps\LaraDumps\Actions\SendPayload;
 use LaraDumps\LaraDumps\Concerns\Colors;
 use LaraDumps\LaraDumps\Observers\QueryObserver;
-use LaraDumps\LaraDumps\Payloads\{
-    ClearPayload,
+use LaraDumps\LaraDumps\Payloads\{ClearPayload,
     CoffeePayload,
     ColorPayload,
     DiffPayload,
     DumpPayload,
     LabelPayload,
+    MailablePayload,
     ModelPayload,
     Payload,
     PhpInfoPayload,
@@ -23,7 +24,6 @@ use LaraDumps\LaraDumps\Payloads\{
     TimeTrackPayload,
     ValidateStringPayload
 };
-use Symfony\Component\Process\{ExecutableFinder, Process};
 
 class LaraDumps
 {
@@ -286,5 +286,18 @@ class LaraDumps
     {
         $payload = new TimeTrackPayload($reference);
         $this->send($payload);
+        $this->label($reference);
+    }
+
+    /**
+     * Send rendered mailable
+     *
+     */
+    public function mailable(Mailable $mailable): self
+    {
+        $mailablePayload = new MailablePayload($mailable);
+        $this->send($mailablePayload);
+
+        return $this;
     }
 }
