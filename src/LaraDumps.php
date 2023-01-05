@@ -5,7 +5,7 @@ namespace LaraDumps\LaraDumps;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Mail\Mailable;
 use Illuminate\Support\{Collection, Str};
-use LaraDumps\LaraDumps\Actions\{OpenLaraDumps, SendPayload};
+use LaraDumps\LaraDumps\Actions\SendPayload;
 use LaraDumps\LaraDumps\Concerns\Colors;
 use LaraDumps\LaraDumps\Observers\QueryObserver;
 use LaraDumps\LaraDumps\Payloads\{ClearPayload,
@@ -13,7 +13,6 @@ use LaraDumps\LaraDumps\Payloads\{ClearPayload,
     ColorPayload,
     DiffPayload,
     DumpPayload,
-    JsonPayload,
     LabelPayload,
     MailablePayload,
     ModelPayload,
@@ -276,7 +275,6 @@ class LaraDumps
     {
         $payload = new TimeTrackPayload($reference);
         $this->send($payload);
-        $this->label($reference);
     }
 
     /**
