@@ -21,6 +21,7 @@ abstract class Payload
         'model',
         'time-track',
         'coffee',
+        'mailable'
     ];
 
     private ?bool $autoInvokeApp = null;
