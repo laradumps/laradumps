@@ -12,8 +12,8 @@ it('should return the correct payload to dump', function () {
         'name' => 'Luan',
     ];
 
-    [$sfDump, $id]       = Dumper::dump($args);
-    $notificationId      = Str::uuid()->toString();
+    $args           = Dumper::dump($args);
+    $notificationId = Str::uuid()->toString();
 
     $trace      = [
         'file' => 'Test',
@@ -21,7 +21,7 @@ it('should return the correct payload to dump', function () {
     ];
 
     $laradumps      = new LaraDumps(notificationId: $notificationId, trace: $trace);
-    $payload        = $laradumps->send(new DumpPayload($sfDump, $args));
+    $payload        = $laradumps->send(new DumpPayload($args));
 
     expect($payload)
         ->id->toBe($notificationId)
