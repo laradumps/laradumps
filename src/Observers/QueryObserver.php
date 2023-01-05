@@ -4,7 +4,6 @@ namespace LaraDumps\LaraDumps\Observers;
 
 use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Support\Facades\DB;
-use LaraDumps\LaraDumps\Actions\Trace;
 use LaraDumps\LaraDumps\LaraDumps;
 use LaraDumps\LaraDumps\Payloads\QueriesPayload;
 
@@ -15,6 +14,18 @@ class QueryObserver
     private ?string $label = null;
 
     private array $trace = [];
+
+    protected array $backtraceExcludePaths = [
+        '/vendor/laravel/framework/src/Illuminate/Support',
+        '/vendor/laravel/framework/src/Illuminate/Database',
+        '/vendor/laravel/framework/src/Illuminate/Events',
+        '/vendor/barryvdh',
+        '/vendor/symfony',
+        '/artisan',
+        '/vendor/livewire',
+        '/packages/laradumps',
+        '/vendor/laradumps',
+    ];
 
     public function register(): void
     {
@@ -31,11 +42,13 @@ class QueryObserver
             }
 
             $queries = [
-                'sql'            => $sqlQuery,
-                'time'           => $query->time,
-                'database'       => $query->connection->getDatabaseName(),
-                'connectionName' => $query->connectionName,
-                'query'          => $query,
+                'sql'                       => $sqlQuery,
+                'time'                      => $query->time,
+                'database'                  => $query->connection->getDatabaseName(),
+                'connectionName'            => $query->connectionName,
+                'query'                     => $query,
+                'formatted'                 => boolval(config('laradumps.send_queries.formatted', false)),
+                'showConnectionInformation' => boolval(config('laradumps.send_queries.show_connection_information', false)),
             ];
 
             $dumps = new LaraDumps(trace: $this->trace);
@@ -45,8 +58,6 @@ class QueryObserver
             if ($this->label) {
                 $dumps->label($this->label);
             }
-
-            $dumps->toScreen('Queries');
         });
     }
 
@@ -73,19 +84,50 @@ class QueryObserver
 
     public function isEnabled(): bool
     {
-        $this->trace   = Trace::findSource()->toArray();
+        $this->trace   = array_slice($this->findSource(), 0, 5)[0] ?? [];
 
-        /** version <= 1.4.0 */
-        if (is_bool(config('laradumps.send_queries'))) {
-            if (!boolval(config('laradumps.send_queries'))) {
-                return $this->enabled;
-            }
-        }
-
-        if (!boolval(config('laradumps.send_queries.enabled'))) {
+        if (!boolval(config('laradumps.send_queries'))) {
             return $this->enabled;
         }
 
         return true;
+    }
+
+    protected function findSource(): array
+    {
+        $stack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 50);
+
+        $sources = [];
+
+        foreach ($stack as $trace) {
+            $sources[] = $this->parseTrace($trace);
+        }
+
+        return array_filter($sources);
+    }
+
+    protected function parseTrace(array $trace): array
+    {
+        if (
+            isset($trace['class']) && isset($trace['file']) &&
+            !$this->fileIsInExcludedPath($trace['file'])
+        ) {
+            return $trace;
+        }
+
+        return [];
+    }
+
+    protected function fileIsInExcludedPath(string $file): bool
+    {
+        $normalizedPath = str_replace('\\', '/', $file);
+
+        foreach ($this->backtraceExcludePaths as $excludedPath) {
+            if (str_contains($normalizedPath, $excludedPath)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

@@ -204,24 +204,13 @@ class LaraDumps
 
     public function write(mixed $args = null, ?bool $autoInvokeApp = null): LaraDumps
     {
-        /** @phpstan-ignore-next-line  */
-        if (is_string($args) && str($args)->isJson()) {
-            [$pre, $id]         = ['', uniqid()];
-        } else {
-            [$pre, $id]         = Support\Dumper::dump($args);
+        $originalContent = $args;
+        $args            = Support\Dumper::dump($args);
+        if (!empty($args)) {
+            $payload = new DumpPayload($args, $originalContent);
+            $payload->autoInvokeApp($autoInvokeApp);
+            $this->send($payload);
         }
-
-        /** @phpstan-ignore-next-line  */
-        if (is_string($args) && str($args)->isJson()) {
-            $payload = new JsonPayload($args);
-        } else {
-            $payload = new DumpPayload($pre, $args);
-        }
-
-        $payload->autoInvokeApp($autoInvokeApp);
-        $payload->dumpId($id);
-
-        $this->send($payload);
 
         return $this;
     }
@@ -285,7 +274,7 @@ class LaraDumps
      */
     public function time(string $reference): void
     {
-        $payload = new TimeTrackPayload();
+        $payload = new TimeTrackPayload($reference);
         $this->send($payload);
         $this->label($reference);
     }
@@ -297,7 +286,7 @@ class LaraDumps
      */
     public function stopTime(string $reference): void
     {
-        $payload = new TimeTrackPayload(true);
+        $payload = new TimeTrackPayload($reference);
         $this->send($payload);
         $this->label($reference);
     }

@@ -12,12 +12,12 @@ trait Colors
             return $this->toScreen('danger', true);
         }
 
-        return $this->color('red');
+        return $this->color('border-red-300');
     }
 
     public function dark(): LaraDumps
     {
-        return $this->color('black');
+        return $this->color('border-black');
     }
 
     public function warning(): LaraDumps
@@ -26,7 +26,7 @@ trait Colors
             return $this->toScreen('warning', true);
         }
 
-        return $this->color('orange');
+        return $this->color('border-orange-300');
     }
 
     public function success(): LaraDumps
@@ -35,7 +35,7 @@ trait Colors
             return $this->toScreen('success', true);
         }
 
-        return $this->color('green');
+        return $this->color('border-green-600');
     }
 
     public function info(): LaraDumps
@@ -44,6 +44,6 @@ trait Colors
             return $this->toScreen('info', true);
         }
 
-        return $this->color('blue');
+        return $this->color('border-blue-600');
     }
 }

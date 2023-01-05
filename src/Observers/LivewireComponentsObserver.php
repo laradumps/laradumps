@@ -47,7 +47,7 @@ class LivewireComponentsObserver
 
                 $viewPath = $this->getViewPath($view);
 
-                $data['name']        = Str::of($component->getName())->afterLast('.')->studly();
+                $data['name']        = $component->getName();
                 $data['view']        = Str::of($view->name())->replace('livewire.', '');
                 $data['viewHandler'] = [
                     'handler' => IdeHandle::makeFileHandler($viewPath, '1'),
