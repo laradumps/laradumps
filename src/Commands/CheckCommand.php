@@ -38,12 +38,12 @@ class CheckCommand extends Command
 
         $finder->files()->in($directories);
 
-        $progressBar = $this->output->createProgressBar($finder->count());
+        $progressBar = $this->output->createProgressBar(count($files) ?: $finder->count());
 
         $this->output->writeln('');
 
         foreach ($finder as $file) {
-            if (!in_array($file->getRealPath(), $files)) {
+            if (filled($files) && !in_array($file->getRealPath(), $files)) {
                 continue;
             }
 

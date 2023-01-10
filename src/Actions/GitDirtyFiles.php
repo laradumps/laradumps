@@ -5,12 +5,13 @@ namespace LaraDumps\LaraDumps\Actions;
 use Illuminate\Support\Str;
 use Symfony\Component\Process\Process;
 
-/**
- * Code snippet taken from laravel/pint
- * https://github.com/laravel/pint/pull/130
- */
-class GitDirtyFiles
+final class GitDirtyFiles
 {
+    /**
+     * @internal
+     * Code snippet taken from laravel/pint
+     * url: https://github.com/laravel/pint/pull/130
+     */
     public static function run()
     {
         $process = tap(new Process(['git', 'status', '--short', '--', '*.php']))->run();
