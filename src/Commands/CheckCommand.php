@@ -17,10 +17,10 @@ class CheckCommand extends Command
 
     public function handle(): int
     {
-        $files = [];
+        $dirtyFiles = [];
 
         if (!empty($this->option('dirty'))) {
-            $files = GitDirtyFiles::run();
+            $dirtyFiles = GitDirtyFiles::run();
         }
 
         /** @var array<string>|string $directories */
@@ -38,12 +38,12 @@ class CheckCommand extends Command
 
         $finder->files()->in($directories);
 
-        $progressBar = $this->output->createProgressBar(count($files) ?: $finder->count());
+        $progressBar = $this->output->createProgressBar(count($dirtyFiles) ?: $finder->count());
 
         $this->output->writeln('');
 
         foreach ($finder as $file) {
-            if (filled($files) && !in_array($file->getRealPath(), $files)) {
+            if (filled($dirtyFiles) && !in_array($file->getRealPath(), $dirtyFiles)) {
                 continue;
             }
 
