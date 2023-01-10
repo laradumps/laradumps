@@ -75,17 +75,10 @@ class QueryObserver
     {
         $this->trace   = Trace::findSource()->toArray();
 
-        /** version <= 1.4.0 */
-        if (is_bool(config('laradumps.send_queries'))) {
-            if (!boolval(config('laradumps.send_queries'))) {
-                return $this->enabled;
-            }
-        }
-
-        if (!boolval(config('laradumps.send_queries.enabled'))) {
+        if (!boolval(config('laradumps.send_queries'))) {
             return $this->enabled;
         }
 
-        return true;
+        return boolval(config('laradumps.send_queries'));
     }
 }
