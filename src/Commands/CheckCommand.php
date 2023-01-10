@@ -3,6 +3,7 @@
 namespace LaraDumps\LaraDumps\Commands;
 
 use Illuminate\Console\Command;
+use LaraDumps\LaraDumps\Actions\GitDirtyFiles;
 use LaraDumps\LaraDumps\Support\IdeHandle;
 use Symfony\Component\Finder\Finder;
 
@@ -10,12 +11,18 @@ use function Termwind\{render, renderUsing};
 
 class CheckCommand extends Command
 {
-    protected $signature = 'ds:check';
+    protected $signature = 'ds:check {--dirty}';
 
     protected $description = 'Check if you forgot any ds() in your files';
 
     public function handle(): int
     {
+        $dirtyFiles = [];
+
+        if (!empty($this->option('dirty'))) {
+            $dirtyFiles = GitDirtyFiles::run();
+        }
+
         /** @var array<string>|string $directories */
         $directories = config('laradumps.ci_check.directories');
 
@@ -31,11 +38,15 @@ class CheckCommand extends Command
 
         $finder->files()->in($directories);
 
-        $progressBar = $this->output->createProgressBar($finder->count());
+        $progressBar = $this->output->createProgressBar(count($dirtyFiles) ?: $finder->count());
 
         $this->output->writeln('');
 
         foreach ($finder as $file) {
+            if (filled($dirtyFiles) && !in_array($file->getRealPath(), $dirtyFiles)) {
+                continue;
+            }
+
             $progressBar->advance();
 
             /** @var string[] $contents */
