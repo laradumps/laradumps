@@ -21,6 +21,17 @@ class CheckCommand extends Command
 
         if (!empty($this->option('dirty'))) {
             $dirtyFiles = GitDirtyFiles::run();
+
+            if (empty($dirtyFiles)) {
+                render(
+                    view('laradumps::summary', [
+                        'error' => false,
+                        'total' => 0,
+                    ])
+                );
+
+                return Command::SUCCESS;
+            }
         }
 
         /** @var array<string>|string $directories */
