@@ -12,7 +12,7 @@ final class GitDirtyFiles
      * Code snippet taken from laravel/pint
      * url: https://github.com/laravel/pint/pull/130
      */
-    public static function run()
+    public static function run(): array
     {
         $process = tap(new Process(['git', 'status', '--short', '--', '*.php']))->run();
 
@@ -20,8 +20,8 @@ final class GitDirtyFiles
             abort(1);
         }
 
-        return collect(preg_split('/\R+/', $process->getOutput(), flags: PREG_SPLIT_NO_EMPTY))
-            ->mapWithKeys(fn ($file) => [substr($file, 3) => trim(substr($file, 0, 3))])
+        return collect((array) preg_split('/\R+/', $process->getOutput(), flags: PREG_SPLIT_NO_EMPTY))
+            ->mapWithKeys(fn ($file) => [substr(strval($file), 3) => trim(substr(strval($file), 0, 3))])
             ->reject(fn ($status) => $status === 'D')
             ->map(fn ($status, $file) => $status === 'R' ? Str::after($file, ' -> ') : $file)
             ->map(fn ($file) => getcwd() . '/' . $file)
