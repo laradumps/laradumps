@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Str;
 use LaraDumps\LaraDumps\LaraDumps;
-use LaraDumps\LaraDumps\Payloads\{DumpPayload, MailablePayload, ModelPayload};
+use LaraDumps\LaraDumps\Payloads\{DumpPayload, MailablePayload, ModelPayload, TableV2Payload};
 use LaraDumps\LaraDumps\Support\Dumper;
 use LaraDumps\LaraDumps\Tests\Mail\TestMail;
 use LaraDumps\LaraDumps\Tests\Models\Dish;
@@ -94,3 +94,34 @@ it('should return the correct payload to mailable', function () {
         ->and($payload['content']['to'][0]['email'])
         ->toContain('to@example.com');
 })->group('mailable');
+
+it('should return the correct payload to table-v2', function () {
+    $data = [
+        'Name'  => 'Anand Pilania',
+        'Email' => 'pilaniaanand@gmail.com',
+        'Stack' => [
+            'Laravel',
+            'Flutter',
+        ],
+    ];
+
+    $notificationId = Str::uuid()->toString();
+
+    $trace      = [
+        'file' => 'Test',
+        'line' => 1,
+    ];
+
+    $laradumps      = new LaraDumps($notificationId, trace: $trace);
+    $payload        = $laradumps->send(new TableV2Payload($data));
+
+    expect($payload)
+        ->id->toBe($notificationId)
+        ->type->toBe('table-v2')
+        ->and($payload['content']['values']['Name'])
+        ->toContain('Anand Pilania')
+        ->and($payload['content']['values']['Email'])
+        ->toContain('pilaniaanand@gmail.com')
+        ->and($payload['content']['values']['Stack'])
+        ->toContain('Laravel');
+})->group('table-v2');
