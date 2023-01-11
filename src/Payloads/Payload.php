@@ -22,6 +22,8 @@ abstract class Payload
         'time-track',
         'coffee',
         'mailable',
+        'http-client',
+        'table-v2',
     ];
 
     private ?bool $autoInvokeApp = null;
