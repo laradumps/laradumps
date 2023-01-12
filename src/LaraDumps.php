@@ -15,6 +15,7 @@ use LaraDumps\LaraDumps\Payloads\{ClearPayload,
     DumpPayload,
     LabelPayload,
     MailablePayload,
+    MarkdownPayload,
     ModelPayload,
     Payload,
     PhpInfoPayload,
@@ -297,6 +298,17 @@ class LaraDumps
     {
         $mailablePayload = new MailablePayload($mailable);
         $this->send($mailablePayload);
+
+        return $this;
+    }
+
+    /*
+     * Sends rendered markdown
+     */
+    public function markdown(string $markdown): self
+    {
+        $payload = new MarkdownPayload($markdown);
+        $this->send($payload);
 
         return $this;
     }
