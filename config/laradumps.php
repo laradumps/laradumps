@@ -62,7 +62,7 @@ return [
     |
     */
 
-    'send_http_client_request'           => env('DS_SEND_HTTP_CLIENT_REQUEST', false),
+    'send_http_client_requests'          => env('DS_SEND_HTTP_CLIENT_REQUESTS', false),
 
     /*
     |--------------------------------------------------------------------------
