@@ -8,22 +8,11 @@ class TableV2Payload extends Payload
 {
     use Converter;
 
-    /** @var array */
-    protected $values;
-
-    /** @var string */
-    protected $label;
-
-    /** @var null|string */
-    protected $type = null;
-
-    public function __construct(array $values, string $label = 'Table', string $type = 'table-v2')
-    {
-        $this->values = $values;
-
-        $this->label = $label;
-
-        $this->type = $type;
+    public function __construct(
+        protected array $values,
+        protected string $label = 'Table',
+        protected string $type = 'table-v2'
+    ) {
     }
 
     public function type(): string

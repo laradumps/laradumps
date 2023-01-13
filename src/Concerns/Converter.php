@@ -2,8 +2,7 @@
 
 namespace LaraDumps\LaraDumps\Concerns;
 
-use Symfony\Component\VarDumper\Cloner\VarCloner;
-use Symfony\Component\VarDumper\Dumper\HtmlDumper;
+use LaraDumps\LaraDumps\Support\Dumper;
 
 trait Converter
 {
@@ -25,12 +24,6 @@ trait Converter
             return $argument;
         }
 
-        $cloner = new VarCloner();
-
-        $dumper = new HtmlDumper();
-
-        $clonedArgument = $cloner->cloneVar($argument);
-
-        return $dumper->dump($clonedArgument, true);
+        return Dumper::dump($argument);
     }
 }
