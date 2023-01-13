@@ -5,7 +5,7 @@ namespace LaraDumps\LaraDumps\Payloads;
 class DumpPayload extends Payload
 {
     public function __construct(
-        public string $dump,
+        public mixed $dump,
         public mixed $originalContent = null,
     ) {
     }

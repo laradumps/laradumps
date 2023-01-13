@@ -2,12 +2,10 @@
 
 namespace LaraDumps\LaraDumps\Payloads;
 
-use LaraDumps\LaraDumps\Concerns\Converter;
+use LaraDumps\LaraDumps\Support\Dumper;
 
 class TableV2Payload extends Payload
 {
-    use Converter;
-
     public function __construct(
         protected array $values,
         protected string $label = 'Table',
@@ -23,7 +21,7 @@ class TableV2Payload extends Payload
     public function content(): array
     {
         $values = array_map(function ($value) {
-            return $this->convertToPrimitive($value);
+            return Dumper::dump($value);
         }, $this->values);
 
         return [
