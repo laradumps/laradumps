@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Str;
 use LaraDumps\LaraDumps\LaraDumps;
-use LaraDumps\LaraDumps\Payloads\{DumpPayload, MailablePayload, ModelPayload, TableV2Payload};
+use LaraDumps\LaraDumps\Payloads\{DumpPayload, MailablePayload, ModelPayload, MarkdownPayload, TableV2Payload};
 use LaraDumps\LaraDumps\Support\Dumper;
 use LaraDumps\LaraDumps\Tests\Mail\TestMail;
 use LaraDumps\LaraDumps\Tests\Models\Dish;
@@ -69,7 +69,7 @@ it('should return the correct payload to model', function () {
             '<span class=sf-dump-key>name</span>',
             '<span class=sf-dump-key>active</span>',
         );
-})->skip('v2');;
+})->skip('v2');
 
 it('should return the correct payload to mailable', function () {
     $mailable = new TestMail();
@@ -104,14 +104,7 @@ it('should return the correct payload to table-v2', function () {
             'Flutter',
         ],
     ];
-
-    $notificationId = Str::uuid()->toString();
-
-    $trace      = [
-        'file' => 'Test',
-        'line' => 1,
-    ];
-
+    
     $laradumps      = new LaraDumps($notificationId, trace: $trace);
     $payload        = $laradumps->send(new TableV2Payload($data));
 
@@ -125,3 +118,30 @@ it('should return the correct payload to table-v2', function () {
         ->and($payload['content']['values']['Stack'])
         ->toContain('Laravel');
 })->group('table-v2');
+
+it('should return the correct markdown payload to dump', function () {
+    $args   = '# Hi, Anand Pilania!';
+
+    $notificationId = Str::uuid()->toString();
+
+    $trace      = [
+        'file' => 'Test',
+        'line' => 1,
+    ];
+
+    $laradumps      = new LaraDumps(notificationId: $notificationId, trace: $trace);
+    $payload        = $laradumps->send(new MarkdownPayload($args));
+
+    expect($payload)
+        ->id->toBe($notificationId)
+        ->type->toBe('dump')
+        ->ideHandle->toMatchArray([
+            'handler' => 'phpstorm://open?file=Test&line=1',
+            'path'    => 'Test',
+            'line'    => 1,
+        ])
+        ->and($payload['content']['dump'])
+        ->toContain(
+            '<h1>Hi, Anand Pilania!</h1>'
+        );
+});

@@ -6,13 +6,13 @@
   <br />
   <!--LaraDumpsVersion-->
   <p align="center">
-    <a href="https://github.com/laradumps/app/releases/download/v1.6.0/LaraDumps-Setup-1.6.0.exe">
+    <a href="https://github.com/laradumps/app/releases/download/v1.6.1/LaraDumps-Setup-1.6.1.exe">
       <img src="./art/os/windows.png" height="60" alt="LaraDumps Windows App" />
     </a>
-    <a href="https://github.com/laradumps/app/releases/download/v1.6.0/LaraDumps-1.6.0-universal.dmg">
+    <a href="https://github.com/laradumps/app/releases/download/v1.6.1/LaraDumps-1.6.1-universal.dmg">
       <img src="./art/os/macos.png" height="60" alt="LaraDumps MacOS App" />
     </a>
-    <a href="https://github.com/laradumps/app/releases/download/v1.6.0/LaraDumps-1.6.0.AppImage">
+    <a href="https://github.com/laradumps/app/releases/download/v1.6.1/LaraDumps-1.6.1.AppImage">
       <img src="./art/os/linux.png" height="60" alt="LaraDumps Linux App" />
     </a>
   </p>
@@ -89,8 +89,8 @@ These are some debug tools available for you:
 
 #### Usage
 <!--LaraDumpsVersion-->
-1. Download the 🖥️ [LaraDumps](https://github.com/laradumps/app) Desktop App here: [Windows](https://github.com/laradumps/app/releases/download/v1.6.0/LaraDumps-Setup-1.6.0.exe) | [MacOS](https://github.com/laradumps/app/releases/download/v1.6.0/LaraDumps-1.6.0.dmg)
- | [Linux](https://github.com/laradumps/app/releases/download/v1.6.0/LaraDumps-1.6.0.AppImage)
+1. Download the 🖥️ [LaraDumps](https://github.com/laradumps/app) Desktop App here: [Windows](https://github.com/laradumps/app/releases/download/v1.6.1/LaraDumps-Setup-1.6.1.exe) | [MacOS](https://github.com/laradumps/app/releases/download/v1.6.1/LaraDumps-1.6.1.dmg)
+ | [Linux](https://github.com/laradumps/app/releases/download/v1.6.1/LaraDumps-1.6.1.AppImage)
 <!--EndOfLaraDumpsVersion-->
 
 2. Install LaraDumps in your Laravel project, run:

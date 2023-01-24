@@ -15,6 +15,7 @@ use LaraDumps\LaraDumps\Payloads\{ClearPayload,
     DumpPayload,
     LabelPayload,
     MailablePayload,
+    MarkdownPayload,
     ModelPayload,
     Payload,
     PhpInfoPayload,
@@ -318,5 +319,16 @@ class LaraDumps
     public function httpClientOff(): void
     {
         app(HttpClientObserver::class)->disable();
+    }
+    
+    /*
+     * Sends rendered markdown
+     */
+    public function markdown(string $markdown): self
+    {
+        $payload = new MarkdownPayload($markdown);
+        $this->send($payload);
+
+        return $this;
     }
 }
