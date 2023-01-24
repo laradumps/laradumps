@@ -4,7 +4,7 @@ namespace LaraDumps\LaraDumps;
 
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\{ServiceProvider, Str};
+use Illuminate\Support\{Collection, ServiceProvider, Str, Stringable};
 use LaraDumps\LaraDumps\Commands\{CheckCommand, InitCommand};
 use LaraDumps\LaraDumps\Observers\{LivewireComponentsObserver,
     LivewireDispatchObserver,
@@ -48,24 +48,7 @@ class LaraDumpsServiceProvider extends ServiceProvider
 
         $this->app->singleton(QueryObserver::class);
 
-        Builder::macro('ds', function () {
-            $trace   = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-
-            $trace = collect($trace)
-                ->filter(function ($trace) {
-                    /** @var array $trace */
-                    /** @var string $file */
-                    $file = $trace['file'] ?? '';
-
-                    return !str_contains($file, 'vendor');
-                });
-
-            $ds = new LaraDumps(trace: (array) $trace->first());
-            /** @phpstan-ignore-next-line  */
-            $ds->send(new QueryPayload($this));
-
-            return $this;
-        });
+        $this->registerMacros();
     }
 
     private function loadConfigs(): void
@@ -131,5 +114,49 @@ HTML;
         app(LivewireDispatchObserver::class)->register();
         app(LivewireComponentsObserver::class)->register();
         app(LivewireFailedValidationObserver::class)->register();
+    }
+
+    private function registerMacros(): void
+    {
+        Collection::macro('ds', function (string $label = '') {
+            /* @var Collection $this */
+            $label === ''
+                // @phpstan-ignore-next-line
+                ? ds($this->items)
+                // @phpstan-ignore-next-line
+                : ds($this->items)->label($label);
+
+            return $this;
+        });
+
+        Stringable::macro('ds', function (string $label = '') {
+            /* @var Stringable $this */
+            $label === ''
+                // @phpstan-ignore-next-line
+                ? ds($this->value)
+                // @phpstan-ignore-next-line
+                : ds($this->value)->label($label);
+
+            return $this;
+        });
+
+        Builder::macro('ds', function () {
+            $trace   = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+
+            $trace = collect($trace)
+                ->filter(function ($trace) {
+                    /** @var array $trace */
+                    /** @var string $file */
+                    $file = $trace['file'] ?? '';
+
+                    return !str_contains($file, 'vendor');
+                });
+
+            $ds = new LaraDumps(trace: (array) $trace->first());
+            /** @phpstan-ignore-next-line  */
+            $ds->send(new QueryPayload($this));
+
+            return $this;
+        });
     }
 }

@@ -69,7 +69,7 @@ it('should return the correct payload to model', function () {
             '<span class=sf-dump-key>name</span>',
             '<span class=sf-dump-key>active</span>',
         );
-})->skip('v2');;
+})->skip('v2');
 
 it('should return the correct payload to mailable', function () {
     $mailable = new TestMail();
