@@ -105,6 +105,13 @@ it('should return the correct payload to table-v2', function () {
         ],
     ];
 
+    $trace      = [
+        'file' => 'Test',
+        'line' => 1,
+    ];
+
+    $notificationId = Str::uuid()->toString();
+
     $laradumps      = new LaraDumps($notificationId, trace: $trace);
     $payload        = $laradumps->send(new TableV2Payload($data));
 
