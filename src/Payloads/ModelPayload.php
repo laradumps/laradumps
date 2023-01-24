@@ -17,7 +17,7 @@ class ModelPayload extends Payload
         return 'model';
     }
 
-    /** @return array<string, array|string> */
+    /** @return array<string, mixed> */
     public function content(): array
     {
         $relations = $this->model->relationsToArray();

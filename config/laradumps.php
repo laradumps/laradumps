@@ -54,6 +54,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | HTTP Client dump
+    |--------------------------------------------------------------------------
+    |
+    | When `true`, it allows to dump HTTP and send them to Desktop App.
+    | Required for: ds()->httpClientOn() method.
+    |
+    */
+
+    'send_http_client_requests'          => env('DS_SEND_HTTP_CLIENT_REQUESTS', false),
+
+    /*
+    |--------------------------------------------------------------------------
     | Log dump
     |--------------------------------------------------------------------------
     |

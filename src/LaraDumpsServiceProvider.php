@@ -6,7 +6,8 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\{Collection, ServiceProvider, Str, Stringable};
 use LaraDumps\LaraDumps\Commands\{CheckCommand, InitCommand};
-use LaraDumps\LaraDumps\Observers\{LivewireComponentsObserver,
+use LaraDumps\LaraDumps\Observers\{HttpClientObserver,
+    LivewireComponentsObserver,
     LivewireDispatchObserver,
     LivewireEventsObserver,
     LivewireFailedValidationObserver,
@@ -47,6 +48,7 @@ class LaraDumpsServiceProvider extends ServiceProvider
         }
 
         $this->app->singleton(QueryObserver::class);
+        $this->app->singleton(HttpClientObserver::class);
 
         $this->registerMacros();
     }
@@ -108,6 +110,7 @@ HTML;
 
     private function bootObservers(): void
     {
+        app(HttpClientObserver::class)->register();
         app(LogObserver::class)->register();
         app(QueryObserver::class)->register();
         app(LivewireEventsObserver::class)->register();
