@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Str;
 use LaraDumps\LaraDumps\LaraDumps;
-use LaraDumps\LaraDumps\Payloads\{DumpPayload, MailablePayload, ModelPayload, MarkdownPayload, TableV2Payload};
+use LaraDumps\LaraDumps\Payloads\{DumpPayload, MailablePayload, MarkdownPayload, ModelPayload, TableV2Payload};
 use LaraDumps\LaraDumps\Support\Dumper;
 use LaraDumps\LaraDumps\Tests\Mail\TestMail;
 use LaraDumps\LaraDumps\Tests\Models\Dish;
@@ -104,7 +104,7 @@ it('should return the correct payload to table-v2', function () {
             'Flutter',
         ],
     ];
-    
+
     $laradumps      = new LaraDumps($notificationId, trace: $trace);
     $payload        = $laradumps->send(new TableV2Payload($data));
 

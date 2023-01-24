@@ -320,7 +320,7 @@ class LaraDumps
     {
         app(HttpClientObserver::class)->disable();
     }
-    
+
     /*
      * Sends rendered markdown
      */
