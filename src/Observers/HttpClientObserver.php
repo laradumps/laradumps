@@ -2,12 +2,12 @@
 
 namespace LaraDumps\LaraDumps\Observers;
 
-use LaraDumps\LaraDumps\Support\Dumper;
 use Illuminate\Http\Client\Events\{RequestSending, ResponseReceived};
 use Illuminate\Http\Client\{Request, Response};
 use Illuminate\Support\Facades\Event;
 use LaraDumps\LaraDumps\LaraDumps;
 use LaraDumps\LaraDumps\Payloads\{Payload, TableV2Payload};
+use LaraDumps\LaraDumps\Support\Dumper;
 
 class HttpClientObserver
 {
