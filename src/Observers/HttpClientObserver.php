@@ -2,6 +2,7 @@
 
 namespace LaraDumps\LaraDumps\Observers;
 
+use LaraDumps\LaraDumps\Support\Dumper;
 use Illuminate\Http\Client\Events\{RequestSending, ResponseReceived};
 use Illuminate\Http\Client\{Request, Response};
 use Illuminate\Support\Facades\Event;
@@ -99,11 +100,11 @@ class HttpClientObserver
             'Real Request'    => !empty($response->handlerStats()),
             'Success'         => $response->successful(),
             'Status'          => $response->status(),
-            'Headers'         => $response->headers(),
+            'Headers'         => Dumper::dump($response->headers()),
             'Body'            => rescue(function () use ($response) {
                 return $response->json();
-            }, $response->body(), false),
-            'Cookies'         => $response->cookies(),
+            }, Dumper::dump($response->body()), false),
+            'Cookies'         => Dumper::dump($response->cookies()),
             'Size'            => $response->handlerStats()['size_download'] ?? null,
             'Connection time' => $response->handlerStats()['connect_time']  ?? null,
             'Duration'        => $response->handlerStats()['total_time']    ?? null,
