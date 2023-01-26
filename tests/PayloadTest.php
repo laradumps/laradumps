@@ -4,7 +4,7 @@ use Illuminate\Support\Str;
 use LaraDumps\LaraDumps\LaraDumps;
 use LaraDumps\LaraDumps\Payloads\{DumpPayload, MailablePayload, MarkdownPayload, ModelPayload, TableV2Payload};
 use LaraDumps\LaraDumps\Support\Dumper;
-use LaraDumps\LaraDumps\Tests\Mail\TestMail;
+use LaraDumps\LaraDumps\Tests\Classes\TestMail;
 use LaraDumps\LaraDumps\Tests\Models\Dish;
 
 it('should return the correct payload to dump', function () {

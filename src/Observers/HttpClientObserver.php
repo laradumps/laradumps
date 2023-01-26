@@ -5,12 +5,16 @@ namespace LaraDumps\LaraDumps\Observers;
 use Illuminate\Http\Client\Events\{RequestSending, ResponseReceived};
 use Illuminate\Http\Client\{Request, Response};
 use Illuminate\Support\Facades\Event;
+use LaraDumps\LaraDumps\Concerns\Traceable;
+use LaraDumps\LaraDumps\Contracts\TraceableContract;
 use LaraDumps\LaraDumps\LaraDumps;
 use LaraDumps\LaraDumps\Payloads\{Payload, TableV2Payload};
 use LaraDumps\LaraDumps\Support\Dumper;
 
-class HttpClientObserver
+class HttpClientObserver implements TraceableContract
 {
+    use Traceable;
+
     private bool $enabled = false;
 
     private ?string $label = null;
@@ -63,11 +67,6 @@ class HttpClientObserver
         return true;
     }
 
-    public function setTrace(array $trace): array
-    {
-        return $this->trace = $trace;
-    }
-
     protected function getRequestType(Request $request): string
     {
         if ($request->isJson()) {
@@ -110,28 +109,6 @@ class HttpClientObserver
             'Duration'        => $response->handlerStats()['total_time']    ?? null,
             'Request Size'    => $response->handlerStats()['request_size']  ?? null,
         ], 'Http', 'http-client');
-    }
-
-    protected function findSource(): array
-    {
-        $stack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 50);
-
-        $sources = [];
-
-        foreach ($stack as $trace) {
-            $sources[] = $this->parseTrace($trace);
-        }
-
-        return array_filter($sources);
-    }
-
-    protected function parseTrace(array $trace): array
-    {
-        if (isset($trace['class']) && isset($trace['file'])) {
-            return $trace;
-        }
-
-        return [];
     }
 
     private function sendPayload(Payload $payload): void

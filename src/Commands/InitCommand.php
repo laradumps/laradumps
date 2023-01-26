@@ -4,7 +4,7 @@ namespace LaraDumps\LaraDumps\Commands;
 
 use Exception;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\{Artisan, File};
+use Illuminate\Support\Facades\{File};
 use LaraDumps\LaraDumps\Actions\ConsoleUrl;
 use LaraDumps\LaraDumps\Commands\Concerns\{RenderAscii, UpdateEnv};
 
@@ -13,7 +13,7 @@ class InitCommand extends Command
     use RenderAscii;
     use UpdateEnv;
 
-    protected $signature = 'ds:init {--no-interaction?} {--host=} {--port=} {--send_queries=} {--send_http_client_requests=} {--send_logs=} {--send_livewire=} {--livewire_events=}{--livewire_validation=}  {--livewire_autoclear=} {--auto_invoke=} {--ide=}';
+    protected $signature = 'ds:init {--no-interaction?} {--host=} {--port=} {--send_queries=} {--send_http_client_requests=} {--send_jobs=} {--send_logs=} {--send_livewire=} {--livewire_events=}{--livewire_validation=}  {--livewire_autoclear=} {--auto_invoke=} {--ide=}';
 
     protected $description = 'Initialize LaraDumps configuration';
 
@@ -31,6 +31,7 @@ class InitCommand extends Command
             ->setPort()
             ->setQueries()
             ->setHttpClientRequests()
+            ->setJobs()
             ->setLogs()
             ->setLivewire()
             ->setLivewireEvents()
@@ -46,7 +47,7 @@ class InitCommand extends Command
 
     private function publishConfig(): void
     {
-        if ($this->isInteractive  && File::exists(config_path('laradumps.php'))) {
+        if ($this->isInteractive && File::exists(config_path('laradumps.php'))) {
             if ($this->confirm('The config file <comment>laradumps.php</comment> already exists. Delete it?') === true) {
                 File::delete(config_path('laradumps.php'));
             }
@@ -82,6 +83,7 @@ class InitCommand extends Command
             . ' --port=' . config('laradumps.port')
             . ' --send_queries=' . (config('laradumps.send_queries') ? 'true' : 'false')
             . ' --send_http_client_requests=' . (config('laradumps.send_http_client_requests') ? 'true' : 'false')
+            . ' --send_jobs=' . (config('laradumps.send_jobs') ? 'true' : 'false')
             . ' --send_logs=' . (config('laradumps.send_log_applications') ? 'true' : 'false')
             . ' --send_livewire=' . (config('laradumps.send_livewire_components') ? 'true' : 'false')
             . ' --livewire_events=' . (config('laradumps.send_livewire_events') ? 'true' : 'false')
@@ -101,7 +103,7 @@ class InitCommand extends Command
         $host = $this->option('host');
 
         if (empty($host) && $this->isInteractive) {
-            $hosts =  [
+            $hosts = [
                 '127.0.0.1',
                 'host.docker.internal',
                 '10.211.55.2',
@@ -125,7 +127,7 @@ class InitCommand extends Command
 
             $hosts = array_map(fn ($host) => ' ' . $host, $hosts);
 
-            $host =  $this->choice(
+            $host = $this->choice(
                 'Select the App host address',
                 $hosts,
                 $defaultHost
@@ -139,7 +141,7 @@ class InitCommand extends Command
                 $host = $this->ask('Enter the App Host');
             }
 
-            if ($host == 'host.docker.internal' && PHP_OS_FAMILY ==  'Linux') {
+            if ($host == 'host.docker.internal' && PHP_OS_FAMILY == 'Linux') {
                 $docUrl = 'http://laradumps.dev/#/laravel/get-started/configuration?id=host';
 
                 if ($this->confirm("\n❗<error>  IMPORTANT  </error>❗ You need to perform some extra configuration for Docker with Linux host. Read more at: <comment>{$docUrl}</comment>.\n\nBrowse the documentation now?") === true) {
@@ -170,7 +172,7 @@ class InitCommand extends Command
 
     private function setQueries(): self
     {
-        $sendQueries =  $this->option('send_queries');
+        $sendQueries = $this->option('send_queries');
 
         if (empty($sendQueries) && $this->isInteractive) {
             $sendQueries = $this->confirm('Allow dumping <comment>SQL Queries</comment> to the App?', true);
@@ -186,7 +188,7 @@ class InitCommand extends Command
 
     private function setLogs(): self
     {
-        $sendLogs =  $this->option('send_logs');
+        $sendLogs = $this->option('send_logs');
 
         if (empty($sendLogs) && $this->isInteractive) {
             $sendLogs = $this->confirm('Allow dumping <comment>Laravel Logs</comment> to the App?', true);
@@ -202,7 +204,7 @@ class InitCommand extends Command
 
     private function setLivewire(): self
     {
-        $sendLivewire =  $this->option('send_livewire');
+        $sendLivewire = $this->option('send_livewire');
 
         if (empty($sendLivewire) && $this->isInteractive) {
             $sendLivewire = $this->confirm('Allow dumping <comment>Livewire components</comment> to the App?', true);
@@ -218,7 +220,7 @@ class InitCommand extends Command
 
     private function setLivewireEvents(): self
     {
-        $sendLivewireEvents =  $this->option('livewire_events');
+        $sendLivewireEvents = $this->option('livewire_events');
 
         if (empty($sendLivewireEvents) && $this->isInteractive) {
             $sendLivewireEvents = $this->confirm('Allow dumping <comment>Livewire Events</comment> & <comment>Browser Events (dispatch)</comment> to the App?', true);
@@ -237,7 +239,7 @@ class InitCommand extends Command
 
     private function setLivewireValidation(): self
     {
-        $sendLivewireValidation =  $this->option('livewire_validation');
+        $sendLivewireValidation = $this->option('livewire_validation');
 
         if (empty($sendLivewireValidation) && $this->isInteractive) {
             $sendLivewireValidation = $this->confirm('Allow dumping <comment>Livewire failed validation</comment> to the App?', true);
@@ -253,7 +255,7 @@ class InitCommand extends Command
 
     private function setLivewireAutoClear(): self
     {
-        $allowLivewireAutoClear =  $this->option('livewire_autoclear');
+        $allowLivewireAutoClear = $this->option('livewire_autoclear');
 
         if (empty($allowLivewireAutoClear) && $this->isInteractive) {
             $allowLivewireAutoClear = $this->confirm('Enable <comment>Auto-clear</comment> APP History on page reload?', false);
@@ -269,7 +271,7 @@ class InitCommand extends Command
 
     private function setAutoInvoke(): self
     {
-        $autoInvoke =  $this->option('auto_invoke');
+        $autoInvoke = $this->option('auto_invoke');
 
         if (empty($autoInvoke) && $this->isInteractive) {
             $autoInvoke = $this->confirm('Would you like to invoke the App window on every Dump?', true);
@@ -299,7 +301,7 @@ class InitCommand extends Command
 
     private function setPreferredIde(): self
     {
-        $ide =  $this->option('ide');
+        $ide = $this->option('ide');
 
         $ideList = $this->ideConfigList();
 
@@ -341,6 +343,22 @@ class InitCommand extends Command
 
         config()->set('laradumps.send_http_client_requests', boolval($httpRequests));
         $this->updateEnv('DS_SEND_HTTP_CLIENT_REQUESTS', ($httpRequests ? 'true' : 'false'));
+
+        return $this;
+    }
+
+    private function setJobs(): self
+    {
+        $sendJobs = $this->option('send_jobs');
+
+        if (empty($sendJobs) && $this->isInteractive) {
+            $sendJobs = $this->confirm('Allow dumping <comment>Jobs</comment> to the App?', true);
+        }
+
+        $sendJobs = filter_var($sendJobs, FILTER_VALIDATE_BOOLEAN);
+
+        config()->set('laradumps.send_jobs', (bool) $sendJobs);
+        $this->updateEnv('DS_SEND_JOBS', ($sendJobs ? 'true' : 'false'));
 
         return $this;
     }
