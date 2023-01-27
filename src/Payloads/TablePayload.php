@@ -3,6 +3,7 @@
 namespace LaraDumps\LaraDumps\Payloads;
 
 use Illuminate\Support\Collection;
+use LaraDumps\LaraDumps\Actions\Table;
 
 class TablePayload extends Payload
 {
@@ -25,33 +26,6 @@ class TablePayload extends Payload
      */
     public function content(): array
     {
-        $values  = [];
-        $columns = [];
-
-        if ($this->data instanceof Collection) {
-            $this->data = $this->data->toArray();
-        }
-
-        foreach ($this->data as $row) {
-            foreach ($row as $key => $item) {
-                if (!in_array($key, $columns)) {
-                    $columns[] = $key;
-                }
-            }
-
-            $value = [];
-            foreach ($columns as $column) {
-                $value[$column] = (string) $row[$column];
-            }
-
-            $values[] = $value;
-        }
-
-        return [
-            'fields' => $columns,
-            'values' => $values,
-            'header' => $columns,
-            'label'  => $this->name,
-        ];
+        return (new Table($this->data, $this->name))->make();
     }
 }

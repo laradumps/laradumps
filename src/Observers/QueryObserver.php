@@ -89,7 +89,7 @@ class QueryObserver implements TraceableContract
             return $this->enabled;
         }
 
-        return true;
+        return boolval(config('laradumps.send_queries'));
     }
 
     protected function fileIsInExcludedPath(string $file): bool
