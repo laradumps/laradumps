@@ -7,7 +7,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Support\{Collection, Str};
 use LaraDumps\LaraDumps\Actions\SendPayload;
 use LaraDumps\LaraDumps\Concerns\Colors;
-use LaraDumps\LaraDumps\Observers\{HttpClientObserver, QueryObserver};
+use LaraDumps\LaraDumps\Observers\{HttpClientObserver, JobsObserver, QueryObserver};
 use LaraDumps\LaraDumps\Payloads\{ClearPayload,
     CoffeePayload,
     ColorPayload,
@@ -305,12 +305,14 @@ class LaraDumps
     /**
      * Display all HTTP Client requests that are executed with custom label
      */
-    public function httpClientOn(string $label = null): void
+    public function httpClientOn(string $label = null): self
     {
         $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
 
         app(HttpClientObserver::class)->setTrace($trace);
         app(HttpClientObserver::class)->enable($label);
+
+        return $this;
     }
 
     /**
@@ -330,5 +332,26 @@ class LaraDumps
         $this->send($payload);
 
         return $this;
+    }
+
+    /**
+     * Dump all Jobs that are dispatched with custom label
+     */
+    public function showJobs(string $label = null): self
+    {
+        $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
+
+        app(JobsObserver::class)->setTrace($trace);
+        app(JobsObserver::class)->enable($label);
+
+        return $this;
+    }
+
+    /**
+     * Stop dumping Jobs
+     */
+    public function stopShowingJobs(): void
+    {
+        app(JobsObserver::class)->disable();
     }
 }

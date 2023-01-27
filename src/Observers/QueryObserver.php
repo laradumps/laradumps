@@ -4,11 +4,15 @@ namespace LaraDumps\LaraDumps\Observers;
 
 use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Support\Facades\DB;
+use LaraDumps\LaraDumps\Concerns\Traceable;
+use LaraDumps\LaraDumps\Contracts\TraceableContract;
 use LaraDumps\LaraDumps\LaraDumps;
 use LaraDumps\LaraDumps\Payloads\QueriesPayload;
 
-class QueryObserver
+class QueryObserver implements TraceableContract
 {
+    use Traceable;
+
     private bool $enabled = false;
 
     private ?string $label = null;
@@ -77,11 +81,6 @@ class QueryObserver
         $this->enabled    = false;
     }
 
-    public function setTrace(array $trace): array
-    {
-        return $this->trace = $trace;
-    }
-
     public function isEnabled(): bool
     {
         $this->trace   = array_slice($this->findSource(), 0, 5)[0] ?? [];
@@ -91,31 +90,6 @@ class QueryObserver
         }
 
         return true;
-    }
-
-    protected function findSource(): array
-    {
-        $stack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 50);
-
-        $sources = [];
-
-        foreach ($stack as $trace) {
-            $sources[] = $this->parseTrace($trace);
-        }
-
-        return array_filter($sources);
-    }
-
-    protected function parseTrace(array $trace): array
-    {
-        if (
-            isset($trace['class']) && isset($trace['file']) &&
-            !$this->fileIsInExcludedPath($trace['file'])
-        ) {
-            return $trace;
-        }
-
-        return [];
     }
 
     protected function fileIsInExcludedPath(string $file): bool
