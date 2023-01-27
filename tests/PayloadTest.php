@@ -12,8 +12,8 @@ it('should return the correct payload to dump', function () {
         'name' => 'Luan',
     ];
 
-    $args           = Dumper::dump($args);
-    $notificationId = Str::uuid()->toString();
+    [$args, $id]       = Dumper::dump($args);
+    $notificationId    = Str::uuid()->toString();
 
     $trace      = [
         'file' => 'Test',
@@ -122,7 +122,7 @@ it('should return the correct payload to table-v2', function () {
         ->toContain('Anand Pilania')
         ->and($payload['content']['values']['Email'])
         ->toContain('pilaniaanand@gmail.com')
-        ->and($payload['content']['values']['Stack'])
+        ->and($payload['content']['values']['Stack'][0])
         ->toContain('Laravel');
 })->group('table-v2');
 

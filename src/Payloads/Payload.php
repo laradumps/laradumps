@@ -10,6 +10,8 @@ abstract class Payload
 
     private array $trace = [];
 
+    private ?string $dumpId = null;
+
     protected array $typesWithTrace = [
         'table',
         'validate',
@@ -33,6 +35,11 @@ abstract class Payload
     public function trace(array $trace): void
     {
         $this->trace = $trace;
+    }
+
+    public function dumpId(string $id): void
+    {
+        $this->dumpId = $id;
     }
 
     public function notificationId(string $notificationId): void
@@ -75,16 +82,18 @@ abstract class Payload
         }
 
         return [
-            'id'        => $this->notificationId,
-            'type'      => $this->type(),
-            'meta'      => [
+            'id'         => $this->notificationId,
+            'request_id' => LARADUMPS_REQUEST_ID,
+            'dumpId'     => $this->dumpId,
+            'type'       => $this->type(),
+            'meta'       => [
                 'laradumps_version' => $this->getInstalledVersion(),
                 'auto_invoke_app'   => $this->autoInvokeApp ?? boolval(config('laradumps.auto_invoke_app')),
             ],
-            'content'   => $this->content(),
-            'ideHandle' => $ideHandle,
-            'dateTime'  => now()->format('H:i:s'),
-            'pusher'    => $pusherConfig,
+            'content'    => $this->content(),
+            'ideHandle'  => $ideHandle,
+            'dateTime'   => now()->format('H:i:s'),
+            'pusher'     => $pusherConfig,
         ];
     }
 

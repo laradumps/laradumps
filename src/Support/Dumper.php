@@ -8,22 +8,24 @@ use Symfony\Component\VarDumper\Dumper\HtmlDumper;
 
 class Dumper
 {
-    public static function dump(mixed $arguments): mixed
+    public static function dump(mixed $arguments): array
     {
+        $id = Str::uuid();
+
         if (is_null($arguments)) {
-            return null;
+            return [null, $id];
         }
 
         if (is_string($arguments)) {
-            return $arguments;
+            return [$arguments, $id];
         }
 
         if (is_int($arguments)) {
-            return $arguments;
+            return [$arguments, $id];
         }
 
         if (is_bool($arguments)) {
-            return $arguments;
+            return [$arguments, $id];
         }
 
         $varCloner = new VarCloner();
@@ -32,6 +34,13 @@ class Dumper
 
         $htmlDumper = (string) $dumper->dump($varCloner->cloneVar($arguments), true);
 
-        return Str::cut($htmlDumper, '<pre ', '</pre>');
+        $pre = Str::cut($htmlDumper, '<pre ', '</pre>');
+
+        $id = Str::between($pre, 'class=sf-dump id=sf-dump-', ' data-indent-pad="  "');
+
+        return [
+            $pre,
+            $id,
+        ];
     }
 }

@@ -40,7 +40,7 @@
     },
     "scripts": {
         "cs-fixer": "./vendor/bin/php-cs-fixer fix --verbose --dry-run --using-cache=no --stop-on-violation",
-        "fix": "./vendor/bin/php-cs-fixer fix",
+        "fix": "PHP_CS_FIXER_IGNORE_ENV=1 ./vendor/bin/php-cs-fixer fix",
         "test:types": "./vendor/bin/phpstan analyse --ansi --memory-limit=-1",
         "test:tests": "./vendor/bin/pest --order-by random",
         "verify": [
