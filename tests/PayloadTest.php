@@ -2,8 +2,9 @@
 
 use Illuminate\Support\Str;
 use LaraDumps\LaraDumps\LaraDumps;
-use LaraDumps\LaraDumps\Payloads\{DumpPayload, ModelPayload};
+use LaraDumps\LaraDumps\Payloads\{DumpPayload, MailablePayload, MarkdownPayload, ModelPayload, TableV2Payload};
 use LaraDumps\LaraDumps\Support\Dumper;
+use LaraDumps\LaraDumps\Tests\Mail\TestMail;
 use LaraDumps\LaraDumps\Tests\Models\Dish;
 
 it('should return the correct payload to dump', function () {
@@ -11,8 +12,8 @@ it('should return the correct payload to dump', function () {
         'name' => 'Luan',
     ];
 
-    [$sfDump, $id]       = Dumper::dump($args);
-    $notificationId      = Str::uuid()->toString();
+    $args           = Dumper::dump($args);
+    $notificationId = Str::uuid()->toString();
 
     $trace      = [
         'file' => 'Test',
@@ -20,7 +21,7 @@ it('should return the correct payload to dump', function () {
     ];
 
     $laradumps      = new LaraDumps(notificationId: $notificationId, trace: $trace);
-    $payload        = $laradumps->send(new DumpPayload($sfDump, $args));
+    $payload        = $laradumps->send(new DumpPayload($args));
 
     expect($payload)
         ->id->toBe($notificationId)
@@ -69,3 +70,85 @@ it('should return the correct payload to model', function () {
             '<span class=sf-dump-key>active</span>',
         );
 })->skip('v2');
+
+it('should return the correct payload to mailable', function () {
+    $mailable = new TestMail();
+
+    $notificationId = Str::uuid()->toString();
+
+    $trace      = [
+        'file' => 'Test',
+        'line' => 1,
+    ];
+
+    $laradumps      = new LaraDumps($notificationId, trace: $trace);
+    $payload        = $laradumps->send(new MailablePayload($mailable));
+
+    expect($payload)
+        ->id->toBe($notificationId)
+        ->type->toBe('mailable')
+        ->and($payload['content']['subject'])
+        ->toContain('An test mail')
+        ->and($payload['content']['from'][0]['email'])
+        ->toContain('from@example.com')
+        ->and($payload['content']['to'][0]['email'])
+        ->toContain('to@example.com');
+})->group('mailable');
+
+it('should return the correct payload to table-v2', function () {
+    $data = [
+        'Name'  => 'Anand Pilania',
+        'Email' => 'pilaniaanand@gmail.com',
+        'Stack' => [
+            'Laravel',
+            'Flutter',
+        ],
+    ];
+
+    $trace      = [
+        'file' => 'Test',
+        'line' => 1,
+    ];
+
+    $notificationId = Str::uuid()->toString();
+
+    $laradumps      = new LaraDumps($notificationId, trace: $trace);
+    $payload        = $laradumps->send(new TableV2Payload($data));
+
+    expect($payload)
+        ->id->toBe($notificationId)
+        ->type->toBe('table-v2')
+        ->and($payload['content']['values']['Name'])
+        ->toContain('Anand Pilania')
+        ->and($payload['content']['values']['Email'])
+        ->toContain('pilaniaanand@gmail.com')
+        ->and($payload['content']['values']['Stack'])
+        ->toContain('Laravel');
+})->group('table-v2');
+
+it('should return the correct markdown payload to dump', function () {
+    $args   = '# Hi, Anand Pilania!';
+
+    $notificationId = Str::uuid()->toString();
+
+    $trace      = [
+        'file' => 'Test',
+        'line' => 1,
+    ];
+
+    $laradumps      = new LaraDumps(notificationId: $notificationId, trace: $trace);
+    $payload        = $laradumps->send(new MarkdownPayload($args));
+
+    expect($payload)
+        ->id->toBe($notificationId)
+        ->type->toBe('dump')
+        ->ideHandle->toMatchArray([
+            'handler' => 'phpstorm://open?file=Test&line=1',
+            'path'    => 'Test',
+            'line'    => 1,
+        ])
+        ->and($payload['content']['dump'])
+        ->toContain(
+            '<h1>Hi, Anand Pilania!</h1>'
+        );
+});

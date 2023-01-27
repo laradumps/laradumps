@@ -7,10 +7,10 @@ class TimeTrackPayload extends Payload
     /**
      * Clock script executiontime
      *
-     * @param bool $stop
+     * @param string $reference Reference name used in each call
      */
     public function __construct(
-        public bool $stop = false
+        public string $reference
     ) {
     }
 
@@ -22,15 +22,10 @@ class TimeTrackPayload extends Payload
     /** @return array<string, mixed> */
     public function content(): array
     {
-        $content = [
-            'timeTrackerId' => uniqid(),
+        return [
+            'timeTrackerId' => base64_encode(config('app.name') . strtolower($this->reference)),
+            'label'         => $this->reference,
             'time'          => microtime(true),
         ];
-
-        if ($this->stop) {
-            $content['end_time'] = microtime(true);
-        }
-
-        return $content;
     }
 }

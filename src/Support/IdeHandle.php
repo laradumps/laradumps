@@ -36,7 +36,6 @@ class IdeHandle
         }
 
         return [
-            'ide'     => config('laradumps.preferred_ide'),
             'handler' => $fileHandle,
             'path'    => $file,
             'line'    => $line,

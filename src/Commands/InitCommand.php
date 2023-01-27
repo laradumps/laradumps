@@ -13,7 +13,7 @@ class InitCommand extends Command
     use RenderAscii;
     use UpdateEnv;
 
-    protected $signature = 'ds:init {--no-interaction?} {--host=} {--port=} {--send_queries=} {--send_logs=} {--send_livewire=} {--livewire_events=}{--livewire_validation=}  {--livewire_autoclear=} {--auto_invoke=} {--ide=}';
+    protected $signature = 'ds:init {--no-interaction?} {--host=} {--port=} {--send_queries=} {--send_http_client_requests=} {--send_logs=} {--send_livewire=} {--livewire_events=}{--livewire_validation=}  {--livewire_autoclear=} {--auto_invoke=} {--ide=}';
 
     protected $description = 'Initialize LaraDumps configuration';
 
@@ -30,6 +30,7 @@ class InitCommand extends Command
         $this->setHost()
             ->setPort()
             ->setQueries()
+            ->setHttpClientRequests()
             ->setLogs()
             ->setLivewire()
             ->setLivewireEvents()
@@ -78,16 +79,17 @@ class InitCommand extends Command
         $this->line("\n🎉 <fg=green>Setup completed successfully!</> If you want to re-use this same configuration in other Laravel projects, simply run:\n");
 
         $this->line('<fg=cyan>   php artisan ds:init --no-interaction --host=' . config('laradumps.host')
-                    . ' --port=' . config('laradumps.port')
-                    . ' --send_queries=' . (config('laradumps.send_queries') ? 'true' : 'false')
-                    . ' --send_logs=' . (config('laradumps.send_log_applications') ? 'true' : 'false')
-                    . ' --send_livewire=' . (config('laradumps.send_livewire_components') ? 'true' : 'false')
-                    . ' --livewire_events=' . (config('laradumps.send_livewire_events') ? 'true' : 'false')
-                    . ' --livewire_validation=' . (config('laradumps.send_livewire_failed_validation.enabled') ? 'true' : 'false')
-                    . ' --livewire_autoclear=' . (config('laradumps.auto_clear_on_page_reload') ? 'true' : 'false')
-                    . ' --auto_invoke=' . (config('laradumps.auto_invoke_app') ? 'true' : 'false')
-                    . ' --ide=' . config('laradumps.preferred_ide')
-                    . "</>\n\n");
+            . ' --port=' . config('laradumps.port')
+            . ' --send_queries=' . (config('laradumps.send_queries') ? 'true' : 'false')
+            . ' --send_http_client_requests=' . (config('laradumps.send_http_client_requests') ? 'true' : 'false')
+            . ' --send_logs=' . (config('laradumps.send_log_applications') ? 'true' : 'false')
+            . ' --send_livewire=' . (config('laradumps.send_livewire_components') ? 'true' : 'false')
+            . ' --livewire_events=' . (config('laradumps.send_livewire_events') ? 'true' : 'false')
+            . ' --livewire_validation=' . (config('laradumps.send_livewire_failed_validation.enabled') ? 'true' : 'false')
+            . ' --livewire_autoclear=' . (config('laradumps.auto_clear_on_page_reload') ? 'true' : 'false')
+            . ' --auto_invoke=' . (config('laradumps.auto_invoke_app') ? 'true' : 'false')
+            . ' --ide=' . config('laradumps.preferred_ide')
+            . "</>\n\n");
 
         $this->line("\n\n⭐ Please consider <comment>starring</comment> our repository at <comment>https://github.com/laradumps/laradumps</comment>\n");
 
@@ -323,6 +325,22 @@ class InitCommand extends Command
 
         config()->set('laradumps.preferred_ide', $ide);
         $this->updateEnv('DS_PREFERRED_IDE', strval($ide));
+
+        return $this;
+    }
+
+    private function setHttpClientRequests(): self
+    {
+        $httpRequests = $this->option('send_http_client_requests');
+
+        if (empty($httpRequests) && $this->isInteractive) {
+            $httpRequests = $this->confirm('Allow dumping <comment>HTTP Client Requests</comment> to the App?', true);
+        }
+
+        $httpRequests = filter_var($httpRequests, FILTER_VALIDATE_BOOLEAN);
+
+        config()->set('laradumps.send_http_client_requests', boolval($httpRequests));
+        $this->updateEnv('DS_SEND_HTTP_CLIENT_REQUESTS', ($httpRequests ? 'true' : 'false'));
 
         return $this;
     }

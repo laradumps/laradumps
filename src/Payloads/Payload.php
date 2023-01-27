@@ -21,13 +21,12 @@ abstract class Payload
         'model',
         'time-track',
         'coffee',
-        'json',
-        'log',
+        'mailable',
+        'http-client',
+        'table-v2',
     ];
 
     private ?bool $autoInvokeApp = null;
-
-    private ?string $dumpId = null;
 
     abstract public function type(): string;
 
@@ -63,11 +62,6 @@ abstract class Payload
         $this->autoInvokeApp = $enable;
     }
 
-    public function dumpId(string $id): void
-    {
-        $this->dumpId = $id;
-    }
-
     public function toArray(): array
     {
         $ideHandle = $this->customHandle();
@@ -81,13 +75,10 @@ abstract class Payload
         }
 
         return [
-            'id'         => $this->notificationId,
-            'request_id' => LARADUMPS_REQUEST_ID,
-            'dumpId'     => $this->dumpId,
-            'type'       => $this->type(),
-            'meta'       => [
+            'id'        => $this->notificationId,
+            'type'      => $this->type(),
+            'meta'      => [
                 'laradumps_version' => $this->getInstalledVersion(),
-                'debugbar_enabled'  => boolval(config('debugbar.collectors.livewire')),
                 'auto_invoke_app'   => $this->autoInvokeApp ?? boolval(config('laradumps.auto_invoke_app')),
             ],
             'content'   => $this->content(),
