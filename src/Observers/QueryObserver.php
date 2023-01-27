@@ -46,13 +46,11 @@ class QueryObserver implements TraceableContract
             }
 
             $queries = [
-                'sql'                       => $sqlQuery,
-                'time'                      => $query->time,
-                'database'                  => $query->connection->getDatabaseName(),
-                'connectionName'            => $query->connectionName,
-                'query'                     => $query,
-                'formatted'                 => boolval(config('laradumps.send_queries.formatted', false)),
-                'showConnectionInformation' => boolval(config('laradumps.send_queries.show_connection_information', false)),
+                'sql'            => $sqlQuery,
+                'time'           => $query->time,
+                'database'       => $query->connection->getDatabaseName(),
+                'connectionName' => $query->connectionName,
+                'query'          => $query,
             ];
 
             $dumps = new LaraDumps(trace: $this->trace);
@@ -62,6 +60,8 @@ class QueryObserver implements TraceableContract
             if ($this->label) {
                 $dumps->label($this->label);
             }
+
+            $dumps->toScreen('Queries');
         });
     }
 

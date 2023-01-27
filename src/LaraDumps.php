@@ -13,6 +13,7 @@ use LaraDumps\LaraDumps\Payloads\{ClearPayload,
     ColorPayload,
     DiffPayload,
     DumpPayload,
+    JsonPayload,
     LabelPayload,
     MailablePayload,
     MarkdownPayload,
@@ -23,8 +24,7 @@ use LaraDumps\LaraDumps\Payloads\{ClearPayload,
     ScreenPayload,
     TablePayload,
     TimeTrackPayload,
-    ValidateStringPayload
-};
+    ValidateStringPayload};
 
 class LaraDumps
 {
@@ -204,16 +204,24 @@ class LaraDumps
 
     public function write(mixed $args = null, ?bool $autoInvokeApp = null): LaraDumps
     {
-        $originalContent    = $args;
-        [$pre, $id]         = Support\Dumper::dump($args);
-
-        if (!empty($args)) {
-            $payload = new DumpPayload($args, $originalContent);
-            $payload->autoInvokeApp($autoInvokeApp);
-            $payload->dumpId($id);
-
-            $this->send($payload);
+        /** @phpstan-ignore-next-line  */
+        if (is_string($args) && str($args)->isJson()) {
+            [$pre, $id]         = ['', uniqid()];
+        } else {
+            [$pre, $id]         = Support\Dumper::dump($args);
         }
+
+        /** @phpstan-ignore-next-line  */
+        if (is_string($args) && str($args)->isJson()) {
+            $payload = new JsonPayload($args);
+        } else {
+            $payload = new DumpPayload($pre, $args);
+        }
+
+        $payload->autoInvokeApp($autoInvokeApp);
+        $payload->dumpId($id);
+
+        $this->send($payload);
 
         return $this;
     }
@@ -277,8 +285,9 @@ class LaraDumps
      */
     public function time(string $reference): void
     {
-        $payload = new TimeTrackPayload($reference);
+        $payload = new TimeTrackPayload();
         $this->send($payload);
+        $this->label($reference);
     }
 
     /**
@@ -288,7 +297,7 @@ class LaraDumps
      */
     public function stopTime(string $reference): void
     {
-        $payload = new TimeTrackPayload($reference);
+        $payload = new TimeTrackPayload(true);
         $this->send($payload);
         $this->label($reference);
     }

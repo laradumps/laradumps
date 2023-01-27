@@ -26,6 +26,8 @@ abstract class Payload
         'mailable',
         'http-client',
         'table-v2',
+        'json',
+        'log',
     ];
 
     private ?bool $autoInvokeApp = null;
