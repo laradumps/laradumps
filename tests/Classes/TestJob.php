@@ -6,11 +6,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 
 class TestJob implements ShouldQueue
 {
-    public $data;
-
-    public function __construct($data = null)
+    public function __construct(public mixed $data = null)
     {
-        $this->data = $data;
     }
 
     public function handle()

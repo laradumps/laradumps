@@ -11,7 +11,7 @@ class TestMail extends Mailable
      *
      * @return $this
      */
-    public function build()
+    public function build(): static
     {
         return $this->to('to@example.com', 'To Test')
             ->from('from@example.com', 'From Test')
@@ -19,7 +19,7 @@ class TestMail extends Mailable
             ->html($this->getHTML());
     }
 
-    protected function getHTML()
+    protected function getHTML(): string
     {
         return <<<HTML
         Hi,<br/><br/>
