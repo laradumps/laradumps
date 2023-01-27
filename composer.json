@@ -14,12 +14,12 @@
     ],
     "require": {
         "php": "^8.0",
-        "nunomaduro/termwind": "^1.12"
+        "nunomaduro/termwind": "^1.12",
+        "illuminate/support": "^9.0|^10.0",
+        "illuminate/mail": "^9.0|^10.0"
     },
     "require-dev": {
-        "illuminate/mail": "^8.18 | ^9.0",
-        "illuminate/support": "^8.18 | ^9.0",
-        "orchestra/testbench": "^6.17 | ^7.0",
+        "orchestra/testbench": "^7.0 | ^8.0",
         "symfony/var-dumper": "^5.4 | ^6.0",
         "nunomaduro/larastan": "^1.0 | ^2.1",
         "friendsofphp/php-cs-fixer": "^3.8",
