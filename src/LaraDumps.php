@@ -204,8 +204,7 @@ class LaraDumps
 
     public function write(mixed $args = null, ?bool $autoInvokeApp = null): LaraDumps
     {
-        /** @phpstan-ignore-next-line  */
-        if (is_string($args) && str($args)->isJson()) {
+        if (is_string($args) && Str::of($args)->isJson()) {
             [$pre, $id]         = ['', uniqid()];
         } else {
             [$pre, $id]         = Support\Dumper::dump($args);
