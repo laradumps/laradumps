@@ -13,7 +13,7 @@ class InitCommand extends Command
     use RenderAscii;
     use UpdateEnv;
 
-    protected $signature = 'ds:init {--no-interaction?} {--host=} {--port=} {--send_queries=} {--send_http_client_requests=} {--send_jobs=} {--send_logs=} {--send_livewire=} {--livewire_events=}{--livewire_validation=}  {--livewire_autoclear=} {--auto_invoke=} {--ide=}';
+    protected $signature = 'ds:init {--no-interaction?} {--host=} {--port=} {--send_queries=} {--send_http_client_requests=} {--send_jobs=} {--send_cache=} {--send_logs=} {--send_livewire=} {--livewire_events=}{--livewire_validation=}  {--livewire_autoclear=} {--auto_invoke=} {--ide=}';
 
     protected $description = 'Initialize LaraDumps configuration';
 
@@ -32,6 +32,7 @@ class InitCommand extends Command
             ->setQueries()
             ->setHttpClientRequests()
             ->setJobs()
+            ->setCache()
             ->setLogs()
             ->setLivewire()
             ->setLivewireEvents()
@@ -84,6 +85,7 @@ class InitCommand extends Command
             . ' --send_queries=' . (config('laradumps.send_queries') ? 'true' : 'false')
             . ' --send_http_client_requests=' . (config('laradumps.send_http_client_requests') ? 'true' : 'false')
             . ' --send_jobs=' . (config('laradumps.send_jobs') ? 'true' : 'false')
+            . ' --send_cache=' . (config('laradumps.send_cache') ? 'true' : 'false')
             . ' --send_logs=' . (config('laradumps.send_log_applications') ? 'true' : 'false')
             . ' --send_livewire=' . (config('laradumps.send_livewire_components') ? 'true' : 'false')
             . ' --livewire_events=' . (config('laradumps.send_livewire_events') ? 'true' : 'false')
@@ -359,6 +361,22 @@ class InitCommand extends Command
 
         config()->set('laradumps.send_jobs', (bool) $sendJobs);
         $this->updateEnv('DS_SEND_JOBS', ($sendJobs ? 'true' : 'false'));
+
+        return $this;
+    }
+
+    private function setCache(): self
+    {
+        $sendCache = $this->option('send_cache');
+
+        if (empty($sendCache) && $this->isInteractive) {
+            $sendCache = $this->confirm('Allow dumping <comment>Cache</comment> to the App?', true);
+        }
+
+        $sendCache = filter_var($sendCache, FILTER_VALIDATE_BOOLEAN);
+
+        config()->set('laradumps.send_cache', (bool) $sendCache);
+        $this->updateEnv('DS_SEND_JOBS', ($sendCache ? 'true' : 'false'));
 
         return $this;
     }
