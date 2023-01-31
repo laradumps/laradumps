@@ -29,32 +29,32 @@ class CacheObserver
 
         Event::listen(CacheHit::class, function (CacheHit $event) {
             $this->sendCache($event, [
-                'type'  => 'hit',
-                'key'   => $event->key,
-                'value' => $this->formatValue($event),
+                'Type'  => 'hit',
+                'Key'   => $event->key,
+                'Value' => $this->formatValue($event),
             ]);
         });
 
         Event::listen(CacheMissed::class, function (CacheMissed $event) {
             $this->sendCache($event, [
-                'type' => 'missed',
-                'key'  => $event->key,
+                'Type' => 'missed',
+                'Key'  => $event->key,
             ]);
         });
 
         Event::listen(KeyForgotten::class, function (KeyForgotten $event) {
             $this->sendCache($event, [
-                'type' => 'forget',
-                'key'  => $event->key,
+                'Type' => 'forget',
+                'Key'  => $event->key,
             ]);
         });
 
         Event::listen(KeyWritten::class, function (KeyWritten $event) {
             $this->sendCache($event, [
-                'type'       => 'set',
-                'key'        => $event->key,
-                'value'      => $this->formatValue($event),
-                'expiration' => $this->formatExpiration($event),
+                'Type'       => 'set',
+                'Key'        => $event->key,
+                'Value'      => $this->formatValue($event),
+                'Expiration' => $this->formatExpiration($event),
             ]);
         });
     }

@@ -63,7 +63,6 @@ return [
     */
 
     'send_http_client_requests'          => env('DS_SEND_HTTP_CLIENT_REQUESTS', false),
-
     /*
     |--------------------------------------------------------------------------
     | Job dump
@@ -75,7 +74,6 @@ return [
     */
 
     'send_jobs'                          => env('DS_SEND_JOBS', false),
-
     /*
     |--------------------------------------------------------------------------
     | Cache dump
