@@ -31,8 +31,8 @@ class LivewireEventsObserver
                             'path'    => Str::of(strval($component))->replace(config('livewire.class_namespace') . '\\', ''),
                             'line'    => 1,
                         ],
-                        'event'            => $eventName,
-                        'returned'         => Dumper::dump($returned),
+                        'event'    => $eventName,
+                        'returned' => Dumper::dump($returned),
                     ];
 
                     $dumps = new LaraDumps(notificationId: 'ds-event-' . $eventName);
@@ -101,8 +101,8 @@ class LivewireEventsObserver
                             'path'    => Str::of(strval($component))->replace(config('livewire.class_namespace') . '\\', ''),
                             'line'    => 1,
                         ],
-                        'params'           => Dumper::dump($params),
-                        'returned'         => [],
+                        'params'   => Dumper::dump($params),
+                        'returned' => [],
                     ];
 
                     $dumps = new LaraDumps(notificationId: 'ds-event-' . $notificationId);
