@@ -92,10 +92,10 @@ abstract class Payload
                 'laradumps_version' => $this->getInstalledVersion(),
                 'auto_invoke_app'   => $this->autoInvokeApp ?? boolval(config('laradumps.auto_invoke_app')),
             ],
-            'content'    => $this->content(),
-            'ideHandle'  => $ideHandle,
-            'dateTime'   => now()->format('H:i:s'),
-            'pusher'     => $pusherConfig,
+            'content'   => $this->content(),
+            'ideHandle' => $ideHandle,
+            'dateTime'  => now()->format('H:i:s'),
+            'pusher'    => $pusherConfig,
         ];
     }
 
