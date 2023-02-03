@@ -7,7 +7,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Support\{Collection, Str};
 use LaraDumps\LaraDumps\Actions\SendPayload;
 use LaraDumps\LaraDumps\Concerns\Colors;
-use LaraDumps\LaraDumps\Observers\{HttpClientObserver, JobsObserver, QueryObserver};
+use LaraDumps\LaraDumps\Observers\{CacheObserver, HttpClientObserver, JobsObserver, QueryObserver};
 use LaraDumps\LaraDumps\Payloads\{ClearPayload,
     CoffeePayload,
     ColorPayload,
@@ -364,5 +364,26 @@ class LaraDumps
     public function stopShowingJobs(): void
     {
         app(JobsObserver::class)->disable();
+    }
+
+    /**
+     * Dump all Jobs that are dispatched with custom label
+     */
+    public function showCache(string $label = null): self
+    {
+        $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
+
+        app(CacheObserver::class)->setTrace($trace);
+        app(CacheObserver::class)->enable($label);
+
+        return $this;
+    }
+
+    /**
+     * Stop dumping Jobs
+     */
+    public function stopShowingCache(): void
+    {
+        app(CacheObserver::class)->disable();
     }
 }

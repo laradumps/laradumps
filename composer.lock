@@ -5795,30 +5795,30 @@
         },
         {
             "name": "pestphp/pest",
-            "version": "v1.22.3",
+            "version": "v1.22.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pestphp/pest.git",
-                "reference": "b58a020423e9ad16c8bb8781927d516adae00da4"
+                "reference": "ee4ff5a9094ce04ddda6bc499dd9d81e1d8863d4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pestphp/pest/zipball/b58a020423e9ad16c8bb8781927d516adae00da4",
-                "reference": "b58a020423e9ad16c8bb8781927d516adae00da4",
+                "url": "https://api.github.com/repos/pestphp/pest/zipball/ee4ff5a9094ce04ddda6bc499dd9d81e1d8863d4",
+                "reference": "ee4ff5a9094ce04ddda6bc499dd9d81e1d8863d4",
                 "shasum": ""
             },
             "require": {
                 "nunomaduro/collision": "^5.11.0|^6.3.0",
                 "pestphp/pest-plugin": "^1.1.0",
                 "php": "^7.3 || ^8.0",
-                "phpunit/phpunit": "^9.5.26"
+                "phpunit/phpunit": "^9.6.0"
             },
             "require-dev": {
-                "illuminate/console": "^8.83.26",
-                "illuminate/support": "^8.83.26",
+                "illuminate/console": "^8.83.27",
+                "illuminate/support": "^8.83.27",
                 "laravel/dusk": "^6.25.2",
                 "pestphp/pest-dev-tools": "^1.0.0",
-                "pestphp/pest-plugin-parallel": "^1.2"
+                "pestphp/pest-plugin-parallel": "^1.2.1"
             },
             "bin": [
                 "bin/pest"
@@ -5872,7 +5872,7 @@
             ],
             "support": {
                 "issues": "https://github.com/pestphp/pest/issues",
-                "source": "https://github.com/pestphp/pest/tree/v1.22.3"
+                "source": "https://github.com/pestphp/pest/tree/v1.22.4"
             },
             "funding": [
                 {
@@ -5900,7 +5900,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2022-12-07T14:31:55+00:00"
+            "time": "2023-02-03T13:03:07+00:00"
         },
         {
             "name": "pestphp/pest-plugin",
@@ -6551,16 +6551,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "9.6.0",
+            "version": "9.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "70fc8be1d0b9fad56a199a4df5f9cfabfc246f84"
+                "reference": "9a52e8385f3e432d7e8ecab72c4d211a67223285"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/70fc8be1d0b9fad56a199a4df5f9cfabfc246f84",
-                "reference": "70fc8be1d0b9fad56a199a4df5f9cfabfc246f84",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/9a52e8385f3e432d7e8ecab72c4d211a67223285",
+                "reference": "9a52e8385f3e432d7e8ecab72c4d211a67223285",
                 "shasum": ""
             },
             "require": {
@@ -6633,7 +6633,7 @@
             ],
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.6.0"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.6.1"
             },
             "funding": [
                 {
@@ -6649,7 +6649,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-02-03T07:32:24+00:00"
+            "time": "2023-02-03T19:31:30+00:00"
         },
         {
             "name": "pimple/pimple",
