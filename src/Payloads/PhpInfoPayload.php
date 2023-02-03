@@ -41,7 +41,7 @@ class PhpInfoPayload extends Payload
                 'Property',
                 'Value',
             ],
-            'label'  => 'PHPINFO',
+            'label' => 'PHPINFO',
         ];
     }
 }

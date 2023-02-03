@@ -2,12 +2,16 @@
 
 use Illuminate\Support\Facades\File;
 
+beforeEach(function () {
+    $this->configFile = config_path('laradumps.php');
+
+    if (File::exists($this->configFile)) {
+        File::delete($this->configFile);
+    }
+});
+
 it('publishes the config file', function () {
     $configFile = config_path('laradumps.php');
-
-    if (File::exists($configFile)) {
-        File::delete($configFile);
-    }
 
     $this->artisan('ds:init --no-interaction --host=127.0.0.1 --port=9191 --send_queries=true --send_logs=true --send_livewire=true --auto_invoke=true --ide=phpstorm');
 
@@ -51,7 +55,6 @@ it('updates the config non-interactively', function () {
 
 it('updates the config through the wizard', function () {
     $this->artisan('ds:init')
-        ->expectsQuestion('The config file <comment>laradumps.php</comment> already exists. Delete it?', true)
         ->expectsQuestion('Select the App host address', '0.0.0.1')
         ->expectsQuestion('Enter the App Port', '1212')
         ->expectsQuestion('Allow dumping <comment>SQL Queries</comment> to the App?', true)
@@ -77,6 +80,8 @@ it('updates the config through the wizard', function () {
     expect(config('laradumps.auto_invoke_app'))->toBeTrue();
     expect(config('laradumps.preferred_ide'))->toBe('phpstorm');
 
+    // The config file already exists from the previous ds:init
+    // and the user should be prompted with the option to delete it.
     $this->artisan('ds:init')
         ->expectsQuestion('The config file <comment>laradumps.php</comment> already exists. Delete it?', true)
         ->expectsQuestion('Select the App host address', 'other')
