@@ -95,12 +95,12 @@ class HttpClientObserver implements TraceableContract
     protected function handleResponse(Request $request, Response $response): Payload
     {
         return new TableV2Payload([
-            'URL'          => $request->url(),
-            'Real Request' => !empty($response->handlerStats()),
-            'Success'      => $response->successful(),
-            'Status'       => $response->status(),
-            'Headers'      => Dumper::dump($response->headers()),
-            'Body'         => rescue(function () use ($response) {
+            'URL'             => $request->url(),
+            'Real Request'    => !empty($response->handlerStats()),
+            'Success'         => $response->successful(),
+            'Status'          => $response->status(),
+            'Headers'         => Dumper::dump($response->headers()),
+            'Body'            => rescue(function () use ($response) {
                 return $response->json();
             }, Dumper::dump($response->body()), false),
             'Cookies'         => Dumper::dump($response->cookies()),
