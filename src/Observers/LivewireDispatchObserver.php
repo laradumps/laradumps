@@ -43,7 +43,7 @@ class LivewireDispatchObserver
                             'path'    => Str::of(strval($component))->replace(config('livewire.class_namespace') . '\\', ''),
                             'line'    => 1,
                         ],
-                        'params'           => Dumper::dump($params),
+                        'params' => Dumper::dump($params),
                     ];
 
                     $dumps = new LaraDumps(notificationId: $notificationId);

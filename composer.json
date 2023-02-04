@@ -17,6 +17,7 @@
         "nunomaduro/termwind": "^1.12"
     },
     "require-dev": {
+        "illuminate/console": "^8.18 | ^9.0",
         "illuminate/mail": "^8.18 | ^9.0",
         "illuminate/support": "^8.18 | ^9.0",
         "orchestra/testbench": "^6.17 | ^7.0",

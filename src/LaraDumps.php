@@ -377,7 +377,7 @@ class LaraDumps
     }
 
     /**
-     * Dump all Commands that are dispatched with custom label
+     * Dump all Commands with custom label
      */
     public function commandsOn(string $label = null): self
     {

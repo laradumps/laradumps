@@ -55,7 +55,7 @@ class RoutesPayload extends Payload
                 'Uri',
                 'Action',
             ],
-            'label'  => 'Routes',
+            'label' => 'Routes',
         ];
     }
 
