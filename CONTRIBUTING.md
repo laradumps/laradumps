@@ -24,6 +24,12 @@ Install all dependencies with composer and NPM.
 composer install
 ```
 
+Update the composer dependencies.
+
+```Shell
+composer update
+```
+
 <br/>
 
 2. **Create a new branch**
@@ -38,7 +44,10 @@ git checkout -b feature/my-new-feature
 
 3. **Code and check your work**
 
-Write your code and, when you are done, run the CS Fix:
+
+Write your code and, when you are done, run the following checks:
+
+Run the CS Fix:
 
 ```Shell
 composer fix
