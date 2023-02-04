@@ -316,7 +316,7 @@ class LaraDumps
     /**
      * Display all HTTP Client requests that are executed with custom label
      */
-    public function httpClientOn(string $label = null): self
+    public function httpOn(string $label = null): self
     {
         $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
 
@@ -329,7 +329,7 @@ class LaraDumps
     /**
      * Stop displaying HTTP Client requests
      */
-    public function httpClientOff(): void
+    public function httpOff(): void
     {
         app(HttpClientObserver::class)->disable();
     }
@@ -348,7 +348,7 @@ class LaraDumps
     /**
      * Dump all Jobs that are dispatched with custom label
      */
-    public function showJobs(string $label = null): self
+    public function jobsOn(string $label = null): self
     {
         $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
 
@@ -361,7 +361,7 @@ class LaraDumps
     /**
      * Stop dumping Jobs
      */
-    public function stopShowingJobs(): void
+    public function jobsOff(): void
     {
         app(JobsObserver::class)->disable();
     }
@@ -369,7 +369,7 @@ class LaraDumps
     /**
      * Dump all Jobs that are dispatched with custom label
      */
-    public function showCache(string $label = null): self
+    public function cacheOn(string $label = null): self
     {
         $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
 
@@ -382,7 +382,7 @@ class LaraDumps
     /**
      * Stop dumping Jobs
      */
-    public function stopShowingCache(): void
+    public function cacheOff(): void
     {
         app(CacheObserver::class)->disable();
     }

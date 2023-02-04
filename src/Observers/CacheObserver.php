@@ -3,7 +3,7 @@
 namespace LaraDumps\LaraDumps\Observers;
 
 use Illuminate\Cache\Events\{CacheEvent, CacheHit, CacheMissed, KeyForgotten, KeyWritten};
-use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\{Cache, Event};
 use Illuminate\Support\Str;
 use LaraDumps\LaraDumps\Concerns\Traceable;
 use LaraDumps\LaraDumps\LaraDumps;
@@ -23,11 +23,11 @@ class CacheObserver
 
     public function register(): void
     {
-        if (!($this->enabled = $this->isEnabled())) {
-            return;
-        }
-
         Event::listen(CacheHit::class, function (CacheHit $event) {
+            if (!$this->isEnabled()) {
+                return;
+            }
+
             $this->sendCache($event, [
                 'Type'  => 'hit',
                 'Key'   => $event->key,
@@ -36,6 +36,10 @@ class CacheObserver
         });
 
         Event::listen(CacheMissed::class, function (CacheMissed $event) {
+            if (!$this->isEnabled()) {
+                return;
+            }
+
             $this->sendCache($event, [
                 'Type' => 'missed',
                 'Key'  => $event->key,
@@ -43,6 +47,10 @@ class CacheObserver
         });
 
         Event::listen(KeyForgotten::class, function (KeyForgotten $event) {
+            if (!$this->isEnabled()) {
+                return;
+            }
+
             $this->sendCache($event, [
                 'Type' => 'forget',
                 'Key'  => $event->key,
@@ -50,6 +58,10 @@ class CacheObserver
         });
 
         Event::listen(KeyWritten::class, function (KeyWritten $event) {
+            if (!$this->isEnabled()) {
+                return;
+            }
+
             $this->sendCache($event, [
                 'Type'       => 'set',
                 'Key'        => $event->key,
@@ -93,6 +105,8 @@ class CacheObserver
         $this->trace = array_slice($this->findSource(), 0, 5)[0] ?? [];
 
         if (!boolval(config('laradumps.send_cache'))) {
+            logger($this->enabled ? 'true' : 'false');
+
             return $this->enabled;
         }
 

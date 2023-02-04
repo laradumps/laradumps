@@ -58,7 +58,7 @@ return [
     |--------------------------------------------------------------------------
     |
     | When `true`, it allows to dump HTTP and send them to Desktop App.
-    | Required for: ds()->httpClientOn() method.
+    | Required for: ds()->httpOn() method.
     |
     */
 
@@ -70,7 +70,7 @@ return [
     |--------------------------------------------------------------------------
     |
     | When `true`, it allows to dump Job and send them to Desktop App.
-    | Required for: ds()->showJobs() method.
+    | Required for: ds()->jobsOn() method.
     |
     */
 
@@ -82,11 +82,11 @@ return [
     |--------------------------------------------------------------------------
     |
     | When `true`, it allows to dump Cache and send them to Desktop App.
-    | Required for: ds()->showCache() method.
+    | Required for: ds()->cacheOn() method.
     |
     */
 
-    'send_cache' => env('DS_SEND_CACHE', true),
+    'send_cache' => env('DS_SEND_CACHE', false),
 
     /*
     |--------------------------------------------------------------------------
