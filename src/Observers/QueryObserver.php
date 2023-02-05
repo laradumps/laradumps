@@ -19,18 +19,6 @@ class QueryObserver implements TraceableContract
 
     private array $trace = [];
 
-    protected array $backtraceExcludePaths = [
-        '/vendor/laravel/framework/src/Illuminate/Support',
-        '/vendor/laravel/framework/src/Illuminate/Database',
-        '/vendor/laravel/framework/src/Illuminate/Events',
-        '/vendor/barryvdh',
-        '/vendor/symfony',
-        '/artisan',
-        '/vendor/livewire',
-        '/packages/laradumps',
-        '/vendor/laradumps',
-    ];
-
     public function register(): void
     {
         DB::listen(function (QueryExecuted $query) {

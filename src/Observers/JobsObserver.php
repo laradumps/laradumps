@@ -23,8 +23,6 @@ class JobsObserver implements TraceableContract
 
     public function register(): void
     {
-        $this->enabled = $this->isEnabled();
-
         Event::listen([
             JobQueued::class,
             JobProcessing::class,
