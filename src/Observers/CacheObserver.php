@@ -105,8 +105,6 @@ class CacheObserver
         $this->trace = array_slice($this->findSource(), 0, 5)[0] ?? [];
 
         if (!boolval(config('laradumps.send_cache'))) {
-            logger($this->enabled ? 'true' : 'false');
-
             return $this->enabled;
         }
 
