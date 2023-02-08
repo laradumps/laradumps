@@ -7,7 +7,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Support\{Collection, Str};
 use LaraDumps\LaraDumps\Actions\SendPayload;
 use LaraDumps\LaraDumps\Concerns\Colors;
-use LaraDumps\LaraDumps\Observers\{CacheObserver, HttpClientObserver, JobsObserver, QueryObserver};
+use LaraDumps\LaraDumps\Observers\{CacheObserver, CommandObserver, HttpClientObserver, JobsObserver, QueryObserver};
 use LaraDumps\LaraDumps\Payloads\{ClearPayload,
     CoffeePayload,
     ColorPayload,
@@ -374,5 +374,26 @@ class LaraDumps
     public function cacheOff(): void
     {
         app(CacheObserver::class)->disable();
+    }
+
+    /**
+     * Dump all Commands with custom label
+     */
+    public function commandsOn(string $label = null): self
+    {
+        $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
+
+        app(CommandObserver::class)->setTrace($trace);
+        app(CommandObserver::class)->enable($label);
+
+        return $this;
+    }
+
+    /**
+     * Stop dumping Commands
+     */
+    public function commandsOff(): void
+    {
+        app(CommandObserver::class)->disable();
     }
 }

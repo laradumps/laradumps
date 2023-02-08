@@ -13,7 +13,7 @@ class InitCommand extends Command
     use RenderAscii;
     use UpdateEnv;
 
-    protected $signature = 'ds:init {--no-interaction?} {--host=} {--port=} {--send_queries=} {--send_http_client_requests=} {--send_jobs=} {--send_cache=} {--send_logs=} {--send_livewire=} {--livewire_events=}{--livewire_validation=}  {--livewire_autoclear=} {--auto_invoke=} {--ide=}';
+    protected $signature = 'ds:init {--no-interaction?} {--host=} {--port=} {--send_queries=} {--send_http_client_requests=} {--send_jobs=} {--send_commands=} {--send_cache=} {--send_logs=} {--send_livewire=} {--livewire_events=}{--livewire_validation=}  {--livewire_autoclear=} {--auto_invoke=} {--ide=}';
 
     protected $description = 'Initialize LaraDumps configuration';
 
@@ -32,6 +32,7 @@ class InitCommand extends Command
             ->setQueries()
             ->setHttpClientRequests()
             ->setJobs()
+            ->setCommands()
             ->setCache()
             ->setLogs()
             ->setLivewire()
@@ -85,6 +86,7 @@ class InitCommand extends Command
             . ' --send_queries=' . (config('laradumps.send_queries') ? 'true' : 'false')
             . ' --send_http_client_requests=' . (config('laradumps.send_http_client_requests') ? 'true' : 'false')
             . ' --send_jobs=' . (config('laradumps.send_jobs') ? 'true' : 'false')
+            . ' --send_commands=' . (config('laradumps.send_commands') ? 'true' : 'false')
             . ' --send_cache=' . (config('laradumps.send_cache') ? 'true' : 'false')
             . ' --send_logs=' . (config('laradumps.send_log_applications') ? 'true' : 'false')
             . ' --send_livewire=' . (config('laradumps.send_livewire_components') ? 'true' : 'false')
@@ -377,6 +379,22 @@ class InitCommand extends Command
 
         config()->set('laradumps.send_cache', (bool) $sendCache);
         $this->updateEnv('DS_SEND_JOBS', ($sendCache ? 'true' : 'false'));
+
+        return $this;
+    }
+
+    private function setCommands(): self
+    {
+        $sendCommands = $this->option('send_commands');
+
+        if (empty($sendCommands) && $this->isInteractive) {
+            $sendCommands = $this->confirm('Allow dumping <comment>Commands</comment> to the App?', true);
+        }
+
+        $sendCommands = filter_var($sendCommands, FILTER_VALIDATE_BOOLEAN);
+
+        config()->set('laradumps.send_commands', (bool) $sendCommands);
+        $this->updateEnv('DS_SEND_COMMANDS', ($sendCommands ? 'true' : 'false'));
 
         return $this;
     }

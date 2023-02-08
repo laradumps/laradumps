@@ -63,6 +63,19 @@ return [
     */
 
     'send_http_client_requests' => env('DS_SEND_HTTP_CLIENT_REQUESTS', false),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Commands dump
+    |--------------------------------------------------------------------------
+    |
+    | When `true`, it allows to dump Commands and send them to Desktop App.
+    | Required for: ds()->commandsOn() method.
+    |
+    */
+
+    'send_commands' => env('DS_SEND_COMMANDS', false),
+
     /*
     |--------------------------------------------------------------------------
     | Job dump
@@ -74,6 +87,7 @@ return [
     */
 
     'send_jobs' => env('DS_SEND_JOBS', false),
+
     /*
     |--------------------------------------------------------------------------
     | Cache dump
