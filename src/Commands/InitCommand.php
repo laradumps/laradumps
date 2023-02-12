@@ -13,7 +13,7 @@ class InitCommand extends Command
     use RenderAscii;
     use UpdateEnv;
 
-    protected $signature = 'ds:init {--no-interaction?} {--host=} {--port=} {--send_queries=} {--send_http_client_requests=} {--send_jobs=} {--send_commands=} {--send_cache=} {--send_logs=} {--send_livewire=} {--livewire_events=}{--livewire_validation=}  {--livewire_autoclear=} {--auto_invoke=} {--ide=}';
+    protected $signature = 'ds:init {--no-interaction?} {--host=} {--port=} {--send_queries=} {--send_http_client_requests=} {--send_jobs=} {--send_commands=} {--send_cache=} {--send_gate=} {--send_logs=} {--send_livewire=} {--livewire_events=}{--livewire_validation=}  {--livewire_autoclear=} {--auto_invoke=} {--ide=}';
 
     protected $description = 'Initialize LaraDumps configuration';
 
@@ -34,6 +34,7 @@ class InitCommand extends Command
             ->setJobs()
             ->setCommands()
             ->setCache()
+            ->setGate()
             ->setLogs()
             ->setLivewire()
             ->setLivewireEvents()
@@ -88,6 +89,7 @@ class InitCommand extends Command
             . ' --send_jobs=' . (config('laradumps.send_jobs') ? 'true' : 'false')
             . ' --send_commands=' . (config('laradumps.send_commands') ? 'true' : 'false')
             . ' --send_cache=' . (config('laradumps.send_cache') ? 'true' : 'false')
+            . ' --send_gate=' . (config('laradumps.send_gate') ? 'true' : 'false')
             . ' --send_logs=' . (config('laradumps.send_log_applications') ? 'true' : 'false')
             . ' --send_livewire=' . (config('laradumps.send_livewire_components') ? 'true' : 'false')
             . ' --livewire_events=' . (config('laradumps.send_livewire_events') ? 'true' : 'false')
@@ -378,7 +380,7 @@ class InitCommand extends Command
         $sendCache = filter_var($sendCache, FILTER_VALIDATE_BOOLEAN);
 
         config()->set('laradumps.send_cache', (bool) $sendCache);
-        $this->updateEnv('DS_SEND_JOBS', ($sendCache ? 'true' : 'false'));
+        $this->updateEnv('DS_SEND_CACHE', ($sendCache ? 'true' : 'false'));
 
         return $this;
     }
@@ -395,6 +397,22 @@ class InitCommand extends Command
 
         config()->set('laradumps.send_commands', (bool) $sendCommands);
         $this->updateEnv('DS_SEND_COMMANDS', ($sendCommands ? 'true' : 'false'));
+
+        return $this;
+    }
+
+    private function setGate(): self
+    {
+        $sendGate = $this->option('send_gate');
+
+        if (empty($sendGate) && $this->isInteractive) {
+            $sendGate = $this->confirm('Allow dumping <comment>Gate & Policy</comment> to the App?', true);
+        }
+
+        $sendGate = filter_var($sendGate, FILTER_VALIDATE_BOOLEAN);
+
+        config()->set('laradumps.send_gate', (bool) $sendGate);
+        $this->updateEnv('DS_SEND_GATE', ($sendGate ? 'true' : 'false'));
 
         return $this;
     }
