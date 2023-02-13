@@ -5,6 +5,7 @@ namespace LaraDumps\LaraDumps\Observers;
 use BackedEnum;
 use Illuminate\Auth\Access\Events\GateEvaluated;
 use Illuminate\Auth\Access\Response;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Support\Arr;
@@ -32,10 +33,11 @@ class GateObserver
             }
 
             $dumps = new LaraDumps(trace: $this->trace);
+            $user  = $event->user;
 
             $dumps->send(
                 new TableV2Payload([
-                    'User'      => $event->user,
+                    'User'      => Dumper::dump($user instanceof Authenticatable ? $user->toArray() : null),
                     'Ability'   => $event->ability,
                     'Result'    => $this->gateResult($event->result),
                     'Arguments' => Dumper::dump(collect($event->arguments)->map(function ($argument) {
