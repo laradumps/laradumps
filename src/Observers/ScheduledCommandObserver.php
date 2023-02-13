@@ -7,8 +7,7 @@ use Illuminate\Console\Scheduling\{CallbackEvent, Event, Schedule};
 use LaraDumps\LaraDumps\Concerns\Traceable;
 use LaraDumps\LaraDumps\Contracts\TraceableContract;
 use LaraDumps\LaraDumps\LaraDumps;
-use LaraDumps\LaraDumps\Payloads\{DumpPayload, Payload};
-use LaraDumps\LaraDumps\Support\Dumper;
+use LaraDumps\LaraDumps\Payloads\{DumpPayload, Payload, TableV2Payload};
 
 class ScheduledCommandObserver implements TraceableContract
 {
@@ -78,14 +77,14 @@ class ScheduledCommandObserver implements TraceableContract
 
     private function generatePayload(Event $event): Payload
     {
-        return new DumpPayload(Dumper::dump([
-            'command'     => $event instanceof CallbackEvent ? 'Closure' : $event->command,
-            'description' => $event->description,
-            'expression'  => $event->expression,
-            'timezone'    => $event->timezone,
-            'user'        => $event->user,
-            'output'      => $this->getEventOutput($event),
-        ]));
+        return new TableV2Payload([
+            'Command'     => $event instanceof CallbackEvent ? 'Closure' : $event->command,
+            'Description' => $event->description,
+            'Expression'  => $event->expression,
+            'Timezone'    => $event->timezone,
+            'User'        => $event->user,
+            'Output'      => $this->getEventOutput($event),
+        ]);
     }
 
     protected function getEventOutput(Event $event): string|null
