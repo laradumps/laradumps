@@ -68,7 +68,7 @@ class GateObserver
     {
         $this->trace = array_slice($this->findSource(), 0, 5)[0] ?? [];
 
-        if (!boolval(config('laradumps.send_gate'))) {
+        if (!(bool) boolval(config('laradumps.send_gate'))) {
             return $this->enabled;
         }
 
