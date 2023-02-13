@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\{Collection, ServiceProvider, Str, Stringable};
 use LaraDumps\LaraDumps\Commands\{CheckCommand, InitCommand};
 use LaraDumps\LaraDumps\Observers\{CacheObserver,
+    CommandObserver,
     HttpClientObserver,
     JobsObserver,
     LivewireComponentsObserver,
@@ -55,6 +56,7 @@ class LaraDumpsServiceProvider extends ServiceProvider
         }
 
         $this->app->singleton(JobsObserver::class);
+        $this->app->singleton(CommandObserver::class);
         $this->app->singleton(CacheObserver::class);
         $this->app->singleton(QueryObserver::class);
         $this->app->singleton(HttpClientObserver::class);
@@ -120,6 +122,7 @@ HTML;
     private function bootObservers(): void
     {
         app(JobsObserver::class)->register();
+        app(CommandObserver::class)->register();
         app(CacheObserver::class)->register();
         app(HttpClientObserver::class)->register();
         app(LogObserver::class)->register();

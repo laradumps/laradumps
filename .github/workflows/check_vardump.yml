@@ -1,0 +1,51 @@
+name: Var Dump Check
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+
+  pull_request:
+    types: [ ready_for_review, synchronize, opened ]
+    branches: [ main, dev ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Check for var dump (PHP ${{ matrix.php }})
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        php:
+          - '8.1'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          ini-values: zend.assertions=1, error_reporting=-1, display_errors=On
+          coverage: none
+          tools: cs2pr
+
+      - name: Install Composer dependencies
+        uses: ramsey/composer-install@v2
+
+      - name: Install php-parallel-lint/php-var-dump-check
+        run: |
+          composer require "php-parallel-lint/php-var-dump-check" --no-interaction --no-update
+          composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction
+        
+      - name: 'Checking for var dump in code 🕵🏻'
+        run: |
+          ./vendor/bin/var-dump-check src/ --laravel --custom-function "$CUSTOM_FUNCTIONS"
+          ./vendor/bin/var-dump-check routes/ --laravel --custom-function "$CUSTOM_FUNCTIONS"
+        env:
+          CUSTOM_FUNCTIONS: "logger"
