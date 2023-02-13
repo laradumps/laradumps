@@ -60,7 +60,7 @@ class ScheduledCommandObserver implements TraceableContract
     {
         $this->trace = array_slice($this->findSource(), 0, 5)[0] ?? [];
 
-        if (config('laradumps.send_scheduled_command')) {
+        if (!(bool) boolval(config('laradumps.send_scheduled_command'))) {
             return $this->enabled;
         }
 
