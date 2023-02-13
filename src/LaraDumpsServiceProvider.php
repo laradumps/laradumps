@@ -15,7 +15,8 @@ use LaraDumps\LaraDumps\Observers\{CacheObserver,
     LivewireEventsObserver,
     LivewireFailedValidationObserver,
     LogObserver,
-    QueryObserver};
+    QueryObserver,
+    ScheduledCommandObserver};
 use LaraDumps\LaraDumps\Payloads\QueryPayload;
 
 class LaraDumpsServiceProvider extends ServiceProvider
@@ -52,6 +53,7 @@ class LaraDumpsServiceProvider extends ServiceProvider
 
         $this->app->singleton(JobsObserver::class);
         $this->app->singleton(CommandObserver::class);
+        $this->app->singleton(ScheduledCommandObserver::class);
         $this->app->singleton(CacheObserver::class);
         $this->app->singleton(QueryObserver::class);
         $this->app->singleton(HttpClientObserver::class);
@@ -118,6 +120,7 @@ HTML;
     {
         app(JobsObserver::class)->register();
         app(CommandObserver::class)->register();
+        app(ScheduledCommandObserver::class)->register();
         app(CacheObserver::class)->register();
         app(HttpClientObserver::class)->register();
         app(LogObserver::class)->register();

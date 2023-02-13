@@ -102,6 +102,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Dump Scheduled Commands
+    |--------------------------------------------------------------------------
+    |
+    | When `true`, it allows to dump Scheduled Commands and send them to Desktop App.
+    | Required for: ds()->scheduledOn() method.
+    |
+    */
+
+    'send_scheduled_commands' => env('DS_SEND_SCHEDULED_COMMANDS', false),
+
+    /*
+    |--------------------------------------------------------------------------
     | Log dump
     |--------------------------------------------------------------------------
     |
