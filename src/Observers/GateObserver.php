@@ -37,12 +37,12 @@ class GateObserver
 
             $dumps->send(
                 new TableV2Payload([
-                    'User'      => Dumper::dump($user instanceof Authenticatable ? $user->toArray() : null),
                     'Ability'   => $event->ability,
                     'Result'    => $this->gateResult($event->result),
                     'Arguments' => Dumper::dump(collect($event->arguments)->map(function ($argument) {
                         return $argument instanceof Model ? $this->formatModel($argument) : $argument;
                     })->toArray()),
+                    'User' => Dumper::dump($user instanceof Authenticatable ? $user->toArray() : null),
                 ])
             );
 
