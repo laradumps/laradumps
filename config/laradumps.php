@@ -106,7 +106,7 @@ return [
     |--------------------------------------------------------------------------
     |
     | When `true`, it allows to dump Scheduled Commands and send them to Desktop App.
-    | Required for: ds()->scheduledOn() method.
+    | Required for: ds()->scheduledCommandOn() method.
     |
     */
 
