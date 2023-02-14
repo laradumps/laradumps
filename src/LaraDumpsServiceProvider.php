@@ -62,11 +62,6 @@ class LaraDumpsServiceProvider extends ServiceProvider
 
     private function loadConfigs(): void
     {
-        if (file_exists(base_path('.env1.ds'))) {
-            $dotenv = \Dotenv\Dotenv::createImmutable(base_path(), '.env1.ds');
-            $dotenv->load();
-        }
-
         $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
     }
 
