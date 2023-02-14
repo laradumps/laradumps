@@ -19,8 +19,10 @@ class ScreenPayload extends Payload
     /** @return array<string|mixed> */
     public function content(): array
     {
+        $configFile = include __DIR__ . '/../../config/laradumps.php';
+
         /** @var array $config */
-        $config    = config('laradumps.screen_btn_colors_map');
+        $config    = $configFile['screen_btn_colors_map'];
         $classAttr = ($this->classAttr) ? $config[$this->screenName] : $config['default'];
 
         return [

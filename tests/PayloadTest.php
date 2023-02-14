@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Str;
+use LaraDumps\LaraDumps\Actions\Config;
 use LaraDumps\LaraDumps\LaraDumps;
 use LaraDumps\LaraDumps\Payloads\{DumpPayload, MailablePayload, MarkdownPayload, ModelPayload, TableV2Payload};
 use LaraDumps\LaraDumps\Support\Dumper;
@@ -14,6 +15,8 @@ it('should return the correct payload to dump', function () {
 
     [$args, $id]       = Dumper::dump($args);
     $notificationId    = Str::uuid()->toString();
+
+    Config::set('preferred_ide', 'phpstorm');
 
     $trace      = [
         'file' => 'Test',
@@ -42,6 +45,8 @@ it('should return the correct payload to model', function () {
     $dish = Dish::query()->first();
 
     $notificationId = Str::uuid()->toString();
+
+    Config::set('preferred_ide', 'phpstorm');
 
     $trace      = [
         'file' => 'Test',
@@ -130,6 +135,8 @@ it('should return the correct markdown payload to dump', function () {
     $args   = '# Hi, Anand Pilania!';
 
     $notificationId = Str::uuid()->toString();
+
+    Config::set('preferred_ide', 'phpstorm');
 
     $trace      = [
         'file' => 'Test',

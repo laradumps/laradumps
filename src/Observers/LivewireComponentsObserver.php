@@ -4,6 +4,7 @@ namespace LaraDumps\LaraDumps\Observers;
 
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Str;
+use LaraDumps\LaraDumps\Actions\Config;
 use LaraDumps\LaraDumps\LaraDumps;
 use LaraDumps\LaraDumps\Payloads\LivewirePayload;
 use LaraDumps\LaraDumps\Support\{Dumper, IdeHandle};
@@ -21,21 +22,21 @@ class LivewireComponentsObserver
 
                 $component = $view->getData()['_instance'];
 
-                if (filled(config('laradumps.livewire_components'))) {
-                    $livewireComponents = Str::of(strval(config('laradumps.livewire_components')))->explode(',');
+                if (filled(Config::get('livewire_components'))) {
+                    $livewireComponents = Str::of(strval(Config::get('livewire_components')))->explode(',');
 
                     if (!Str::contains(strval(get_class($component)), $livewireComponents)) {
                         return;
                     }
                 }
 
-                if (in_array(get_class($component), (array) (config('laradumps.ignore_livewire_components')))) {
+                if (in_array(get_class($component), (array) (Config::get('ignore_livewire_components')))) {
                     return;
                 }
 
                 $properties = $component->getPublicPropertiesDefinedBySubClass();
 
-                if (boolval(config('laradumps.send_livewire_protected_properties'))) {
+                if (boolval(Config::get('send_livewire_protected_properties'))) {
                     $properties + $component->getProtectedOrPrivatePropertiesDefinedBySubClass();
                 }
 
@@ -79,6 +80,6 @@ class LivewireComponentsObserver
 
     public function isEnabled(): bool
     {
-        return (bool) config('laradumps.send_livewire_components');
+        return (bool) Config::get('send_livewire_components');
     }
 }

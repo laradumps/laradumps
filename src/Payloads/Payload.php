@@ -2,6 +2,7 @@
 
 namespace LaraDumps\LaraDumps\Payloads;
 
+use LaraDumps\LaraDumps\Actions\Config;
 use LaraDumps\LaraDumps\Support\IdeHandle;
 
 abstract class Payload
@@ -79,7 +80,7 @@ abstract class Payload
         }
 
         $pusherConfig = '';
-        if (boolval(config('laradumps.send_livewire_components_highlight'))) {
+        if (boolval(Config::get('send_livewire_components_highlight'))) {
             $pusherConfig = config('broadcasting.connections.pusher');
         }
 
@@ -90,7 +91,7 @@ abstract class Payload
             'type'       => $this->type(),
             'meta'       => [
                 'laradumps_version' => $this->getInstalledVersion(),
-                'auto_invoke_app'   => $this->autoInvokeApp ?? boolval(config('laradumps.auto_invoke_app')),
+                'auto_invoke_app'   => $this->autoInvokeApp ?? boolval(Config::get('auto_invoke_app')),
             ],
             'content'   => $this->content(),
             'ideHandle' => $ideHandle,

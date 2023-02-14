@@ -5,6 +5,7 @@ namespace LaraDumps\LaraDumps\Observers;
 use Illuminate\Queue\Events\{JobFailed, JobProcessed, JobProcessing, JobQueued};
 use Illuminate\Queue\Jobs\Job;
 use Illuminate\Support\Facades\Event;
+use LaraDumps\LaraDumps\Actions\Config;
 use LaraDumps\LaraDumps\Concerns\Traceable;
 use LaraDumps\LaraDumps\Contracts\TraceableContract;
 use LaraDumps\LaraDumps\LaraDumps;
@@ -57,7 +58,7 @@ class JobsObserver implements TraceableContract
     {
         $this->trace = array_slice($this->findSource(), 0, 5)[0] ?? [];
 
-        if ((bool) boolval(config('laradumps.send_jobs'))) {
+        if ((bool) boolval(Config::get('send_jobs'))) {
             return $this->enabled;
         }
 

@@ -2,6 +2,8 @@
 
 namespace LaraDumps\LaraDumps\Support;
 
+use LaraDumps\LaraDumps\Actions\Config;
+
 class IdeHandle
 {
     public function __construct(
@@ -45,9 +47,11 @@ class IdeHandle
     public static function makeFileHandler(?string $file, string|int|null $line): string
     {
         /** @var string $preferredIde */
-        $preferredIde = config('laradumps.preferred_ide');
+        $preferredIde = Config::get('preferred_ide');
+
+        $configFile = include __DIR__ . '/../../config/laradumps.php';
         /** @var array $handlers */
-        $handlers   = config('laradumps.ide_handlers');
+        $handlers   = $configFile['ide_handlers'];
 
         $ide        = $handlers[$preferredIde] ?? $handlers['vscode'];
         $localPath  = $ide['local_path']       ?? null;

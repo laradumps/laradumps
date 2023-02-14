@@ -3,7 +3,7 @@
 namespace LaraDumps\LaraDumps\Commands;
 
 use Illuminate\Console\Command;
-use LaraDumps\LaraDumps\Actions\GitDirtyFiles;
+use LaraDumps\LaraDumps\Actions\{Config, GitDirtyFiles};
 use LaraDumps\LaraDumps\Support\IdeHandle;
 use Symfony\Component\Finder\Finder;
 
@@ -35,11 +35,11 @@ class CheckCommand extends Command
         }
 
         /** @var array<string>|string $directories */
-        $directories = config('laradumps.ci_check.directories');
+        $directories = Config::get('ci_check.directories');
 
-        $ignoreLineWhenContainsText = config('laradumps.ci_check.ignore_line_when_contains_text');
+        $ignoreLineWhenContainsText = Config::get('ci_check.ignore_line_when_contains_text');
 
-        $textToSearch = config('laradumps.ci_check.text_to_search');
+        $textToSearch = Config::get('ci_check.text_to_search');
 
         renderUsing($this->output);
 

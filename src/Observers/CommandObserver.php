@@ -4,6 +4,7 @@ namespace LaraDumps\LaraDumps\Observers;
 
 use Illuminate\Console\Events\CommandFinished;
 use Illuminate\Support\Facades\Event;
+use LaraDumps\LaraDumps\Actions\Config;
 use LaraDumps\LaraDumps\Concerns\Traceable;
 use LaraDumps\LaraDumps\Contracts\TraceableContract;
 use LaraDumps\LaraDumps\LaraDumps;
@@ -53,7 +54,7 @@ class CommandObserver implements TraceableContract
     {
         $this->trace = array_slice($this->findSource(), 0, 5)[0] ?? [];
 
-        if (!(bool) boolval(config('laradumps.send_commands'))) {
+        if (!(bool) boolval(Config::get('send_commands'))) {
             return $this->enabled;
         }
 

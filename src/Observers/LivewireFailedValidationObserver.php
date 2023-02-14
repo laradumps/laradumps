@@ -4,6 +4,7 @@ namespace LaraDumps\LaraDumps\Observers;
 
 use Illuminate\Support\Str;
 use Illuminate\Validation\Validator;
+use LaraDumps\LaraDumps\Actions\Config;
 use LaraDumps\LaraDumps\LaraDumps;
 use LaraDumps\LaraDumps\Payloads\TablePayload;
 use ReflectionClass;
@@ -48,13 +49,13 @@ class LivewireFailedValidationObserver
     Failed Validation
 </span>
 </div>
-HTML, raiseIn: intval(config('laradumps.send_livewire_failed_validation.sleep')));
+HTML, raiseIn: intval(Config::get('send_livewire_failed_validation.sleep')));
             });
         }
     }
 
     public function isEnabled(): bool
     {
-        return (bool) config('laradumps.send_livewire_failed_validation.enabled');
+        return (bool) Config::get('send_livewire_failed_validation.enabled');
     }
 }

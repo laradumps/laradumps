@@ -3,6 +3,7 @@
 namespace LaraDumps\LaraDumps\Payloads;
 
 use Illuminate\Database\Query\Builder;
+use LaraDumps\LaraDumps\Actions\Config;
 
 class QueryPayload extends Payload
 {
@@ -18,7 +19,7 @@ class QueryPayload extends Payload
 
         return [
             'sql'       => $toSql,
-            'formatted' => boolval(config('laradumps.send_queries.formatted', false)),
+            'formatted' => boolval(Config::get('send_queries.formatted')),
         ];
     }
 

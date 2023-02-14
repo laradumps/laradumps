@@ -5,7 +5,7 @@ namespace LaraDumps\LaraDumps;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Mail\Mailable;
 use Illuminate\Support\{Collection, Str};
-use LaraDumps\LaraDumps\Actions\SendPayload;
+use LaraDumps\LaraDumps\Actions\{Config, SendPayload};
 use LaraDumps\LaraDumps\Concerns\Colors;
 use LaraDumps\LaraDumps\Observers\{CacheObserver, CommandObserver, HttpClientObserver, JobsObserver, QueryObserver};
 use LaraDumps\LaraDumps\Payloads\{ClearPayload,
@@ -35,12 +35,12 @@ class LaraDumps
         private string $fullUrl = '',
         private array  $trace = [],
     ) {
-        if (config('laradumps.sleep')) {
-            $sleep = intval(config('laradumps.sleep'));
+        if (Config::get('sleep')) {
+            $sleep = intval(Config::get('sleep'));
             sleep($sleep);
         }
 
-        $this->fullUrl        = config('laradumps.host') . ':' . config('laradumps.port') . '/api/dumps';
+        $this->fullUrl        = Config::get('host') . ':' . Config::get('port') . '/api/dumps';
         $this->notificationId = filled($notificationId) ? $this->notificationId : Str::uuid()->toString();
     }
 

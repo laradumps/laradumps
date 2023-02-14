@@ -5,13 +5,12 @@ namespace LaraDumps\LaraDumps\Commands;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\{File};
-use LaraDumps\LaraDumps\Actions\ConsoleUrl;
-use LaraDumps\LaraDumps\Commands\Concerns\{RenderAscii, UpdateEnv};
+use LaraDumps\LaraDumps\Actions\{Config, ConsoleUrl};
+use LaraDumps\LaraDumps\Commands\Concerns\RenderAscii;
 
 class InitCommand extends Command
 {
     use RenderAscii;
-    use UpdateEnv;
 
     protected $signature = 'ds:init {--no-interaction?} {--host=} {--port=} {--send_queries=} {--send_http_client_requests=} {--send_jobs=} {--send_commands=} {--send_cache=} {--send_logs=} {--send_livewire=} {--livewire_events=}{--livewire_validation=}  {--livewire_autoclear=} {--auto_invoke=} {--ide=}';
 
@@ -22,8 +21,6 @@ class InitCommand extends Command
     public function handle(): int
     {
         $this->isInteractive = empty($this->option('no-interaction'));
-
-        $this->publishConfig();
 
         $this->welcome();
 
@@ -37,7 +34,6 @@ class InitCommand extends Command
             ->setLogs()
             ->setLivewire()
             ->setLivewireEvents()
-            ->setLivewireValidation()
             ->setLivewireAutoClear()
             ->setAutoInvoke()
             ->setPreferredIde();
@@ -45,17 +41,6 @@ class InitCommand extends Command
         $this->thanks();
 
         return Command::SUCCESS;
-    }
-
-    private function publishConfig(): void
-    {
-        if ($this->isInteractive && File::exists(config_path('laradumps.php'))) {
-            if ($this->confirm('The config file <comment>laradumps.php</comment> already exists. Delete it?') === true) {
-                File::delete(config_path('laradumps.php'));
-            }
-        }
-
-        $this->call('vendor:publish', ['--tag' => 'laradumps-config']);
     }
 
     private function welcome(): void
@@ -81,20 +66,20 @@ class InitCommand extends Command
 
         $this->line("\n🎉 <fg=green>Setup completed successfully!</> If you want to re-use this same configuration in other Laravel projects, simply run:\n");
 
-        $this->line('<fg=cyan>   php artisan ds:init --no-interaction --host=' . config('laradumps.host')
-            . ' --port=' . config('laradumps.port')
-            . ' --send_queries=' . (config('laradumps.send_queries') ? 'true' : 'false')
-            . ' --send_http_client_requests=' . (config('laradumps.send_http_client_requests') ? 'true' : 'false')
-            . ' --send_jobs=' . (config('laradumps.send_jobs') ? 'true' : 'false')
-            . ' --send_commands=' . (config('laradumps.send_commands') ? 'true' : 'false')
-            . ' --send_cache=' . (config('laradumps.send_cache') ? 'true' : 'false')
-            . ' --send_logs=' . (config('laradumps.send_log_applications') ? 'true' : 'false')
-            . ' --send_livewire=' . (config('laradumps.send_livewire_components') ? 'true' : 'false')
-            . ' --livewire_events=' . (config('laradumps.send_livewire_events') ? 'true' : 'false')
-            . ' --livewire_validation=' . (config('laradumps.send_livewire_failed_validation.enabled') ? 'true' : 'false')
-            . ' --livewire_autoclear=' . (config('laradumps.auto_clear_on_page_reload') ? 'true' : 'false')
-            . ' --auto_invoke=' . (config('laradumps.auto_invoke_app') ? 'true' : 'false')
-            . ' --ide=' . config('laradumps.preferred_ide')
+        $this->line('<fg=cyan>   php artisan ds:init --no-interaction --host=' . Config::get('host')
+            . ' --port=' . Config::get('port')
+            . ' --send_queries=' . (Config::get('send_queries') ? 'true' : 'false')
+            . ' --send_http_client_requests=' . (Config::get('send_http_client_requests') ? 'true' : 'false')
+            . ' --send_jobs=' . (Config::get('send_jobs') ? 'true' : 'false')
+            . ' --send_commands=' . (Config::get('send_commands') ? 'true' : 'false')
+            . ' --send_cache=' . (Config::get('send_cache') ? 'true' : 'false')
+            . ' --send_logs=' . (Config::get('send_log_applications') ? 'true' : 'false')
+            . ' --send_livewire=' . (Config::get('send_livewire_components') ? 'true' : 'false')
+            . ' --livewire_events=' . (Config::get('send_livewire_events') ? 'true' : 'false')
+            . ' --livewire_validation=' . (Config::get('send_livewire_failed_validation.enabled') ? 'true' : 'false')
+            . ' --livewire_autoclear=' . (Config::get('auto_clear_on_page_reload') ? 'true' : 'false')
+            . ' --auto_invoke=' . (Config::get('auto_invoke_app') ? 'true' : 'false')
+            . ' --ide=' . Config::get('preferred_ide')
             . "</>\n\n");
 
         $this->line("\n\n⭐ Please consider <comment>starring</comment> our repository at <comment>https://github.com/laradumps/laradumps</comment>\n");
@@ -154,8 +139,7 @@ class InitCommand extends Command
             }
         }
 
-        config()->set('laradumps.host', $host);
-        $this->updateEnv('DS_APP_HOST', strval($host));
+        Config::set('host', strval($host));
 
         return $this;
     }
@@ -168,8 +152,7 @@ class InitCommand extends Command
             $port = $this->ask('Enter the App Port', '9191');
         }
 
-        config()->set('laradumps.port', $port);
-        $this->updateEnv('DS_APP_PORT', strval($port));
+        Config::set('port', strval($port));
 
         return $this;
     }
@@ -184,8 +167,7 @@ class InitCommand extends Command
 
         $sendQueries = filter_var($sendQueries, FILTER_VALIDATE_BOOLEAN);
 
-        config()->set('laradumps.send_queries', boolval($sendQueries));
-        $this->updateEnv('DS_SEND_QUERIES', ($sendQueries ? 'true' : 'false'));
+        Config::set('send_queries', ($sendQueries ? 'true' : 'false'));
 
         return $this;
     }
@@ -200,8 +182,7 @@ class InitCommand extends Command
 
         $sendLogs = filter_var($sendLogs, FILTER_VALIDATE_BOOLEAN);
 
-        config()->set('laradumps.send_log_applications', boolval($sendLogs));
-        $this->updateEnv('DS_SEND_LOGS', ($sendLogs ? 'true' : 'false'));
+        Config::set('send_log_applications', ($sendLogs ? 'true' : 'false'));
 
         return $this;
     }
@@ -216,8 +197,7 @@ class InitCommand extends Command
 
         $sendLivewire = filter_var($sendLivewire, FILTER_VALIDATE_BOOLEAN);
 
-        config()->set('laradumps.send_livewire_components', boolval($sendLivewire));
-        $this->updateEnv('DS_SEND_LIVEWIRE_COMPONENTS', ($sendLivewire ? 'true' : 'false'));
+        Config::set('send_livewire_components', ($sendLivewire ? 'true' : 'false'));
 
         return $this;
     }
@@ -232,27 +212,7 @@ class InitCommand extends Command
 
         $sendLivewireEvents = filter_var($sendLivewireEvents, FILTER_VALIDATE_BOOLEAN);
 
-        config()->set('laradumps.send_livewire_events', boolval($sendLivewireEvents));
-        $this->updateEnv('DS_LIVEWIRE_EVENTS', ($sendLivewireEvents ? 'true' : 'false'));
-
-        config()->set('laradumps.send_livewire_dispatch', boolval($sendLivewireEvents));
-        $this->updateEnv('DS_LIVEWIRE_DISPATCH', ($sendLivewireEvents ? 'true' : 'false'));
-
-        return $this;
-    }
-
-    private function setLivewireValidation(): self
-    {
-        $sendLivewireValidation = $this->option('livewire_validation');
-
-        if (empty($sendLivewireValidation) && $this->isInteractive) {
-            $sendLivewireValidation = $this->confirm('Allow dumping <comment>Livewire failed validation</comment> to the App?', true);
-        }
-
-        $sendLivewireValidation = filter_var($sendLivewireValidation, FILTER_VALIDATE_BOOLEAN);
-
-        config()->set('laradumps.send_livewire_failed_validation.enabled', boolval($sendLivewireValidation));
-        $this->updateEnv('DS_SEND_LIVEWIRE_FAILED_VALIDATION', ($sendLivewireValidation ? 'true' : 'false'));
+        Config::set('send_livewire_events', ($sendLivewireEvents ? 'true' : 'false'));
 
         return $this;
     }
@@ -267,8 +227,7 @@ class InitCommand extends Command
 
         $allowLivewireAutoClear = filter_var($allowLivewireAutoClear, FILTER_VALIDATE_BOOLEAN);
 
-        config()->set('laradumps.auto_clear_on_page_reload', boolval($allowLivewireAutoClear));
-        $this->updateEnv('DS_AUTO_CLEAR_ON_PAGE_RELOAD', ($allowLivewireAutoClear ? 'true' : 'false'));
+        Config::set('auto_clear_on_page_reload', ($allowLivewireAutoClear ? 'true' : 'false'));
 
         return $this;
     }
@@ -283,8 +242,7 @@ class InitCommand extends Command
 
         $autoInvoke = filter_var($autoInvoke, FILTER_VALIDATE_BOOLEAN);
 
-        config()->set('laradumps.auto_invoke_app', boolval($autoInvoke));
-        $this->updateEnv('DS_AUTO_INVOKE_APP', ($autoInvoke ? 'true' : 'false'));
+        Config::set('auto_invoke_app', ($autoInvoke ? 'true' : 'false'));
 
         return $this;
     }
@@ -329,8 +287,7 @@ class InitCommand extends Command
             throw new Exception('Invalid IDE');
         }
 
-        config()->set('laradumps.preferred_ide', $ide);
-        $this->updateEnv('DS_PREFERRED_IDE', strval($ide));
+        Config::set('preferred_ide', strval($ide));
 
         return $this;
     }
@@ -345,8 +302,7 @@ class InitCommand extends Command
 
         $httpRequests = filter_var($httpRequests, FILTER_VALIDATE_BOOLEAN);
 
-        config()->set('laradumps.send_http_client_requests', boolval($httpRequests));
-        $this->updateEnv('DS_SEND_HTTP_CLIENT_REQUESTS', ($httpRequests ? 'true' : 'false'));
+        Config::set('send_http_client_requests', ($httpRequests ? 'true' : 'false'));
 
         return $this;
     }
@@ -361,8 +317,7 @@ class InitCommand extends Command
 
         $sendJobs = filter_var($sendJobs, FILTER_VALIDATE_BOOLEAN);
 
-        config()->set('laradumps.send_jobs', (bool) $sendJobs);
-        $this->updateEnv('DS_SEND_JOBS', ($sendJobs ? 'true' : 'false'));
+        Config::set('send_jobs', ($sendJobs ? 'true' : 'false'));
 
         return $this;
     }
@@ -377,8 +332,7 @@ class InitCommand extends Command
 
         $sendCache = filter_var($sendCache, FILTER_VALIDATE_BOOLEAN);
 
-        config()->set('laradumps.send_cache', (bool) $sendCache);
-        $this->updateEnv('DS_SEND_JOBS', ($sendCache ? 'true' : 'false'));
+        Config::set('send_cache', ($sendCache ? 'true' : 'false'));
 
         return $this;
     }
@@ -393,8 +347,7 @@ class InitCommand extends Command
 
         $sendCommands = filter_var($sendCommands, FILTER_VALIDATE_BOOLEAN);
 
-        config()->set('laradumps.send_commands', (bool) $sendCommands);
-        $this->updateEnv('DS_SEND_COMMANDS', ($sendCommands ? 'true' : 'false'));
+        Config::set('send_commands', ($sendCommands ? 'true' : 'false'));
 
         return $this;
     }

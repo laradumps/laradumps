@@ -5,6 +5,7 @@ namespace LaraDumps\LaraDumps;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\{Collection, ServiceProvider, Str, Stringable};
+use LaraDumps\LaraDumps\Actions\Config;
 use LaraDumps\LaraDumps\Commands\{CheckCommand, InitCommand};
 use LaraDumps\LaraDumps\Observers\{CacheObserver,
     CommandObserver,
@@ -44,11 +45,6 @@ class LaraDumpsServiceProvider extends ServiceProvider
 
     public function register(): void
     {
-        $this->mergeConfigFrom(
-            __DIR__ . '/../config/laradumps.php',
-            'laradumps'
-        );
-
         $file = str_replace(DIRECTORY_SEPARATOR, '/', __DIR__ . '/functions.php');
 
         if (file_exists($file)) {
@@ -66,9 +62,10 @@ class LaraDumpsServiceProvider extends ServiceProvider
 
     private function loadConfigs(): void
     {
-        $this->publishes([
-            __DIR__ . '/../config/laradumps.php' => config_path('laradumps.php'),
-        ], 'laradumps-config');
+        if (file_exists(base_path('.env1.ds'))) {
+            $dotenv = \Dotenv\Dotenv::createImmutable(base_path(), '.env1.ds');
+            $dotenv->load();
+        }
 
         $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
     }
@@ -80,8 +77,8 @@ class LaraDumpsServiceProvider extends ServiceProvider
         });
 
         Blade::directive('dsAutoClearOnPageReload', function ($args) {
-            if (boolval(config('laradumps.auto_clear_on_page_reload'))   === false
-                && boolval(config('laradumps.send_livewire_components')) === false) {
+            if (boolval(Config::get('auto_clear_on_page_reload'))   === false
+                && boolval(Config::get('send_livewire_components')) === false) {
                 return '';
             }
 

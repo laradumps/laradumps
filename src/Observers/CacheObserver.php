@@ -5,6 +5,7 @@ namespace LaraDumps\LaraDumps\Observers;
 use Illuminate\Cache\Events\{CacheEvent, CacheHit, CacheMissed, KeyForgotten, KeyWritten};
 use Illuminate\Support\Facades\{Cache, Event};
 use Illuminate\Support\Str;
+use LaraDumps\LaraDumps\Actions\Config;
 use LaraDumps\LaraDumps\Concerns\Traceable;
 use LaraDumps\LaraDumps\LaraDumps;
 use LaraDumps\LaraDumps\Payloads\TableV2Payload;
@@ -104,7 +105,7 @@ class CacheObserver
     {
         $this->trace = array_slice($this->findSource(), 0, 5)[0] ?? [];
 
-        if (!boolval(config('laradumps.send_cache'))) {
+        if (!boolval(Config::get('send_cache'))) {
             return $this->enabled;
         }
 

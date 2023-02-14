@@ -3,6 +3,7 @@
 namespace LaraDumps\LaraDumps\Observers;
 
 use Illuminate\Support\Str;
+use LaraDumps\LaraDumps\Actions\Config;
 use LaraDumps\LaraDumps\LaraDumps;
 use LaraDumps\LaraDumps\Payloads\LivewireEventsPayload;
 use LaraDumps\LaraDumps\Support\{Dumper, IdeHandle};
@@ -58,6 +59,6 @@ class LivewireDispatchObserver
 
     public function isEnabled(): bool
     {
-        return (bool) config('laradumps.send_livewire_dispatch');
+        return (bool) Config::get('send_livewire_dispatch');
     }
 }

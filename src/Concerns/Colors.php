@@ -2,13 +2,14 @@
 
 namespace LaraDumps\LaraDumps\Concerns;
 
+use LaraDumps\LaraDumps\Actions\Config;
 use LaraDumps\LaraDumps\LaraDumps;
 
 trait Colors
 {
     public function danger(): LaraDumps
     {
-        if (boolval(config('laradumps.send_color_in_screen'))) {
+        if (boolval(Config::get('send_color_in_screen'))) {
             return $this->toScreen('danger', true);
         }
 
@@ -22,7 +23,7 @@ trait Colors
 
     public function warning(): LaraDumps
     {
-        if (boolval(config('laradumps.send_color_in_screen'))) {
+        if (boolval(Config::get('send_color_in_screen'))) {
             return $this->toScreen('warning', true);
         }
 
@@ -31,7 +32,7 @@ trait Colors
 
     public function success(): LaraDumps
     {
-        if (boolval(config('laradumps.send_color_in_screen'))) {
+        if (boolval(Config::get('send_color_in_screen'))) {
             return $this->toScreen('success', true);
         }
 
@@ -40,7 +41,7 @@ trait Colors
 
     public function info(): LaraDumps
     {
-        if (boolval(config('laradumps.send_color_in_screen'))) {
+        if (boolval(Config::get('send_color_in_screen'))) {
             return $this->toScreen('info', true);
         }
 

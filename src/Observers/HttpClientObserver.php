@@ -5,6 +5,7 @@ namespace LaraDumps\LaraDumps\Observers;
 use Illuminate\Http\Client\Events\{RequestSending, ResponseReceived};
 use Illuminate\Http\Client\{Request, Response};
 use Illuminate\Support\Facades\Event;
+use LaraDumps\LaraDumps\Actions\Config;
 use LaraDumps\LaraDumps\Concerns\Traceable;
 use LaraDumps\LaraDumps\Contracts\TraceableContract;
 use LaraDumps\LaraDumps\LaraDumps;
@@ -60,7 +61,7 @@ class HttpClientObserver implements TraceableContract
     {
         $this->trace = array_slice($this->findSource(), 0, 5)[0] ?? [];
 
-        if (!boolval(config('laradumps.send_http_client'))) {
+        if (!boolval(Config::get('send_http_client'))) {
             return $this->enabled;
         }
 
