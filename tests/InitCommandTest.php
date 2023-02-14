@@ -2,14 +2,6 @@
 
 use LaraDumps\LaraDumps\Actions\Config;
 
-it('publishes the config file', function () {
-    // $configFile = config_path('laradumps.php');
-
-    // $this->artisan('ds:init --no-interaction --host=127.0.0.1 --port=9191 --send_queries=true --send_logs=true --send_commands=true --send_livewire=true --auto_invoke=true --ide=phpstorm');
-
-    // expect(File::exists($configFile))->toBeTrue();
-});
-
 it('updates the config non-interactively', function () {
     $this->artisan('ds:init --no-interaction --host=1.2.3.4 --port=2022 --send_queries=true --send_http_client_requests=true --send_jobs=true --send_commands=true --send_cache=true --send_logs=true --livewire_events=true --livewire_validation=true --livewire_autoclear=true --send_livewire=true --auto_invoke=true --ide=atom');
 

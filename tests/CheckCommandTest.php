@@ -18,7 +18,7 @@ test('views exist', function (string $view) {
     expect(view()->exists($view))
         ->toBeTrue();
 })
-->with(['laradumps::output', 'laradumps::summary'])->skip();
+->with(['laradumps::output', 'laradumps::summary']);
 
 it('display "No ds() found" when not ds found', function () {
     if (File::exists($this->view)) {
@@ -29,20 +29,20 @@ it('display "No ds() found" when not ds found', function () {
         File::delete($this->controller);
     }
 
-    Config::set('ci_check.directories', [
+    config('laradumps-check.ci_check.directories', [
         resource_path(),
     ]);
 
     $this->artisan('ds:check')
         ->expectsOutputToContain('No ds() found.');
-})->skip();
+});
 
 it('displays error when found on resources path', function () {
     createBlade();
 
     $this->assertFileExists($this->view);
 
-    Config::set('ci_check.directories', [
+    config('laradumps-check.ci_check.directories', [
         resource_path(),
     ]);
 
@@ -50,14 +50,14 @@ it('displays error when found on resources path', function () {
         ->expectsOutputToContain('@ds(\'Hello\')')
         ->expectsOutputToContain('Found 1 error / 1 file')
         ->assertFailed();
-})->skip();
+});
 
 it('does not display error when found on resources path when not specified in config', function () {
     createBlade();
 
     $this->assertFileExists($this->view);
 
-    Config::set('ci_check.directories', [
+    config('laradumps-check.ci_check.directories', [
         base_path('app'),
     ]);
 
@@ -71,7 +71,7 @@ it('displays error when found on controller', function ($dsFunction) {
 
     $this->assertFileExists($this->controller);
 
-    Config::set('ci_check.directories', [
+    config('laradumps-check.ci_check.directories', [
         base_path('app'),
     ]);
 
@@ -102,7 +102,7 @@ it('displays error when ds macro has line breaks', function () {
 
     $this->assertFileExists($this->controller);
 
-    Config::set('ci_check.directories', [
+    config('laradumps-check.ci_check.directories', [
         base_path('app'),
     ]);
 
@@ -121,7 +121,7 @@ it('does displays error when found on controller when not specified in config', 
 
     $this->assertFileExists($this->controller);
 
-    Config::set('ci_check.directories', [
+    config('laradumps-check.ci_check.directories', [
         resource_path(),
     ]);
 
@@ -129,7 +129,7 @@ it('does displays error when found on controller when not specified in config', 
         ->doesntExpectOutputToContain('error')
         ->expectsOutputToContain('No ds() found.')
         ->assertSuccessful();
-})->skip();
+});
 
 it('will not match a partial function', function () {
     if (File::exists($this->view)) {
@@ -140,7 +140,7 @@ it('will not match a partial function', function () {
 
     $this->assertFileExists($this->controller);
 
-    Config::set('ci_check.directories', [
+    config('laradumps-check.ci_check.directories', [
         base_path('app'),
     ]);
 
@@ -148,7 +148,7 @@ it('will not match a partial function', function () {
         ->doesntExpectOutputToContain('error')
         ->expectsOutputToContain('No ds() found.')
         ->assertSuccessful();
-})->skip();
+});
 
 it('displays errors when found on controller and resources path', function () {
     createBlade();
@@ -157,7 +157,7 @@ it('displays errors when found on controller and resources path', function () {
     $this->assertFileExists($this->view);
     $this->assertFileExists($this->controller);
 
-    Config::set('ci_check.directories', [
+    config('laradumps-check.ci_check.directories', [
         base_path('app'),
         resource_path(),
     ]);
@@ -167,7 +167,7 @@ it('displays errors when found on controller and resources path', function () {
         ->expectsOutputToContain('ds(\'Hello from Controller\')->label(\'label\')')
         ->expectsOutputToContain('Found 2 errors / 2 files')
         ->assertFailed();
-})->skip();
+});
 
 it('displays errors when for dsAutoClearOnPageReload directive', function () {
     $html = <<<HTML
@@ -183,7 +183,7 @@ it('displays errors when for dsAutoClearOnPageReload directive', function () {
 
     $this->assertFileExists($this->view);
 
-    Config::set('ci_check.directories', [
+    config('laradumps-check.ci_check.directories', [
         resource_path(),
     ]);
 
@@ -191,7 +191,7 @@ it('displays errors when for dsAutoClearOnPageReload directive', function () {
         ->expectsOutputToContain('@dsAutoClearOnPageReload')
         ->expectsOutputToContain('Found 1 error / 1 file')
         ->assertFailed();
-})->skip();
+});
 
 it('ignore an error when encountering specific text on the line', function () {
     createBlade();
@@ -200,7 +200,7 @@ it('ignore an error when encountering specific text on the line', function () {
     $this->assertFileExists($this->view);
     $this->assertFileExists($this->controller);
 
-    Config::set('ci_check.directories', [
+    config('laradumps-check.ci_check.directories', [
         base_path('app'),
         resource_path(),
     ]);
@@ -214,7 +214,7 @@ it('ignore an error when encountering specific text on the line', function () {
         ->doesntExpectOutputToContain('ds(\'Hello from Controller\')->label(\'label\')')
         ->expectsOutputToContain('Found 1 error / 1 file')
         ->assertFailed();
-})->skip();
+});
 
 //Helpers
 

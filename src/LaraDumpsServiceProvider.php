@@ -45,6 +45,11 @@ class LaraDumpsServiceProvider extends ServiceProvider
 
     public function register(): void
     {
+        $this->mergeConfigFrom(
+            __DIR__ . '/../config/laradumps-check.php',
+            'laradumps'
+        );
+
         $file = str_replace(DIRECTORY_SEPARATOR, '/', __DIR__ . '/functions.php');
 
         if (file_exists($file)) {
@@ -62,6 +67,10 @@ class LaraDumpsServiceProvider extends ServiceProvider
 
     private function loadConfigs(): void
     {
+        $this->publishes([
+            __DIR__ . '/../config/laradumps-check.php' => config_path('laradumps-check.php'),
+        ], 'laradumps-check-config');
+
         $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
     }
 
