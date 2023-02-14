@@ -12,7 +12,7 @@ return [
     |
     */
 
-    'host' => $_ENV['DS_APP_HOST'] ?? '127.0.0.1',
+    'host' => env('DS_APP_HOST', '127.0.0.1'),
 
     //'host' => 'host.docker.internal',    //Docker on Mac or Windows
     //'host' => '127.0.0.1',               //Homestead with the VirtualBox provider,
@@ -27,7 +27,7 @@ return [
     |
     */
 
-    'port' => $_ENV['DS_APP_PORT'] ?? 9191,
+    'port' => env('DS_APP_PORT', 9191),
 
     /*
     |--------------------------------------------------------------------------
@@ -38,7 +38,7 @@ return [
     |
     */
 
-    'auto_invoke_app' => $_ENV['DS_AUTO_INVOKE_APP'] ?? true,
+    'auto_invoke_app' => env('DS_AUTO_INVOKE_APP', true),
 
     /*
     |--------------------------------------------------------------------------
@@ -50,7 +50,7 @@ return [
     |
     */
 
-    'send_queries' => $_ENV['DS_SEND_QUERIES'] ?? false,
+    'send_queries' => env('DS_SEND_QUERIES', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -62,7 +62,7 @@ return [
     |
     */
 
-    'send_http_client_requests' => $_ENV['DS_SEND_HTTP_CLIENT_REQUESTS'] ?? false,
+    'send_http_client_requests' => env('DS_SEND_HTTP_CLIENT_REQUESTS', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -74,7 +74,7 @@ return [
     |
     */
 
-    'send_commands' => $_ENV['DS_SEND_COMMANDS'] ?? false,
+    'send_commands' => env('DS_SEND_COMMANDS', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -86,7 +86,7 @@ return [
     |
     */
 
-    'send_jobs' => $_ENV['DS_SEND_JOBS'] ?? false,
+    'send_jobs' => env('DS_SEND_JOBS', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -98,7 +98,7 @@ return [
     |
     */
 
-    'send_cache' => $_ENV['DS_SEND_CACHE'] ?? false,
+    'send_cache' => env('DS_SEND_CACHE', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -110,7 +110,7 @@ return [
     |
     */
 
-    'send_log_applications' => $_ENV['DS_SEND_LOGS'] ?? false,
+    'send_log_applications' => env('DS_SEND_LOGS', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -121,7 +121,7 @@ return [
     | private and protected properties to the Desktop App.
     */
 
-    'send_livewire_components' => $_ENV['DS_SEND_LIVEWIRE_COMPONENTS'] ?? false,
+    'send_livewire_components' => env('DS_SEND_LIVEWIRE_COMPONENTS', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -146,7 +146,7 @@ return [
     |
     */
 
-    'livewire_components' => $_ENV['DS_LIVEWIRE_COMPONENTS'] ?? '',
+    'livewire_components' => env('DS_LIVEWIRE_COMPONENTS', ''),
 
     /*
     |--------------------------------------------------------------------------
@@ -158,7 +158,7 @@ return [
     |
     */
 
-    'send_livewire_protected_properties' => $_ENV['DS_LIVEWIRE_PROTECTED_PROPERTIES'] ?? false,
+    'send_livewire_protected_properties' => env('DS_LIVEWIRE_PROTECTED_PROPERTIES', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -168,7 +168,7 @@ return [
     | When `true`, it allows to dump Livewire Events and send them to Desktop App.
     |
     */
-    'send_livewire_events' => $_ENV['DS_LIVEWIRE_EVENTS'] ?? false,
+    'send_livewire_events' => env('DS_LIVEWIRE_EVENTS', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -179,7 +179,7 @@ return [
     | and send them to Desktop App.
     |
     */
-    'send_livewire_dispatch' => $_ENV['DS_LIVEWIRE_DISPATCH'] ?? false,
+    'send_livewire_dispatch' => env('DS_LIVEWIRE_DISPATCH', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -191,7 +191,7 @@ return [
     |
     */
 
-    'send_livewire_components_highlight' => $_ENV['DS_LIVEWIRE_COMPONENTS_HIGHLIGHT'] ?? false,
+    'send_livewire_components_highlight' => env('DS_LIVEWIRE_COMPONENTS_HIGHLIGHT', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -205,7 +205,7 @@ return [
     |
     */
 
-    'auto_clear_on_page_reload' => $_ENV['DS_AUTO_CLEAR_ON_PAGE_RELOAD'] ?? false,
+    'auto_clear_on_page_reload' => env('DS_AUTO_CLEAR_ON_PAGE_RELOAD', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -216,7 +216,7 @@ return [
     |
     */
 
-    'preferred_ide' => $_ENV['DS_PREFERRED_IDE'] ?? 'phpstorm',
+    'preferred_ide' => env('DS_PREFERRED_IDE', 'phpstorm'),
 
     /*
     |--------------------------------------------------------------------------
@@ -248,9 +248,9 @@ return [
         'vscode_remote' => [
             'handler'        => 'vscode://vscode-remote/',
             'line_separator' => ':',
-            'local_path'     => 'wsl+' . ($_ENV['DS_PREFERRED_WSL_DISTRO'] ?? 'Ubuntu20.04LTS'),
-            'remote_path'    => $_ENV['DS_REMOTE_PATH']                   ?? null,
-            'work_dir'       => $_ENV['DS_WORKDIR']                       ?? '/var/www/html',
+            'local_path'     => 'wsl+' . env('DS_PREFERRED_WSL_DISTRO', 'Ubuntu20.04LTS'),
+            'remote_path'    => env('DS_REMOTE_PATH', null),
+            'work_dir'       => env('DS_WORKDIR', '/var/www/html'),
         ],
     ],
 
@@ -281,7 +281,7 @@ return [
     |
     */
 
-    'sleep' => $_ENV['DS_SLEEP'] ?? null,
+    'sleep' => env('DS_SLEEP', null),
 
     /*
     |--------------------------------------------------------------------------
@@ -324,7 +324,7 @@ return [
     |
     */
 
-    'send_color_in_screen' => $_ENV['DS_SEND_COLOR_IN_SCREEN'] ?? false,
+    'send_color_in_screen' => env('DS_SEND_COLOR_IN_SCREEN', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -363,13 +363,13 @@ return [
    */
 
     'level_log_colors_map' => [
-        'error'     => $_ENV['DS_LOG_COLOR_ERROR']     ?? 'border-red-600',
-        'critical'  => $_ENV['DS_LOG_COLOR_CRITICAL']  ?? 'border-red-900',
-        'alert'     => $_ENV['DS_LOG_COLOR_ALERT']     ?? 'border-red-500',
-        'emergency' => $_ENV['DS_LOG_COLOR_EMERGENCY'] ?? 'border-red-600',
-        'warning'   => $_ENV['DS_LOG_COLOR_WARNING']   ?? 'border-orange-300',
-        'notice'    => $_ENV['DS_LOG_COLOR_NOTICE']    ?? 'border-green-300',
-        'info'      => $_ENV['DS_LOG_COLOR_INFO']      ?? 'border-blue-300',
-        'debug'     => $_ENV['DS_LOG_COLOR_INFO']      ?? 'border-black',
+        'error'     => env('DS_LOG_COLOR_ERROR', 'border-red-600'),
+        'critical'  => env('DS_LOG_COLOR_CRITICAL', 'border-red-900'),
+        'alert'     => env('DS_LOG_COLOR_ALERT', 'border-red-500'),
+        'emergency' => env('DS_LOG_COLOR_EMERGENCY', 'border-red-600'),
+        'warning'   => env('DS_LOG_COLOR_WARNING', 'border-orange-300'),
+        'notice'    => env('DS_LOG_COLOR_NOTICE', 'border-green-300'),
+        'info'      => env('DS_LOG_COLOR_INFO', 'border-blue-300'),
+        'debug'     => env('DS_LOG_COLOR_INFO', 'border-black'),
     ],
 ];
