@@ -1,0 +1,20 @@
+DS_APP_HOST=127.0.0.1
+DS_APP_PORT=9191
+#DS_SEND_QUERIES=true #changing this crashes the tests
+DS_SEND_HTTP_CLIENT_REQUESTS=true
+DS_SEND_JOBS=true
+DS_SEND_COMMANDS=true
+DS_SEND_LOGS=true
+DS_SEND_LIVEWIRE_COMPONENTS=true
+DS_LIVEWIRE_EVENTS=true
+DS_LIVEWIRE_DISPATCH=true
+DS_SEND_LIVEWIRE_FAILED_VALIDATION=true
+DS_AUTO_CLEAR_ON_PAGE_RELOAD=false
+DS_AUTO_INVOKE_APP=true
+# ******* File Handler *******
+DS_FILE_HANDLER="phpstorm://open?file={filepath}&line={line}"
+DS_PROJECT_PATH="/Users/jamesbond/bomb-disarmer"
+# ******* DS Check *******
+DS_DEBUG_FUNCTIONS="ds, dsq, dsd, ds1, ds2, ds3, ds4, ds5, dsAutoClearOnPageReload"
+DS_IGNORE_DEBUG_FUNCTIONS="ads"
+DS_SEARCH_DEBUG_IN="app,src,routes,resources"

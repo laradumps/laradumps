@@ -5,18 +5,18 @@ use LaraDumps\LaraDumps\Actions\Config;
 use LaraDumps\LaraDumps\LaraDumps;
 use LaraDumps\LaraDumps\Payloads\{DumpPayload, MailablePayload, MarkdownPayload, ModelPayload, TableV2Payload};
 use LaraDumps\LaraDumps\Support\Dumper;
-use LaraDumps\LaraDumps\Tests\Classes\TestMail;
-use LaraDumps\LaraDumps\Tests\Models\Dish;
+use LaraDumps\LaraDumps\Tests\Support\Classes\TestMail;
+use LaraDumps\LaraDumps\Tests\Support\Models\Dish;
 
 it('should return the correct payload to dump', function () {
+    fixtureEnv('ds_env');
+
     $args   = [
         'name' => 'Luan',
     ];
 
     [$args, $id]       = Dumper::dump($args);
     $notificationId    = Str::uuid()->toString();
-
-    Config::set('preferred_ide', 'phpstorm');
 
     $trace      = [
         'file' => 'Test',
@@ -132,11 +132,11 @@ it('should return the correct payload to table-v2', function () {
 })->group('table-v2');
 
 it('should return the correct markdown payload to dump', function () {
+    fixtureEnv('ds_env');
+
     $args   = '# Hi, Anand Pilania!';
 
     $notificationId = Str::uuid()->toString();
-
-    Config::set('preferred_ide', 'phpstorm');
 
     $trace      = [
         'file' => 'Test',

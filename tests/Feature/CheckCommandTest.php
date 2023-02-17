@@ -1,11 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\File;
-use LaraDumps\LaraDumps\Actions\Config;
 
 beforeEach(function () {
-    $this->view          = getLaravelDir() . 'resources/views/view.blade.php';
-    $this->controller    = getLaravelDir() . 'app/Http/Controllers/LaraDumpsController.php';
+    $this->view          = laravel_path('resources/views/view.blade.php');
+    $this->controller    = laravel_path('app/Http/Controllers/LaraDumpsController.php');
     $this->bladeHtml     =  '<div>@ds(\'Hello\') </div>';
 });
 

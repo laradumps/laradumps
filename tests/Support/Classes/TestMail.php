@@ -1,6 +1,6 @@
 <?php
 
-namespace LaraDumps\LaraDumps\Tests\Classes;
+namespace LaraDumps\LaraDumps\Tests\Support\Classes;
 
 use Illuminate\Mail\Mailable;
 
