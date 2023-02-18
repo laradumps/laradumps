@@ -3,8 +3,8 @@
 namespace LaraDumps\LaraDumps\Payloads;
 
 use Illuminate\Routing\Route;
-use Illuminate\Support\{Arr, Collection, Str};
-use LaraDumps\LaraDumps\Actions\Config;
+use Illuminate\Support\{Arr, Str};
+use LaraDumps\LaraDumps\Actions\GetRoutesToIgnore;
 
 class RoutesPayload extends Payload
 {
@@ -63,7 +63,7 @@ class RoutesPayload extends Payload
     public function getAllExcepts(): array
     {
         return array_merge(
-            (array) Config::get('ignore_route_contains'),
+            (array) GetRoutesToIgnore::handle(),
             Arr::wrap($this->except),
         );
     }
