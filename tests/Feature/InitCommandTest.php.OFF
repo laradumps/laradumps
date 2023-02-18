@@ -1,5 +1,10 @@
 <?php
 
+
+beforeAll(function () {
+    test()->markTestSkipped();
+});
+
 use LaraDumps\LaraDumps\Actions\Config;
 
 it('updates the config non-interactively', function () {

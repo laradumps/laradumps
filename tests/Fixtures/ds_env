@@ -15,6 +15,8 @@ DS_AUTO_INVOKE_APP=true
 DS_FILE_HANDLER="phpstorm://open?file={filepath}&line={line}"
 DS_PROJECT_PATH="/Users/jamesbond/bomb-disarmer"
 # ******* DS Check *******
-DS_DEBUG_FUNCTIONS="ds, dsq, dsd, ds1, ds2, ds3, ds4, ds5, dsAutoClearOnPageReload"
-DS_IGNORE_DEBUG_FUNCTIONS="ads"
-DS_SEARCH_DEBUG_IN="app,src,routes,resources"
+DS_CHECK_FOR="ds, dsq, dsd, ds1, ds2, ds3, ds4, ds5, dsAutoClearOnPageReload"
+DS_CHECK_IN_DIR="app,routes,resources,juca"
+DS_CHECK_IGNORE="foods,ads"
+# ******* Hide Routes *******
+DS_IGNORE_ROUTES="debugbar,ignition,horizon,livewire"

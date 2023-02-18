@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\File;
 
 beforeEach(function () {
+    fixtureEnv('ds_env');
+
     $this->view          = laravel_path('resources/views/view.blade.php');
     $this->controller    = laravel_path('app/Http/Controllers/LaraDumpsController.php');
     $this->bladeHtml     =  '<div>@ds(\'Hello\') </div>';
@@ -28,12 +30,7 @@ it('display "No ds() found" when not ds found', function () {
         File::delete($this->controller);
     }
 
-    config('laradumps-check.ci_check.directories', [
-        resource_path(),
-    ]);
-
-    $this->artisan('ds:check')
-        ->expectsOutputToContain('No ds() found.');
+    $this->artisan('ds:check')->expectsOutputToContain('No ds() found.');
 });
 
 it('displays error when found on resources path', function () {
@@ -41,9 +38,7 @@ it('displays error when found on resources path', function () {
 
     $this->assertFileExists($this->view);
 
-    config('laradumps-check.ci_check.directories', [
-        resource_path(),
-    ]);
+    fixtureEnv('ds_env', ['DS_CHECK_IN_DIR' => 'resources']);
 
     $this->artisan('ds:check')
         ->expectsOutputToContain('@ds(\'Hello\')')
@@ -56,23 +51,19 @@ it('does not display error when found on resources path when not specified in co
 
     $this->assertFileExists($this->view);
 
-    config('laradumps-check.ci_check.directories', [
-        base_path('app'),
-    ]);
+    fixtureEnv('ds_env', ['DS_CHECK_IN_DIR' => 'app']);
 
     $this->artisan('ds:check')
         ->expectsOutputToContain('No ds() found.')
         ->assertSuccessful();
-})->skip();
+});
 
 it('displays error when found on controller', function ($dsFunction) {
     createControllerClass($dsFunction);
 
     $this->assertFileExists($this->controller);
 
-    config('laradumps-check.ci_check.directories', [
-        base_path('app'),
-    ]);
+    fixtureEnv('ds_env', ['DS_CHECK_IN_DIR' => 'app']);
 
     $this->artisan('ds:check')
         ->expectsOutputToContain($dsFunction)
@@ -88,7 +79,7 @@ it('displays error when found on controller', function ($dsFunction) {
     ["ds4('screen 4');"],
     ["ds5('screen 5');"],
     ["//ds('commented');"],
-])->skip();
+]);
 
 it('displays error when ds macro has line breaks', function () {
     $dsFunction = <<<PHP
@@ -101,15 +92,13 @@ it('displays error when ds macro has line breaks', function () {
 
     $this->assertFileExists($this->controller);
 
-    config('laradumps-check.ci_check.directories', [
-        base_path('app'),
-    ]);
+    fixtureEnv('ds_env', ['DS_CHECK_IN_DIR' => 'app']);
 
     $this->artisan('ds:check')
         ->expectsOutputToContain('->ds()')
         ->expectsOutputToContain('Found 1 error / 1 file')
         ->assertFailed();
-})->skip();
+});
 
 it('does displays error when found on controller when not specified in config', function () {
     if (File::exists($this->view)) {
@@ -120,9 +109,7 @@ it('does displays error when found on controller when not specified in config', 
 
     $this->assertFileExists($this->controller);
 
-    config('laradumps-check.ci_check.directories', [
-        resource_path(),
-    ]);
+    fixtureEnv('ds_env', ['DS_CHECK_IN_DIR' => 'resources']);
 
     $this->artisan('ds:check')
         ->doesntExpectOutputToContain('error')
@@ -139,9 +126,7 @@ it('will not match a partial function', function () {
 
     $this->assertFileExists($this->controller);
 
-    config('laradumps-check.ci_check.directories', [
-        base_path('app'),
-    ]);
+    fixtureEnv('ds_env', ['DS_CHECK_IN_DIR' => 'app']);
 
     $this->artisan('ds:check')
         ->doesntExpectOutputToContain('error')
@@ -156,10 +141,7 @@ it('displays errors when found on controller and resources path', function () {
     $this->assertFileExists($this->view);
     $this->assertFileExists($this->controller);
 
-    config('laradumps-check.ci_check.directories', [
-        base_path('app'),
-        resource_path(),
-    ]);
+    fixtureEnv('ds_env', ['DS_CHECK_IN_DIR' => 'app,resources']);
 
     $this->artisan('ds:check')
         ->expectsOutputToContain('@ds(\'Hello\')')
@@ -182,9 +164,7 @@ it('displays errors when for dsAutoClearOnPageReload directive', function () {
 
     $this->assertFileExists($this->view);
 
-    config('laradumps-check.ci_check.directories', [
-        resource_path(),
-    ]);
+    fixtureEnv('ds_env', ['DS_CHECK_IN_DIR' => 'resources']);
 
     $this->artisan('ds:check')
         ->expectsOutputToContain('@dsAutoClearOnPageReload')
@@ -199,14 +179,9 @@ it('ignore an error when encountering specific text on the line', function () {
     $this->assertFileExists($this->view);
     $this->assertFileExists($this->controller);
 
-    config('laradumps-check.ci_check.directories', [
-        base_path('app'),
-        resource_path(),
-    ]);
+    fixtureEnv('ds_env', ['DS_CHECK_IN_DIR' => 'app,resources']);
 
-    Config::set('ci_check.ignore_line_when_contains_text', [
-        'Hello from',
-    ]);
+    fixtureEnv('ds_env', ['DS_CHECK_IGNORE' => 'Hello from,Banana']);
 
     $this->artisan('ds:check')
         ->expectsOutputToContain('@ds(\'Hello\')')

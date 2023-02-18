@@ -216,44 +216,6 @@ return [
     |
     */
 
-    'preferred_ide' => env('DS_PREFERRED_IDE', 'phpstorm'),
-
-    /*
-    |--------------------------------------------------------------------------
-    | IDE Handlers
-    |--------------------------------------------------------------------------
-    |
-    | Dumps already ships with pre-configured IDE protocol handlers.
-    | You may adjust the handler or include custom ones, if needed.
-    |
-    */
-
-    'ide_handlers' => [
-        'atom' => [
-            'handler'        => 'atom://core/open/file?filename=',
-            'line_separator' => '&line=',
-        ],
-        'phpstorm' => [
-            'handler'        => 'phpstorm://open?file=',
-            'line_separator' => '&line=',
-        ],
-        'sublime' => [
-            'handler'        => 'subl://open?url=file://',
-            'line_separator' => '&line=',
-        ],
-        'vscode' => [
-            'handler'        => 'vscode://file/',
-            'line_separator' => ':',
-        ],
-        'vscode_remote' => [
-            'handler'        => 'vscode://vscode-remote/',
-            'line_separator' => ':',
-            'local_path'     => 'wsl+' . env('DS_PREFERRED_WSL_DISTRO', 'Ubuntu20.04LTS'),
-            'remote_path'    => env('DS_REMOTE_PATH', null),
-            'work_dir'       => env('DS_WORKDIR', '/var/www/html'),
-        ],
-    ],
-
     /*
     |--------------------------------------------------------------------------
     | Ignore Routes
@@ -263,13 +225,6 @@ return [
     | ds()->routes() command.
     |
     */
-
-    'ignore_route_contains' => [
-        'debugbar',
-        'ignition',
-        'horizon',
-        'livewire',
-    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -282,37 +237,6 @@ return [
     */
 
     'sleep' => env('DS_SLEEP', null),
-
-    /*
-    |--------------------------------------------------------------------------
-    | CI Check
-    |--------------------------------------------------------------------------
-    |
-    | List of directories and text to be searched when running the
-    |  "php artisan ds:check" command.
-    |
-    */
-
-    'ci_check' => [
-        'directories' => [
-            base_path('app'),
-            base_path('resources'),
-        ],
-        'ignore_line_when_contains_text' => [
-            //'ads()'
-        ],
-        'text_to_search' => [
-            'ds(',
-            'dsq(',
-            'dsd(',
-            'ds1(',
-            'ds2(',
-            'ds3(',
-            'ds4(',
-            'ds5(',
-            'dsAutoClearOnPageReload',
-        ],
-    ],
 
     /*
     |--------------------------------------------------------------------------

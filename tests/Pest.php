@@ -1,7 +1,6 @@
 <?php
 
 use Dotenv\Dotenv;
-use Illuminate\Support\Env;
 use LaraDumps\LaraDumps\Tests\TestCase;
 
 uses(TestCase::class)->in('Feature');
@@ -24,23 +23,6 @@ function fixtureEnv(string $filename, $replace = []): void
     $env = array_merge($env, $replace);
 
     foreach ($env as $key => $value) {
-        setEnvKey($key, $value);
+        putenv("{$key}={$value}");
     }
-
-    // (Dotenv::createImmutable(laravel_path()))->load();
-}
-
-#https://stackoverflow.com/questions/66775841/laravel-vlucas-phpdotenv-changing-env-values-dynamically
-
-function setEnvKey($name, $value)
-{
-    $environmentRepository = Env::getRepository();
-
-    $fn = function () use ($name, $value) {
-        $fn = function () use ($name, $value) {
-            $this->writer->write($name, $value);
-        };
-        $fn->call($this->writer);
-    };
-    $fn->call($environmentRepository);
 }

@@ -4,7 +4,7 @@ namespace LaraDumps\LaraDumps\Observers;
 
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Str;
-use LaraDumps\LaraDumps\Actions\Config;
+use LaraDumps\LaraDumps\Actions\{Config, MakeFileHandler};
 use LaraDumps\LaraDumps\LaraDumps;
 use LaraDumps\LaraDumps\Payloads\LivewirePayload;
 use LaraDumps\LaraDumps\Support\{Dumper, IdeHandle};
@@ -51,7 +51,7 @@ class LivewireComponentsObserver
                 $data['name']        = Str::of($component->getName())->replace('.', '-')->studly();
                 $data['view']        = Str::of($view->name())->replace('livewire.', '');
                 $data['viewHandler'] = [
-                    'handler' => IdeHandle::makeFileHandler($viewPath, '1'),
+                    'handler' => MakeFileHandler::handle(['file' => $viewPath,  'line ' => 1]),
                     'path'    => (string) Str::of($viewPath)->replace(config('livewire.view_path') . '/', ''),
                     'line'    => 1,
                 ];

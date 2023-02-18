@@ -3,7 +3,7 @@
 namespace LaraDumps\LaraDumps\Payloads;
 
 use Illuminate\Support\Str;
-use LaraDumps\LaraDumps\Support\IdeHandle;
+use LaraDumps\LaraDumps\Actions\MakeFileHandler;
 
 class LivewireEventsReturnedPayload extends Payload
 {
@@ -24,7 +24,7 @@ class LivewireEventsReturnedPayload extends Payload
         $component = Str::of(base_path() . '/' . $this->event['component'] . '.php')->replace('\\', '/', )->replace('App', 'app');
 
         return [
-            'handler' => IdeHandle::makeFileHandler($component, '1'),
+            'handler' => MakeFileHandler::handle(['file' => $component, 'line' => 1]),
             'path'    => $this->event['component'],
             'line'    => 1,
         ];

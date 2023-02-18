@@ -50,7 +50,7 @@ final class Config
     }
 
     // Based on https://stackoverflow.com/questions/32307426/how-to-change-variables-in-the-env-file-dynamically-in-laravel
-    public static function updateEnv(string $key, string $value, $filePath = ''): void
+    public static function updateEnv(string $key, string $value, string $filePath = ''): void
     {
         if (empty($filePath)) {
             $filePath  = base_path('.env');

@@ -3,7 +3,7 @@
 namespace LaraDumps\LaraDumps\Observers;
 
 use Illuminate\Support\Str;
-use LaraDumps\LaraDumps\Actions\Config;
+use LaraDumps\LaraDumps\Actions\{Config, MakeFileHandler};
 use LaraDumps\LaraDumps\LaraDumps;
 use LaraDumps\LaraDumps\Payloads\LivewireEventsPayload;
 use LaraDumps\LaraDumps\Support\{Dumper, IdeHandle};
@@ -40,7 +40,7 @@ class LivewireDispatchObserver
                         'dispatch'         => true,
                         'component'        => $component,
                         'componentHandler' => [
-                            'handler' => IdeHandle::makeFileHandler($componentBasePath, '1'),
+                            'handler' => MakeFileHandler::handle(['file' => $componentBasePath, 'line' => 1]),
                             'path'    => Str::of(strval($component))->replace(config('livewire.class_namespace') . '\\', ''),
                             'line'    => 1,
                         ],
