@@ -2,8 +2,6 @@
 
 namespace LaraDumps\LaraDumps\Actions;
 
-use Illuminate\Support\Facades\File;
-
 final class Config
 {
     protected static string $file = __DIR__ . '/../../config/laradumps.php';
@@ -46,33 +44,6 @@ final class Config
 
         $_ENV[self::$map[$key]] = $value;
 
-        self::updateEnv(self::$map[$key], strval($value));
-    }
-
-    // Based on https://stackoverflow.com/questions/32307426/how-to-change-variables-in-the-env-file-dynamically-in-laravel
-    public static function updateEnv(string $key, string $value, string $filePath = ''): void
-    {
-        if (empty($filePath)) {
-            $filePath  = base_path('.env');
-        }
-
-        $fileContent = File::get($filePath);
-
-        //Store the key
-        $original = [];
-
-        if ((bool) preg_match('/^\d+$/', str_replace('.', '', $value)) === false && in_array($value, ['true', 'false']) === false) {
-            $value = "\"{$value}\"";
-        }
-
-        if (preg_match("/^$key=(.+)$/m", $fileContent, $original)) {
-            //Update
-            $fileContent = preg_replace("/^$key=.+$/m", "$key=$value", $fileContent);
-        } else {
-            //Append the key to the end of file
-            $fileContent .= PHP_EOL . "$key=$value";
-        }
-
-        File::put($filePath, strval($fileContent));
+        WriteEnv::handle([self::$map[$key], strval($value)]);
     }
 }
