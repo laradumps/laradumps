@@ -23,8 +23,6 @@ class CommandObserver implements TraceableContract
 
     public function register(): void
     {
-        $this->enabled = $this->isEnabled();
-
         Event::listen(CommandFinished::class, function (object $event) {
             if (!$this->isEnabled()) {
                 return;
@@ -58,7 +56,7 @@ class CommandObserver implements TraceableContract
             return $this->enabled;
         }
 
-        return true;
+        return false;
     }
 
     private function generatePayload(object $event): Payload

@@ -11,10 +11,6 @@ use LaraDumps\LaraDumps\Observers\{CacheObserver,
     CommandObserver,
     HttpClientObserver,
     JobsObserver,
-    LivewireComponentsObserver,
-    LivewireDispatchObserver,
-    LivewireEventsObserver,
-    LivewireFailedValidationObserver,
     LogObserver,
     QueryObserver};
 use LaraDumps\LaraDumps\Payloads\QueryPayload;
@@ -72,8 +68,7 @@ class LaraDumpsServiceProvider extends ServiceProvider
         });
 
         Blade::directive('dsAutoClearOnPageReload', function ($args) {
-            if (boolval(Config::get('auto_clear_on_page_reload'))   === false
-                && boolval(Config::get('send_livewire_components')) === false) {
+            if (boolval(Config::get('auto_clear_on_page_reload')) === false) {
                 return '';
             }
 
@@ -119,10 +114,6 @@ HTML;
         app(HttpClientObserver::class)->register();
         app(LogObserver::class)->register();
         app(QueryObserver::class)->register();
-        app(LivewireEventsObserver::class)->register();
-        app(LivewireDispatchObserver::class)->register();
-        app(LivewireComponentsObserver::class)->register();
-        app(LivewireFailedValidationObserver::class)->register();
     }
 
     private function registerMacros(): void

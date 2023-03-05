@@ -40,7 +40,7 @@ class LaraDumps
             sleep($sleep);
         }
 
-        $this->fullUrl        = Config::get('host') . ':' . Config::get('port') . '/api/dumps';
+        $this->fullUrl        = Config::get('host') . ':9191/api/dumps';
         $this->notificationId = filled($notificationId) ? $this->notificationId : Str::uuid()->toString();
     }
 
