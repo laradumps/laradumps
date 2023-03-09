@@ -5,7 +5,6 @@ namespace LaraDumps\LaraDumps\Observers;
 use Illuminate\Cache\Events\{CacheEvent, CacheHit, CacheMissed, KeyForgotten, KeyWritten};
 use Illuminate\Support\Facades\{Cache, Event};
 use Illuminate\Support\Str;
-use LaraDumps\LaraDumps\Actions\Config;
 use LaraDumps\LaraDumps\Concerns\Traceable;
 use LaraDumps\LaraDumps\LaraDumps;
 use LaraDumps\LaraDumps\Payloads\TableV2Payload;
@@ -33,7 +32,7 @@ class CacheObserver
                 'Type'  => 'hit',
                 'Key'   => $event->key,
                 'Value' => $this->formatValue($event),
-            ]);
+            ], 'width: 120px');
         });
 
         Event::listen(CacheMissed::class, function (CacheMissed $event) {
@@ -44,7 +43,7 @@ class CacheObserver
             $this->sendCache($event, [
                 'Type' => 'missed',
                 'Key'  => $event->key,
-            ]);
+            ], 'width: 120px');
         });
 
         Event::listen(KeyForgotten::class, function (KeyForgotten $event) {
@@ -55,7 +54,7 @@ class CacheObserver
             $this->sendCache($event, [
                 'Type' => 'forget',
                 'Key'  => $event->key,
-            ]);
+            ], 'width: 120px');
         });
 
         Event::listen(KeyWritten::class, function (KeyWritten $event) {
@@ -68,11 +67,11 @@ class CacheObserver
                 'Key'        => $event->key,
                 'Value'      => $this->formatValue($event),
                 'Expiration' => $this->formatExpiration($event),
-            ]);
+            ], 'width: 120px');
         });
     }
 
-    protected function sendCache(CacheEvent $event, array $data): void
+    protected function sendCache(CacheEvent $event, array $data, string $headerStyle = ''): void
     {
         if (!$this->isEnabled() || $this->shouldIgnore($event)) {
             return;
@@ -81,7 +80,7 @@ class CacheObserver
         $dumps = new LaraDumps(trace: $this->trace);
 
         $dumps->send(
-            new TableV2Payload($data)
+            new TableV2Payload($data, $headerStyle)
         );
 
         if (!empty($this->label)) {
@@ -105,11 +104,11 @@ class CacheObserver
     {
         $this->trace = array_slice($this->findSource(), 0, 5)[0] ?? [];
 
-        if (!boolval(Config::get('send_cache'))) {
+        if (!boolval(config('laradumps.send_cache'))) {
             return $this->enabled;
         }
 
-        return true;
+        return false;
     }
 
     public function hidden(array $hidden = []): array

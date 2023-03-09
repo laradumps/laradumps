@@ -18,6 +18,7 @@ final class Config
         'send_cache'                         => 'DS_SEND_CACHE',
         'send_commands'                      => 'DS_SEND_COMMANDS',
         'send_livewire_components_highlight' => 'DS_SEND_LIVEWIRE_COMPONENTS_HIGHLIGHT',
+        'send_http_client'                   => 'DS_SEND_HTTP',
     ];
 
     public static function get(string $key): mixed

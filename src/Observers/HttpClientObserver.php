@@ -100,11 +100,11 @@ class HttpClientObserver implements TraceableContract
             'Real Request' => !empty($response->handlerStats()),
             'Success'      => $response->successful(),
             'Status'       => $response->status(),
-            'Headers'      => Dumper::dump($response->headers()),
+            'Headers'      => Dumper::dump($response->headers())[0],
             'Body'         => rescue(function () use ($response) {
                 return $response->json();
-            }, Dumper::dump($response->body()), false),
-            'Cookies'         => Dumper::dump($response->cookies()),
+            }, Dumper::dump($response->body())[0], false),
+            'Cookies'         => Dumper::dump($response->cookies())[0],
             'Size'            => $response->handlerStats()['size_download'] ?? null,
             'Connection time' => $response->handlerStats()['connect_time']  ?? null,
             'Duration'        => $response->handlerStats()['total_time']    ?? null,

@@ -8,7 +8,8 @@ use Illuminate\Support\{Collection, Str};
 use LaraDumps\LaraDumps\Actions\{Config, SendPayload};
 use LaraDumps\LaraDumps\Concerns\Colors;
 use LaraDumps\LaraDumps\Observers\{CacheObserver, CommandObserver, HttpClientObserver, JobsObserver, QueryObserver};
-use LaraDumps\LaraDumps\Payloads\{ClearPayload,
+use LaraDumps\LaraDumps\Payloads\{
+    ClearPayload,
     CoffeePayload,
     ColorPayload,
     DiffPayload,
@@ -24,7 +25,9 @@ use LaraDumps\LaraDumps\Payloads\{ClearPayload,
     ScreenPayload,
     TablePayload,
     TimeTrackPayload,
-    ValidateStringPayload};
+    ValidJsonPayload,
+    ValidateStringPayload
+};
 
 class LaraDumps
 {
@@ -142,7 +145,7 @@ class LaraDumps
      */
     public function isJson(): LaraDumps
     {
-        $payload = new ValidateStringPayload('json');
+        $payload = new ValidJsonPayload();
 
         $this->send($payload);
 
