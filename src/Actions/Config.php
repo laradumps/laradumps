@@ -19,6 +19,7 @@ final class Config
         'send_commands'                      => 'DS_SEND_COMMANDS',
         'send_livewire_components_highlight' => 'DS_SEND_LIVEWIRE_COMPONENTS_HIGHLIGHT',
         'send_http_client'                   => 'DS_SEND_HTTP',
+        'send_color_in_screen'               => 'DS_SEND_COLOR_IN_SCREEN',
     ];
 
     public static function get(string $key): mixed
