@@ -40,9 +40,9 @@ final class WriteEnv
                 $value = filter_var($value, FILTER_VALIDATE_BOOLEAN) ? 'true' : 'false';
             }
 
-            if (preg_match("/^$key=(.+)$/m", strval($fileContent), $original)) {
+            if (preg_match("/^$key\=.*$/m", strval($fileContent), $original)) {
                 //Update
-                $fileContent = preg_replace("/^$key=.+$/m", "$key=$value", strval($fileContent));
+                $fileContent = preg_replace("/^$key\=.*$/m", "$key=$value", strval($fileContent));
             } else {
                 //Append the key to the end of file
                 $fileContent .= PHP_EOL . "$key=$value";

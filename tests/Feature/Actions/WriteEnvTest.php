@@ -20,8 +20,17 @@ it('properly updates an .env key')
     ->tap(fn () => WriteEnv::handle(['DS_APP_HOST' => 'server.demo', 'DS_SEND_JOBS' => ''], $this->tempFile))
     ->expect(fn () => envFile())
     ->toContain('DS_APP_HOST="server.demo"')
-    ->toContain("DS_SEND_JOBS=\nDS_SEND_COMMANDS=true")
+    ->toContain("DS_SEND_JOBS=\n")
+    ->toContain('DS_SEND_COMMANDS=true')
     ->not->toContain('127.0.0.1');
+
+it('properly edits a key without value')
+    ->expect(fn () => envFile())
+    ->toContain("DS_SOME_KEY=\n")
+    ->tap(fn () => WriteEnv::handle(['DS_SOME_KEY' => 'bar'], $this->tempFile))
+    ->expect(fn () => envFile())
+    ->toContain('DS_SOME_KEY="bar"')
+    ->not()->toContain("DS_SOME_KEY=\n");
 
 beforeEach(function () {
     $this->tempFile = str_replace('/', DIRECTORY_SEPARATOR, sys_get_temp_dir() . '/.env');

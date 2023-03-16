@@ -15,3 +15,4 @@ DS_CHECK_IN_DIR="app,routes,resources,juca"
 DS_CHECK_IGNORE="foods,ads"
 # ******* Hide Routes *******
 DS_IGNORE_ROUTES="debugbar,ignition,horizon,livewire"
+DS_SOME_KEY=
