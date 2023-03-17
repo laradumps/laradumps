@@ -14,11 +14,13 @@ it('properly adds a key to a .env')
     ->tap(fn () => WriteEnv::handle(['DS_FOO' => 'bar', 'DS_BAR' => true, 'DS_BAZ' => 90125, ], $this->tempFile))
     ->expect(fn () => envFile())
     ->toContain("DS_FOO=\"bar\"\nDS_BAR=true\nDS_BAZ=90125")
-    ->toContain('DS_SEND_JOBS');
+    ->toContain('DS_SEND_JOBS')
+    ->toContain("APP_KEY=abcd12345\n");
 
 it('properly updates an .env key')
     ->tap(fn () => WriteEnv::handle(['DS_APP_HOST' => 'server.demo', 'DS_SEND_JOBS' => ''], $this->tempFile))
     ->expect(fn () => envFile())
+    ->toContain("APP_KEY=abcd12345\n")
     ->toContain('DS_APP_HOST="server.demo"')
     ->toContain("DS_SEND_JOBS=\n")
     ->toContain('DS_SEND_COMMANDS=true')
@@ -29,6 +31,7 @@ it('properly edits a key without value')
     ->toContain("DS_SOME_KEY=\n")
     ->tap(fn () => WriteEnv::handle(['DS_SOME_KEY' => 'bar'], $this->tempFile))
     ->expect(fn () => envFile())
+    ->toContain("APP_KEY=abcd12345\n")
     ->toContain('DS_SOME_KEY="bar"')
     ->not()->toContain("DS_SOME_KEY=\n");
 
