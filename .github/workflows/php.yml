@@ -7,15 +7,13 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-12, windows-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest]
         php: [ 8.2, 8.1 ]
-        laravel: [ 10.*, 9.* ]
+        laravel: [ 10.* ]
         dependency-version: [ prefer-stable ]
         include:
           - laravel: 10.*
             testbench: 8.*
-          - laravel: 9.*
-            testbench: 7.*
         exclude:
           - php: 8.0
             laravel: 10.*
@@ -45,15 +43,14 @@ jobs:
           composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
           composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction
 
-      - name: Code Style 👨‍🏭
-        run: composer cs-fixer
-        if: runner.os == 'Linux'
+      - name: Pint 👨‍🏭
+        if: matrix.php == '8.1'
+        run: composer test:pint
         env:
           PHP_CS_FIXER_IGNORE_ENV: 1
 
       - name: Larastan ⚗️
         run: composer test:types
-        if: matrix.laravel == '9.*' || matrix.laravel == '10.*'
 
       - name: Pest Tests 👨🏻‍🔬
         run: composer test:tests

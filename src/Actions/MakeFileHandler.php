@@ -16,8 +16,8 @@ final class MakeFileHandler
             $trace['line'] = 1;
         }
 
-        $keyHandler        = env($keyHandler, '');
-        $forceProjectPath  = env($forceProjectPath, '');
+        $keyHandler       = env($keyHandler, '');
+        $forceProjectPath = env($forceProjectPath, '');
 
         if (!is_string($keyHandler) || !is_string($forceProjectPath)) {
             return '';
@@ -48,6 +48,7 @@ final class MakeFileHandler
         if (str_contains($filepath, '/')) {
             $separator = '/';
         }
+
         if (str_contains($filepath, '\\')) {
             $separator = '\\';
         }

@@ -6,11 +6,11 @@ use Illuminate\Http\Client\Events\{RequestSending, ResponseReceived};
 use Illuminate\Http\Client\{Request, Response};
 use Illuminate\Support\Facades\Event;
 use LaraDumps\LaraDumps\Actions\Config;
-use LaraDumps\LaraDumps\Concerns\Traceable;
-use LaraDumps\LaraDumps\Contracts\TraceableContract;
-use LaraDumps\LaraDumps\LaraDumps;
-use LaraDumps\LaraDumps\Payloads\{Payload, TableV2Payload};
-use LaraDumps\LaraDumps\Support\Dumper;
+use LaraDumps\LaraDumpsCore\Concerns\Traceable;
+use LaraDumps\LaraDumpsCore\Contracts\TraceableContract;
+use LaraDumps\LaraDumpsCore\LaraDumps;
+use LaraDumps\LaraDumpsCore\Payloads\{Payload, TableV2Payload};
+use LaraDumps\LaraDumpsCore\Support\Dumper;
 
 class HttpClientObserver implements TraceableContract
 {
@@ -19,8 +19,6 @@ class HttpClientObserver implements TraceableContract
     private bool $enabled = false;
 
     private ?string $label = null;
-
-    private array $trace = [];
 
     public function register(): void
     {
@@ -106,9 +104,9 @@ class HttpClientObserver implements TraceableContract
             }, Dumper::dump($response->body())[0], false),
             'Cookies'         => Dumper::dump($response->cookies())[0],
             'Size'            => $response->handlerStats()['size_download'] ?? null,
-            'Connection time' => $response->handlerStats()['connect_time']  ?? null,
-            'Duration'        => $response->handlerStats()['total_time']    ?? null,
-            'Request Size'    => $response->handlerStats()['request_size']  ?? null,
+            'Connection time' => $response->handlerStats()['connect_time'] ?? null,
+            'Duration'        => $response->handlerStats()['total_time'] ?? null,
+            'Request Size'    => $response->handlerStats()['request_size'] ?? null,
         ], 'Http', 'http-client');
     }
 

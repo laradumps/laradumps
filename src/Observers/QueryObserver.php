@@ -5,10 +5,10 @@ namespace LaraDumps\LaraDumps\Observers;
 use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Support\Facades\DB;
 use LaraDumps\LaraDumps\Actions\Config;
-use LaraDumps\LaraDumps\Concerns\Traceable;
-use LaraDumps\LaraDumps\Contracts\TraceableContract;
-use LaraDumps\LaraDumps\LaraDumps;
 use LaraDumps\LaraDumps\Payloads\QueriesPayload;
+use LaraDumps\LaraDumpsCore\Concerns\Traceable;
+use LaraDumps\LaraDumpsCore\Contracts\TraceableContract;
+use LaraDumps\LaraDumpsCore\LaraDumps;
 
 class QueryObserver implements TraceableContract
 {
@@ -17,8 +17,6 @@ class QueryObserver implements TraceableContract
     private bool $enabled = false;
 
     private ?string $label = null;
-
-    private array $trace = [];
 
     public function register(): void
     {
@@ -60,25 +58,29 @@ class QueryObserver implements TraceableContract
 
         DB::enableQueryLog();
 
-        $this->enabled    = true;
+        $this->enabled = true;
     }
 
     public function disable(): void
     {
         DB::disableQueryLog();
 
-        $this->enabled    = false;
+        $this->enabled = false;
     }
 
     public function isEnabled(): bool
     {
-        $this->trace   = array_slice($this->findSource(), 0, 5)[0] ?? [];
+        $this->trace = array_slice($this->findSource(), 0, 5)[0] ?? [];
 
         if (!boolval(Config::get('send_queries'))) {
             return $this->enabled;
         }
 
-        return boolval(Config::get('send_queries'));
+        if (Config::get('send_queries') === 'true') {
+            return true;
+        }
+
+        return false;
     }
 
     protected function fileIsInExcludedPath(string $file): bool

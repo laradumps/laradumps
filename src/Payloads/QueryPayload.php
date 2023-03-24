@@ -4,6 +4,7 @@ namespace LaraDumps\LaraDumps\Payloads;
 
 use Illuminate\Database\Query\Builder;
 use LaraDumps\LaraDumps\Actions\Config;
+use LaraDumps\LaraDumpsCore\Payloads\Payload;
 
 class QueryPayload extends Payload
 {

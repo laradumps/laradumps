@@ -1,30 +1,35 @@
 <?php
 
-use Illuminate\Support\Str;
 use LaraDumps\LaraDumps\Actions\Config;
-use LaraDumps\LaraDumps\LaraDumps;
-use LaraDumps\LaraDumps\Payloads\{DumpPayload, MailablePayload, MarkdownPayload, ModelPayload, TableV2Payload};
-use LaraDumps\LaraDumps\Support\Dumper;
+use LaraDumps\LaraDumps\Payloads\{MailablePayload, MarkdownPayload, ModelPayload};
+use LaraDumps\LaraDumps\Tests\Models\Dish;
 use LaraDumps\LaraDumps\Tests\Support\Classes\TestMail;
-use LaraDumps\LaraDumps\Tests\Support\Models\Dish;
+use LaraDumps\LaraDumpsCore\LaraDumps;
+use LaraDumps\LaraDumpsCore\Payloads\{DumpPayload, TableV2Payload};
+use LaraDumps\LaraDumpsCore\Support\Dumper;
+use Ramsey\Uuid\Uuid;
+
+beforeEach(function () {
+    putenv("DS_RUNNING_IN_TESTS=true");
+});
 
 it('should return the correct payload to dump', function () {
     fixtureEnv('ds_env');
 
-    $args   = [
+    $args = [
         'name' => 'Luan',
     ];
 
-    [$args, $id]       = Dumper::dump($args);
-    $notificationId    = Str::uuid()->toString();
+    [$args, $id]    = Dumper::dump($args);
+    $notificationId = Uuid::uuid4()->toString();
 
-    $trace      = [
+    $trace = [
         'file' => 'Test',
         'line' => 1,
     ];
 
-    $laradumps      = new LaraDumps(notificationId: $notificationId, trace: $trace);
-    $payload        = $laradumps->send(new DumpPayload($args));
+    $laradumps = new LaraDumps(notificationId: $notificationId, trace: $trace);
+    $payload   = $laradumps->send(new DumpPayload($args));
 
     expect($payload)
         ->id->toBe($notificationId)
@@ -44,17 +49,17 @@ it('should return the correct payload to dump', function () {
 it('should return the correct payload to model', function () {
     $dish = Dish::query()->first();
 
-    $notificationId = Str::uuid()->toString();
+    $notificationId = Uuid::uuid4()->toString();
 
     Config::set('preferred_ide', 'phpstorm');
 
-    $trace      = [
+    $trace = [
         'file' => 'Test',
         'line' => 1,
     ];
 
-    $laradumps      = new LaraDumps($notificationId, trace: $trace);
-    $payload        = $laradumps->send(new ModelPayload($dish));
+    $laradumps = new LaraDumps($notificationId, trace: $trace);
+    $payload   = $laradumps->send(new ModelPayload($dish));
 
     expect($payload)
         ->id->toBe($notificationId)
@@ -79,15 +84,15 @@ it('should return the correct payload to model', function () {
 it('should return the correct payload to mailable', function () {
     $mailable = new TestMail();
 
-    $notificationId = Str::uuid()->toString();
+    $notificationId = Uuid::uuid4()->toString();
 
-    $trace      = [
+    $trace = [
         'file' => 'Test',
         'line' => 1,
     ];
 
-    $laradumps      = new LaraDumps($notificationId, trace: $trace);
-    $payload        = $laradumps->send(new MailablePayload($mailable));
+    $laradumps = new LaraDumps($notificationId, trace: $trace);
+    $payload   = $laradumps->send(new MailablePayload($mailable));
 
     expect($payload)
         ->id->toBe($notificationId)
@@ -110,15 +115,15 @@ it('should return the correct payload to table-v2', function () {
         ],
     ];
 
-    $trace      = [
+    $trace = [
         'file' => 'Test',
         'line' => 1,
     ];
 
-    $notificationId = Str::uuid()->toString();
+    $notificationId = Uuid::uuid4()->toString();
 
-    $laradumps      = new LaraDumps($notificationId, trace: $trace);
-    $payload        = $laradumps->send(new TableV2Payload($data));
+    $laradumps = new LaraDumps($notificationId, trace: $trace);
+    $payload   = $laradumps->send(new TableV2Payload($data));
 
     expect($payload)
         ->id->toBe($notificationId)
@@ -134,17 +139,17 @@ it('should return the correct payload to table-v2', function () {
 it('should return the correct markdown payload to dump', function () {
     fixtureEnv('ds_env');
 
-    $args   = '# Hi, Anand Pilania!';
+    $args = '# Hi, Anand Pilania!';
 
-    $notificationId = Str::uuid()->toString();
+    $notificationId = Uuid::uuid4()->toString();
 
-    $trace      = [
+    $trace = [
         'file' => 'Test',
         'line' => 1,
     ];
 
-    $laradumps      = new LaraDumps(notificationId: $notificationId, trace: $trace);
-    $payload        = $laradumps->send(new MarkdownPayload($args));
+    $laradumps = new LaraDumps(notificationId: $notificationId, trace: $trace);
+    $payload   = $laradumps->send(new MarkdownPayload($args));
 
     expect($payload)
         ->id->toBe($notificationId)

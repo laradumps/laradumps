@@ -2,10 +2,12 @@
 
 namespace LaraDumps\LaraDumps\Payloads;
 
+use LaraDumps\LaraDumpsCore\Payloads\Payload;
+
 class TimeTrackPayload extends Payload
 {
     /**
-     * Clock script executiontime
+     * Clock script execution time
      *
      * @param bool $stop
      */

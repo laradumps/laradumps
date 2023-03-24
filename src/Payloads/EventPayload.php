@@ -2,6 +2,8 @@
 
 namespace LaraDumps\LaraDumps\Payloads;
 
+use LaraDumps\LaraDumpsCore\Payloads\Payload;
+
 class EventPayload extends Payload
 {
     /** @var object|mixed|null */

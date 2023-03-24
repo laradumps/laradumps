@@ -5,9 +5,9 @@ use Illuminate\Support\Facades\File;
 beforeEach(function () {
     fixtureEnv('ds_env');
 
-    $this->view          = laravel_path('resources/views/view.blade.php');
-    $this->controller    = laravel_path('app/Http/Controllers/LaraDumpsController.php');
-    $this->bladeHtml     =  '<div>@ds(\'Hello\') </div>';
+    $this->view       = laravel_path('resources/views/view.blade.php');
+    $this->controller = laravel_path('app/Http/Controllers/LaraDumpsController.php');
+    $this->bladeHtml  = '<div>@ds(\'Hello\') </div>';
 });
 
 afterEach(function () {

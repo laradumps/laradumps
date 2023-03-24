@@ -3,6 +3,7 @@
 namespace LaraDumps\LaraDumps\Payloads;
 
 use Illuminate\Mail\Markdown;
+use LaraDumps\LaraDumpsCore\Payloads\Payload;
 
 class MarkdownPayload extends Payload
 {

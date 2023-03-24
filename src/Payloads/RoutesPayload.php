@@ -4,7 +4,8 @@ namespace LaraDumps\LaraDumps\Payloads;
 
 use Illuminate\Routing\Route;
 use Illuminate\Support\{Arr, Str};
-use LaraDumps\LaraDumps\Actions\GetRoutesToIgnore;
+use LaraDumps\LaraDumpsCore\Actions\GetRoutesToIgnore;
+use LaraDumps\LaraDumpsCore\Payloads\Payload;
 
 class RoutesPayload extends Payload
 {
@@ -26,6 +27,7 @@ class RoutesPayload extends Payload
         /** @phpstan-ignore-next-line */
         foreach (\Route::getRoutes()->getIterator() as $route) {
             $ignore = false;
+
             foreach ($this->getAllExcepts() as $except) {
                 if (Str::contains($route->uri, $except)) {
                     $ignore = true;

@@ -3,6 +3,7 @@
 namespace LaraDumps\LaraDumps\Payloads;
 
 use Illuminate\Mail\Mailable;
+use LaraDumps\LaraDumpsCore\Payloads\Payload;
 use Throwable;
 
 class MailablePayload extends Payload

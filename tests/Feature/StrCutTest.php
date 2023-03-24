@@ -1,10 +1,8 @@
 
 <?php
 
-use Illuminate\Support\Str;
-
 it('properly cuts dump string')
-    ->expect(fn () => Str::cut(htmlDumper(), '<pre ', '</pre>'))
+    ->expect(fn () => \LaraDumps\LaraDumpsCore\Actions\Support::cut(htmlDumper(), '<pre ', '</pre>'))
     ->toBe(htmlDump());
 
 // Helpers

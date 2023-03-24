@@ -6,11 +6,11 @@ use Illuminate\Queue\Events\{JobFailed, JobProcessed, JobProcessing, JobQueued};
 use Illuminate\Queue\Jobs\Job;
 use Illuminate\Support\Facades\Event;
 use LaraDumps\LaraDumps\Actions\Config;
-use LaraDumps\LaraDumps\Concerns\Traceable;
-use LaraDumps\LaraDumps\Contracts\TraceableContract;
-use LaraDumps\LaraDumps\LaraDumps;
-use LaraDumps\LaraDumps\Payloads\{DumpPayload, Payload};
-use LaraDumps\LaraDumps\Support\Dumper;
+use LaraDumps\LaraDumpsCore\Concerns\Traceable;
+use LaraDumps\LaraDumpsCore\Contracts\TraceableContract;
+use LaraDumps\LaraDumpsCore\LaraDumps;
+use LaraDumps\LaraDumpsCore\Payloads\{DumpPayload, Payload};
+use LaraDumps\LaraDumpsCore\Support\Dumper;
 
 class JobsObserver implements TraceableContract
 {
@@ -19,8 +19,6 @@ class JobsObserver implements TraceableContract
     private bool $enabled = false;
 
     private string $label = 'Job';
-
-    private array $trace = [];
 
     public function register(): void
     {

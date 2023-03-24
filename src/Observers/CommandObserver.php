@@ -5,11 +5,11 @@ namespace LaraDumps\LaraDumps\Observers;
 use Illuminate\Console\Events\CommandFinished;
 use Illuminate\Support\Facades\Event;
 use LaraDumps\LaraDumps\Actions\Config;
-use LaraDumps\LaraDumps\Concerns\Traceable;
-use LaraDumps\LaraDumps\Contracts\TraceableContract;
-use LaraDumps\LaraDumps\LaraDumps;
-use LaraDumps\LaraDumps\Payloads\{DumpPayload, Payload};
-use LaraDumps\LaraDumps\Support\Dumper;
+use LaraDumps\LaraDumpsCore\Concerns\Traceable;
+use LaraDumps\LaraDumpsCore\Contracts\TraceableContract;
+use LaraDumps\LaraDumpsCore\LaraDumps;
+use LaraDumps\LaraDumpsCore\Payloads\{DumpPayload, Payload};
+use LaraDumps\LaraDumpsCore\Support\Dumper;
 
 class CommandObserver implements TraceableContract
 {
@@ -18,8 +18,6 @@ class CommandObserver implements TraceableContract
     private bool $enabled = false;
 
     private string $label = 'Command';
-
-    private array $trace = [];
 
     public function register(): void
     {

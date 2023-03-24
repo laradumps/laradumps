@@ -4,8 +4,8 @@ namespace LaraDumps\LaraDumps\Tests;
 
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\File;
-use LaraDumps\LaraDumps\Actions\SendPayload;
 use LaraDumps\LaraDumps\LaraDumpsServiceProvider;
+use LaraDumps\LaraDumpsCore\Actions\SendPayload;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase

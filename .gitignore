@@ -3,3 +3,4 @@
 .php_cs.cache
 .phpunit.result.cache
 .php-cs-fixer.cache
+.env

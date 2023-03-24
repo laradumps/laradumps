@@ -12,18 +12,25 @@
             "role": "Developer"
         }
     ],
+    "repositories": [
+        {
+            "type": "path",
+            "url": "/Users/luan.freitas/Documents/laradumps/playground/packages/laradumps-core"
+        }
+    ],
     "require": {
         "php": "^8.0",
         "nunomaduro/termwind": "^1.15.1",
         "illuminate/support": "^9.0|^10.0",
-        "illuminate/mail": "^9.0|^10.0"
+        "illuminate/mail": "^9.0|^10.0",
+        "laradumps/laradumps-core": "dev-main"
     },
     "require-dev": {
         "orchestra/testbench": "^7.22 | ^8.0",
         "symfony/var-dumper": "^5.4 | ^6.2.5",
-        "nunomaduro/larastan": "^1.0 | ^2.4",
-        "friendsofphp/php-cs-fixer": "^3.14.4",
-        "pestphp/pest": "^1.22.4"
+        "nunomaduro/larastan": "^2.4",
+        "pestphp/pest": "^2.2",
+        "laravel/pint": "^1.7"
     },
     "autoload": {
         "psr-4": {
@@ -39,10 +46,10 @@
         }
     },
     "scripts": {
-        "cs-fixer": "./vendor/bin/php-cs-fixer fix --verbose --dry-run --using-cache=no --stop-on-violation",
-        "fix": "PHP_CS_FIXER_IGNORE_ENV=1 ./vendor/bin/php-cs-fixer fix",
+        "test:pint": "./vendor/bin/pint --test",
+        "pint:fix": "./vendor/bin/pint",
         "test:types": "./vendor/bin/phpstan analyse --ansi --memory-limit=-1",
-        "test:tests": "./vendor/bin/pest --order-by random",
+        "test:tests": "./vendor/bin/pest --parallel --order-by random",
         "verify": [
             "@cs-fixer",
             "@test:types",

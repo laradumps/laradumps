@@ -4,10 +4,10 @@ namespace LaraDumps\LaraDumps\Observers;
 
 use Illuminate\Log\Events\MessageLogged;
 use Illuminate\Support\Facades\Event;
-use LaraDumps\LaraDumps\Actions\{Config, Trace};
-use LaraDumps\LaraDumps\LaraDumps;
 use LaraDumps\LaraDumps\Payloads\LogPayload;
-use LaraDumps\LaraDumps\Support\Dumper;
+use LaraDumps\LaraDumpsCore\Actions\{Config, Trace};
+use LaraDumps\LaraDumpsCore\LaraDumps;
+use LaraDumps\LaraDumpsCore\Support\Dumper;
 
 class LogObserver
 {
@@ -20,15 +20,17 @@ class LogObserver
                 return;
             }
 
-            if (str_contains($message->message, '/vendor/laravel/framework')) {
-                return;
-            }
-
             if ($message->level == 'debug') {
                 $message->level = 'info';
             }
 
-            $log       = [
+            if (!Config::get('send_deprecated')) {
+                if (str_contains($message->message, 'deprecated')) {
+                    return;
+                }
+            }
+
+            $log = [
                 'message' => $message->message,
                 'level'   => $message->level,
                 'context' => Dumper::dump($message->context),
@@ -44,7 +46,7 @@ class LogObserver
 
     public function isEnabled(): bool
     {
-        $this->trace   = Trace::findSource()->toArray();
+        $this->trace = Trace::findSource()->toArray();
 
         return (bool) Config::get('send_log_applications');
     }

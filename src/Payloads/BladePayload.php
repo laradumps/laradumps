@@ -4,6 +4,7 @@ namespace LaraDumps\LaraDumps\Payloads;
 
 use LaraDumps\LaraDumps\Actions\MakeFileHandler;
 use LaraDumps\LaraDumps\Support;
+use LaraDumps\LaraDumpsCore\Payloads\Payload;
 
 class BladePayload extends Payload
 {

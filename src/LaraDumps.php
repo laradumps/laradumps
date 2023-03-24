@@ -4,226 +4,19 @@ namespace LaraDumps\LaraDumps;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Mail\Mailable;
-use Illuminate\Support\{Collection, Str};
-use LaraDumps\LaraDumps\Actions\{Config, SendPayload};
-use LaraDumps\LaraDumps\Concerns\Colors;
 use LaraDumps\LaraDumps\Observers\{CacheObserver, CommandObserver, HttpClientObserver, JobsObserver, QueryObserver};
-use LaraDumps\LaraDumps\Payloads\{
-    ClearPayload,
-    CoffeePayload,
-    ColorPayload,
-    DiffPayload,
-    DumpPayload,
-    JsonPayload,
-    LabelPayload,
-    MailablePayload,
-    MarkdownPayload,
-    ModelPayload,
-    Payload,
-    PhpInfoPayload,
-    RoutesPayload,
-    ScreenPayload,
-    TablePayload,
-    TimeTrackPayload,
-    ValidJsonPayload,
-    ValidateStringPayload
-};
+use LaraDumps\LaraDumps\Payloads\{MailablePayload, MarkdownPayload, ModelPayload, RoutesPayload};
+use LaraDumps\LaraDumpsCore\LaraDumps as BaseLaraDumps;
 
-class LaraDumps
+class LaraDumps extends BaseLaraDumps
 {
-    use Colors;
-
-    public function __construct(
-        public string  $notificationId = '',
-        private string $fullUrl = '',
-        private array  $trace = [],
-    ) {
-        if (Config::get('sleep')) {
-            $sleep = intval(Config::get('sleep'));
-            sleep($sleep);
-        }
-
-        $this->fullUrl        = Config::get('host') . ':9191/api/dumps';
-        $this->notificationId = filled($notificationId) ? $this->notificationId : Str::uuid()->toString();
-    }
-
-    public function send(array|Payload $payload): array|Payload
-    {
-        if ($payload instanceof Payload) {
-            $payload->trace($this->trace);
-            $payload->notificationId($this->notificationId);
-            $payload = $payload->toArray();
-
-            SendPayload::handle($this->fullUrl, $payload);
-        }
-
-        return $payload;
-    }
-
-    /**
-     * Send custom color
-     *
-     */
-    public function color(string $color): LaraDumps
-    {
-        $payload = new ColorPayload($color);
-        $this->send($payload);
-
-        return $this;
-    }
-
-    /**
-     * Add new screen
-     *
-     */
-    public function s(string $screen, bool $classAttr = false): LaraDumps
-    {
-        return $this->toScreen($screen, $classAttr);
-    }
-
-    /**
-     * Add new screen
-     *
-     * @param int $raiseIn Delay in seconds for the app to raise and focus
-     */
-    public function toScreen(
-        string $screenName,
-        bool   $classAttr = false,
-        int    $raiseIn = 0
-    ): LaraDumps {
-        $payload = new ScreenPayload($screenName, $classAttr, $raiseIn);
-        $this->send($payload);
-
-        return $this;
-    }
-
-    /**
-     * Send custom label
-     *
-     */
-    public function label(string $label): LaraDumps
-    {
-        $payload = new LabelPayload($label);
-        $this->send($payload);
-
-        return $this;
-    }
-
-    /**
-     * Send dump and die
-     */
-    public function die(string $status = ''): void
-    {
-        die($status);
-    }
-
-    /**
-     * Clear screen
-     *
-     */
-    public function clear(): LaraDumps
-    {
-        $this->send(new ClearPayload());
-
-        return $this;
-    }
-
-    /**
-     * Grab a coffee!
-     *
-     */
-    public function coffee(): LaraDumps
-    {
-        $this->send(new CoffeePayload());
-
-        return $this;
-    }
-
-    /**
-     * Send JSON data and validate
-     *
-     */
-    public function isJson(): LaraDumps
-    {
-        $payload = new ValidJsonPayload();
-
-        $this->send($payload);
-
-        return $this;
-    }
-
-    /**
-     * Checks if content contains string.
-     *
-     * @param string $content
-     * @param boolean $caseSensitive Search is case-sensitive
-     * @param boolean $wholeWord Search for the whole words
-     * @return LaraDumps
-     */
-    public function contains(string $content, bool $caseSensitive = false, bool $wholeWord = false): LaraDumps
-    {
-        $payload = new ValidateStringPayload('contains');
-        $payload->setContent($content)
-            ->setCaseSensitive($caseSensitive)
-            ->setWholeWord($wholeWord);
-
-        $this->send($payload);
-
-        return $this;
-    }
-
-    /**
-     * Send PHPInfo
-     *
-     */
-    public function phpinfo(): LaraDumps
-    {
-        $this->send(new PhpInfoPayload());
-
-        return $this;
-    }
-
     /**
      * Send Routes
      *
      */
-    public function routes(mixed ...$except): LaraDumps
+    public function routes(mixed ...$except): self
     {
         $this->send(new RoutesPayload($except));
-
-        return $this;
-    }
-
-    /**
-     * Send Table
-     *
-     */
-    public function table(Collection|array $data = [], string $name = ''): LaraDumps
-    {
-        $this->send(new TablePayload($data, $name));
-
-        return $this;
-    }
-
-    public function write(mixed $args = null, ?bool $autoInvokeApp = null): LaraDumps
-    {
-        if (is_string($args) && Str::of($args)->isJson()) {
-            [$pre, $id]         = ['', uniqid()];
-        } else {
-            [$pre, $id]         = Support\Dumper::dump($args);
-        }
-
-        /** @phpstan-ignore-next-line  */
-        if (is_string($args) && str($args)->isJson()) {
-            $payload = new JsonPayload($args);
-        } else {
-            $payload = new DumpPayload($pre, $args);
-        }
-
-        $payload->autoInvokeApp($autoInvokeApp);
-        $payload->dumpId($id);
-
-        $this->send($payload);
 
         return $this;
     }
@@ -237,6 +30,7 @@ class LaraDumps
         foreach ($models as $model) {
             if ($model instanceof Model) {
                 $payload = new ModelPayload($model);
+                $payload->setTrace(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0]);
                 $this->send($payload);
             }
         }
@@ -266,52 +60,15 @@ class LaraDumps
     }
 
     /**
-     * @param mixed $argument
-     * @param boolean $splitDiff Outputs comparison result in 2 rows (original/diff).
-     * @return LaraDumps
-     */
-    public function diff(mixed $argument, bool $splitDiff = false): LaraDumps
-    {
-        $argument = is_array($argument) ? json_encode($argument) : $argument;
-
-        $payload = new DiffPayload($argument, $splitDiff);
-        $this->send($payload);
-
-        return $this;
-    }
-
-    /**
-     * Starts clocking a code block execution time
-     *
-     * @param string $reference Unique name for this time clocking
-     */
-    public function time(string $reference): void
-    {
-        $payload = new TimeTrackPayload();
-        $this->send($payload);
-        $this->label($reference);
-    }
-
-    /**
-     * Stops clocking a code block execution time
-     *
-     * @param string $reference Unique name called on ds()->time()
-     */
-    public function stopTime(string $reference): void
-    {
-        $payload = new TimeTrackPayload(true);
-        $this->send($payload);
-        $this->label($reference);
-    }
-
-    /**
      * Send rendered mailable
      *
      */
     public function mailable(Mailable $mailable): self
     {
-        $mailablePayload = new MailablePayload($mailable);
-        $this->send($mailablePayload);
+        $payload = new MailablePayload($mailable);
+        $payload->setTrace(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0]);
+
+        $this->send($payload);
 
         return $this;
     }
@@ -343,6 +100,7 @@ class LaraDumps
     public function markdown(string $markdown): self
     {
         $payload = new MarkdownPayload($markdown);
+        $payload->setTrace(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0]);
         $this->send($payload);
 
         return $this;

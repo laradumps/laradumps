@@ -74,8 +74,8 @@ class CheckCommand extends Command
             $contents = file($file->getRealPath());
 
             foreach ($contents as $line => $lineContent) {
-                $contains  = false;
-                $ignore    = false;
+                $contains = false;
+                $ignore   = false;
 
                 /** @var string[] $ignoreLineWhenContainsText */
                 foreach ($ignoreLineWhenContainsText as $text) {
@@ -153,7 +153,7 @@ class CheckCommand extends Command
         /** @var array $fileContents */
         $fileContents = file($file->getRealPath());
 
-        $partialContent = $fileContents[$line - 2]  ?? '';
+        $partialContent = $fileContents[$line - 2] ?? '';
         $partialContent .= $fileContents[$line - 1] ?? '';
 
         $partialContent .= $lineContent;

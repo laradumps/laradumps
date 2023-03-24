@@ -2,6 +2,8 @@
 
 namespace LaraDumps\LaraDumps\Payloads;
 
+use LaraDumps\LaraDumpsCore\Payloads\Payload;
+
 class LogPayload extends Payload
 {
     public function __construct(

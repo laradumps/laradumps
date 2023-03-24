@@ -4,14 +4,14 @@ namespace LaraDumps\LaraDumps;
 
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\{Collection, ServiceProvider, Str, Stringable};
+use Illuminate\Support\{Collection, ServiceProvider, Stringable};
 use LaraDumps\LaraDumps\Actions\Config;
-use LaraDumps\LaraDumps\Commands\{CheckCommand, InitCommand};
+use LaraDumps\LaraDumps\Commands\CheckCommand;
+use LaraDumps\LaraDumps\Observers\LogObserver;
 use LaraDumps\LaraDumps\Observers\{CacheObserver,
     CommandObserver,
     HttpClientObserver,
     JobsObserver,
-    LogObserver,
     QueryObserver};
 use LaraDumps\LaraDumps\Payloads\QueryPayload;
 
@@ -26,14 +26,12 @@ class LaraDumpsServiceProvider extends ServiceProvider
         $this->loadConfigs();
         $this->createDirectives();
 
-        $this->bootMacros();
         $this->bootObservers();
 
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'laradumps');
 
         if ($this->app->runningInConsole()) {
             $this->commands([
-                InitCommand::class,
                 CheckCommand::class,
             ]);
         }
@@ -90,22 +88,6 @@ HTML;
         });
     }
 
-    private function bootMacros(): void
-    {
-        Str::macro('cut', function (string $str, string $start, string $end) {
-            /** @phpstan-ignore-next-line */
-            $arr = explode($start, $str);
-            if (isset($arr[1])) {
-                /** @phpstan-ignore-next-line */
-                $arr = explode($end, $arr[1]);
-
-                return '<pre ' . $arr[0] . '</pre>';
-            }
-
-            return '';
-        });
-    }
-
     private function bootObservers(): void
     {
         app(JobsObserver::class)->register();
@@ -119,29 +101,53 @@ HTML;
     private function registerMacros(): void
     {
         Collection::macro('ds', function (string $label = '') {
-            /* @var Collection $this */
-            $label === ''
-                // @phpstan-ignore-next-line
-                ? ds($this->items)
-                // @phpstan-ignore-next-line
-                : ds($this->items)->label($label);
+            $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+
+            $trace = collect($trace)
+                ->filter(function ($trace) {
+                    /** @var array $trace */
+                    /** @var string $file */
+                    $file = $trace['file'] ?? '';
+
+                    return !str_contains($file, 'vendor');
+                });
+
+            $ds = new LaraDumps(trace: (array) $trace->first());
+            /** @phpstan-ignore-next-line  */
+            $ds->write($this->items);
+
+            if ($label) {
+                $ds->label($label);
+            }
 
             return $this;
         });
 
         Stringable::macro('ds', function (string $label = '') {
-            /* @var Stringable $this */
-            $label === ''
-                // @phpstan-ignore-next-line
-                ? ds($this->value)
-                // @phpstan-ignore-next-line
-                : ds($this->value)->label($label);
+            $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+
+            $trace = collect($trace)
+                ->filter(function ($trace) {
+                    /** @var array $trace */
+                    /** @var string $file */
+                    $file = $trace['file'] ?? '';
+
+                    return !str_contains($file, 'vendor');
+                });
+
+            $ds = new LaraDumps(trace: (array) $trace->first());
+            /** @phpstan-ignore-next-line  */
+            $ds->write($this->value);
+
+            if ($label) {
+                $ds->label($label);
+            }
 
             return $this;
         });
 
         Builder::macro('ds', function () {
-            $trace   = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+            $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
 
             $trace = collect($trace)
                 ->filter(function ($trace) {
