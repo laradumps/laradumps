@@ -4,7 +4,7 @@ namespace LaraDumps\LaraDumps\Payloads;
 
 use Illuminate\Routing\Route;
 use Illuminate\Support\{Arr, Str};
-use LaraDumps\LaraDumpsCore\Actions\GetRoutesToIgnore;
+use LaraDumps\LaraDumps\Actions\GetRoutesToIgnore;
 use LaraDumps\LaraDumpsCore\Payloads\Payload;
 
 class RoutesPayload extends Payload
