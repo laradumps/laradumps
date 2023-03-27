@@ -14,8 +14,8 @@
     ],
     "repositories": [
         {
-            "type": "path",
-            "url": "/Users/luan.freitas/Documents/laradumps/playground/packages/laradumps-core"
+            "type": "git",
+            "url": "git@github.com:laradumps-next/laradumps-core.git"
         }
     ],
     "require": {
