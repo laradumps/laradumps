@@ -2,8 +2,7 @@
 
 namespace LaraDumps\LaraDumps\Observers;
 
-use Illuminate\Queue\Events\{JobFailed, JobProcessed, JobProcessing, JobQueued};
-use Illuminate\Queue\Jobs\Job;
+use Illuminate\Console\Events\CommandFinished;
 use Illuminate\Support\Facades\Event;
 use LaraDumps\LaraDumps\Actions\Config;
 use LaraDumps\LaraDumps\Concerns\Traceable;
@@ -12,24 +11,19 @@ use LaraDumps\LaraDumps\LaraDumps;
 use LaraDumps\LaraDumps\Payloads\{DumpPayload, Payload};
 use LaraDumps\LaraDumps\Support\Dumper;
 
-class JobsObserver implements TraceableContract
+class CommandObserver implements TraceableContract
 {
     use Traceable;
 
     private bool $enabled = false;
 
-    private string $label = 'Job';
+    private string $label = 'Command';
 
     private array $trace = [];
 
     public function register(): void
     {
-        Event::listen([
-            JobQueued::class,
-            JobProcessing::class,
-            JobProcessed::class,
-            JobFailed::class,
-        ], function (object $event) {
+        Event::listen(CommandFinished::class, function (object $event) {
             if (!$this->isEnabled()) {
                 return;
             }
@@ -58,21 +52,22 @@ class JobsObserver implements TraceableContract
     {
         $this->trace = array_slice($this->findSource(), 0, 5)[0] ?? [];
 
-        if (!(bool) boolval(Config::get('send_jobs'))) {
+        if (!(bool) boolval(Config::get('send_commands'))) {
             return $this->enabled;
         }
 
-        return true;
+        return false;
     }
 
     private function generatePayload(object $event): Payload
     {
-        return new DumpPayload(Dumper::dump(
+        return new DumpPayload(Dumper::dump([
             /* @phpstan-ignore-next-line */
-            $event->job instanceof Job
-                ? unserialize($event->job->payload()['data']['command'], ['allowed_classes' => true])
-                : $event->job
-        ));
+            'command'   => $event->command ?? $event->input->getArguments()['command'] ?? 'default',
+            'exit_code' => $event->exitCode, /** @phpstan-ignore-line */
+            'arguments' => $event->input->getArguments(), /** @phpstan-ignore-line */
+            'options'   => $event->input->getOptions(), /** @phpstan-ignore-line */
+        ]));
     }
 
     private function sendPayload(Payload $payload): void

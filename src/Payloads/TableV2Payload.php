@@ -8,6 +8,7 @@ class TableV2Payload extends Payload
 {
     public function __construct(
         protected array $values,
+        protected string $headerStyle = '',
         protected string $label = 'Table',
         protected string $type = 'table-v2'
     ) {
@@ -25,8 +26,9 @@ class TableV2Payload extends Payload
         }, $this->values);
 
         return [
-            'values' => $values,
-            'label'  => $this->label,
+            'values'      => $values,
+            'headerStyle' => $this->headerStyle,
+            'label'       => $this->label,
         ];
     }
 }

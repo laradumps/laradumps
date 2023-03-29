@@ -3,7 +3,7 @@
 namespace LaraDumps\LaraDumps\Payloads;
 
 use Illuminate\Support\Str;
-use LaraDumps\LaraDumps\Support\IdeHandle;
+use LaraDumps\LaraDumps\Actions\MakeFileHandler;
 
 class LivewirePayload extends Payload
 {
@@ -29,7 +29,7 @@ class LivewirePayload extends Payload
             ->replace(config('livewire.class_namespace') . '\\', '');
 
         return [
-            'handler' => IdeHandle::makeFileHandler($component, '1'),
+            'handler' => MakeFileHandler::handle(['file' => $component, 'line' => 1]),
             'path'    => $path,
             'line'    => 1,
         ];

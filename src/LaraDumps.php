@@ -5,10 +5,11 @@ namespace LaraDumps\LaraDumps;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Mail\Mailable;
 use Illuminate\Support\{Collection, Str};
-use LaraDumps\LaraDumps\Actions\SendPayload;
+use LaraDumps\LaraDumps\Actions\{Config, SendPayload};
 use LaraDumps\LaraDumps\Concerns\Colors;
-use LaraDumps\LaraDumps\Observers\{CacheObserver, HttpClientObserver, JobsObserver, QueryObserver};
-use LaraDumps\LaraDumps\Payloads\{ClearPayload,
+use LaraDumps\LaraDumps\Observers\{CacheObserver, CommandObserver, HttpClientObserver, JobsObserver, QueryObserver};
+use LaraDumps\LaraDumps\Payloads\{
+    ClearPayload,
     CoffeePayload,
     ColorPayload,
     DiffPayload,
@@ -24,7 +25,9 @@ use LaraDumps\LaraDumps\Payloads\{ClearPayload,
     ScreenPayload,
     TablePayload,
     TimeTrackPayload,
-    ValidateStringPayload};
+    ValidJsonPayload,
+    ValidateStringPayload
+};
 
 class LaraDumps
 {
@@ -35,12 +38,12 @@ class LaraDumps
         private string $fullUrl = '',
         private array  $trace = [],
     ) {
-        if (config('laradumps.sleep')) {
-            $sleep = intval(config('laradumps.sleep'));
+        if (Config::get('sleep')) {
+            $sleep = intval(Config::get('sleep'));
             sleep($sleep);
         }
 
-        $this->fullUrl        = config('laradumps.host') . ':' . config('laradumps.port') . '/api/dumps';
+        $this->fullUrl        = Config::get('host') . ':9191/api/dumps';
         $this->notificationId = filled($notificationId) ? $this->notificationId : Str::uuid()->toString();
     }
 
@@ -142,7 +145,7 @@ class LaraDumps
      */
     public function isJson(): LaraDumps
     {
-        $payload = new ValidateStringPayload('json');
+        $payload = new ValidJsonPayload();
 
         $this->send($payload);
 
@@ -385,5 +388,26 @@ class LaraDumps
     public function cacheOff(): void
     {
         app(CacheObserver::class)->disable();
+    }
+
+    /**
+     * Dump all Commands with custom label
+     */
+    public function commandsOn(string $label = null): self
+    {
+        $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
+
+        app(CommandObserver::class)->setTrace($trace);
+        app(CommandObserver::class)->enable($label);
+
+        return $this;
+    }
+
+    /**
+     * Stop dumping Commands
+     */
+    public function commandsOff(): void
+    {
+        app(CommandObserver::class)->disable();
     }
 }

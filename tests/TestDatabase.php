@@ -1,6 +1,6 @@
 <?php
 
-namespace LaraDumps\LaraDumps\Tests\Actions;
+namespace LaraDumps\LaraDumps\Tests;
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\{DB, Schema};

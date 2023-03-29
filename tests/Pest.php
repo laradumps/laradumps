@@ -1,19 +1,28 @@
 <?php
 
+use Dotenv\Dotenv;
 use LaraDumps\LaraDumps\Tests\TestCase;
 
-uses(TestCase::class)->in(__DIR__);
+uses(TestCase::class)->in('Feature');
 
-function getLaravelDir(): string
+function laravel_path($path = ''): string
 {
-    return __DIR__ . '/../vendor/orchestra/testbench-core/laravel/';
+    return  str_replace('/', DIRECTORY_SEPARATOR, __DIR__ . '/../vendor/orchestra/testbench-core/laravel/' . $path);
 }
 
-function requiresLaravel9()
+function fixtureEnv(string $filename, $replace = []): void
 {
-    if (version_compare(app()->version(), '9.2.0', '<')) {
-        test()->markTestSkipped('This test requires Laravel 9.2');
+    $fixturePath = str_replace('/', DIRECTORY_SEPARATOR, __DIR__ . '/Fixtures/');
+
+    if (!file_exists($fixturePath . $filename)) {
+        throw new \Exception(sprintf('The fixture %s does not exist', $fixturePath . $filename));
     }
 
-    return test();
+    $env = Dotenv::parse(file_get_contents($fixturePath . $filename));
+
+    $env = array_merge($env, $replace);
+
+    foreach ($env as $key => $value) {
+        putenv("{$key}={$value}");
+    }
 }

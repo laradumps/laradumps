@@ -2,9 +2,11 @@
 
 namespace LaraDumps\LaraDumps\Commands;
 
+use Exception;
 use Illuminate\Console\Command;
-use LaraDumps\LaraDumps\Actions\GitDirtyFiles;
-use LaraDumps\LaraDumps\Support\IdeHandle;
+use Illuminate\Support\Arr;
+use LaraDumps\LaraDumps\Actions\{GetCheckFor, GetCheckInDir, GitDirtyFiles, MakeFileHandler};
+
 use Symfony\Component\Finder\Finder;
 
 use function Termwind\{render, renderUsing};
@@ -35,11 +37,19 @@ class CheckCommand extends Command
         }
 
         /** @var array<string>|string $directories */
-        $directories = config('laradumps.ci_check.directories');
+        $directories = GetCheckInDir::handle();
 
-        $ignoreLineWhenContainsText = config('laradumps.ci_check.ignore_line_when_contains_text');
+        if (!is_array($directories)) {
+            throw new Exception('could not list directories to check');
+        }
 
-        $textToSearch = config('laradumps.ci_check.text_to_search');
+        $directories = Arr::where($directories, function ($directory, $key) {
+            return is_dir($directory) === true;
+        });
+
+        $textToSearch = GetCheckFor::handle();
+
+        $ignoreLineWhenContainsText = GetCheckFor::handle('DS_CHECK_IGNORE');
 
         renderUsing($this->output);
 
@@ -78,13 +88,7 @@ class CheckCommand extends Command
 
                 /** @var string[] $textToSearch */
                 foreach ($textToSearch as $search) {
-                    $search = ' ' . ltrim($search);// mantaining compatiblity with V1.0.2;
-
-                    if (strpos($lineContent, $search)
-                        || strpos($lineContent, '@' . ltrim($search))
-                        || strpos($lineContent, '//' . ltrim($search))
-                        || strpos($lineContent, '->' . ltrim($search))
-                    ) {
+                    if (strpos($lineContent, $search)) {
                         $contains = true;
 
                         break;
@@ -159,7 +163,7 @@ class CheckCommand extends Command
             'line'     => $line + 1,
             'file'     => str_replace(base_path() . '/', '', $file->getRealPath()),
             'realPath' => 'file:///' . $file->getRealPath(),
-            'link'     => IdeHandle::makeFileHandler($file->getRealPath(), $line + 1),
+            'link'     => MakeFileHandler::handle(['file' => $file->getRealPath(), 'line' => $line + 1]),
             'content'  => $partialContent,
         ];
     }

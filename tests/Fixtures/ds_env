@@ -1,0 +1,19 @@
+APP_KEY=abcd12345
+DS_APP_HOST=127.0.0.1
+#DS_SEND_QUERIES=true #changing this crashes the tests
+DS_SEND_HTTP_CLIENT_REQUESTS=true
+DS_SEND_JOBS=true
+DS_SEND_COMMANDS=true
+DS_SEND_LOGS=true
+DS_AUTO_CLEAR_ON_PAGE_RELOAD=false
+DS_AUTO_INVOKE_APP=true
+# ******* File Handler *******
+DS_FILE_HANDLER="phpstorm://open?file={filepath}&line={line}"
+DS_PROJECT_PATH="/Users/jamesbond/bomb-disarmer"
+# ******* DS Check *******
+DS_CHECK_FOR="ds, dsq, dsd, ds1, ds2, ds3, ds4, ds5, dsAutoClearOnPageReload"
+DS_CHECK_IN_DIR="app,routes,resources,juca"
+DS_CHECK_IGNORE="foods,ads"
+# ******* Hide Routes *******
+DS_IGNORE_ROUTES="debugbar,ignition,horizon,livewire"
+DS_SOME_KEY=

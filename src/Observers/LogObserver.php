@@ -4,7 +4,7 @@ namespace LaraDumps\LaraDumps\Observers;
 
 use Illuminate\Log\Events\MessageLogged;
 use Illuminate\Support\Facades\Event;
-use LaraDumps\LaraDumps\Actions\Trace;
+use LaraDumps\LaraDumps\Actions\{Config, Trace};
 use LaraDumps\LaraDumps\LaraDumps;
 use LaraDumps\LaraDumps\Payloads\LogPayload;
 use LaraDumps\LaraDumps\Support\Dumper;
@@ -46,6 +46,6 @@ class LogObserver
     {
         $this->trace   = Trace::findSource()->toArray();
 
-        return (bool) config('laradumps.send_log_applications');
+        return (bool) Config::get('send_log_applications');
     }
 }

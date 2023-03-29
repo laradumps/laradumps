@@ -5,14 +5,12 @@ namespace LaraDumps\LaraDumps;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\{Collection, ServiceProvider, Str, Stringable};
+use LaraDumps\LaraDumps\Actions\Config;
 use LaraDumps\LaraDumps\Commands\{CheckCommand, InitCommand};
 use LaraDumps\LaraDumps\Observers\{CacheObserver,
+    CommandObserver,
     HttpClientObserver,
     JobsObserver,
-    LivewireComponentsObserver,
-    LivewireDispatchObserver,
-    LivewireEventsObserver,
-    LivewireFailedValidationObserver,
     LogObserver,
     QueryObserver};
 use LaraDumps\LaraDumps\Payloads\QueryPayload;
@@ -43,11 +41,6 @@ class LaraDumpsServiceProvider extends ServiceProvider
 
     public function register(): void
     {
-        $this->mergeConfigFrom(
-            __DIR__ . '/../config/laradumps.php',
-            'laradumps'
-        );
-
         $file = str_replace(DIRECTORY_SEPARATOR, '/', __DIR__ . '/functions.php');
 
         if (file_exists($file)) {
@@ -55,6 +48,7 @@ class LaraDumpsServiceProvider extends ServiceProvider
         }
 
         $this->app->singleton(JobsObserver::class);
+        $this->app->singleton(CommandObserver::class);
         $this->app->singleton(CacheObserver::class);
         $this->app->singleton(QueryObserver::class);
         $this->app->singleton(HttpClientObserver::class);
@@ -64,10 +58,6 @@ class LaraDumpsServiceProvider extends ServiceProvider
 
     private function loadConfigs(): void
     {
-        $this->publishes([
-            __DIR__ . '/../config/laradumps.php' => config_path('laradumps.php'),
-        ], 'laradumps-config');
-
         $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
     }
 
@@ -78,8 +68,7 @@ class LaraDumpsServiceProvider extends ServiceProvider
         });
 
         Blade::directive('dsAutoClearOnPageReload', function ($args) {
-            if (boolval(config('laradumps.auto_clear_on_page_reload'))   === false
-                && boolval(config('laradumps.send_livewire_components')) === false) {
+            if (boolval(Config::get('auto_clear_on_page_reload')) === false) {
                 return '';
             }
 
@@ -120,14 +109,11 @@ HTML;
     private function bootObservers(): void
     {
         app(JobsObserver::class)->register();
+        app(CommandObserver::class)->register();
         app(CacheObserver::class)->register();
         app(HttpClientObserver::class)->register();
         app(LogObserver::class)->register();
         app(QueryObserver::class)->register();
-        app(LivewireEventsObserver::class)->register();
-        app(LivewireDispatchObserver::class)->register();
-        app(LivewireComponentsObserver::class)->register();
-        app(LivewireFailedValidationObserver::class)->register();
     }
 
     private function registerMacros(): void

@@ -2,8 +2,8 @@
 
 namespace LaraDumps\LaraDumps\Payloads;
 
+use LaraDumps\LaraDumps\Actions\MakeFileHandler;
 use LaraDumps\LaraDumps\Support;
-use LaraDumps\LaraDumps\Support\IdeHandle;
 
 class BladePayload extends Payload
 {
@@ -28,7 +28,7 @@ class BladePayload extends Payload
     public function customHandle(): array
     {
         return [
-            'handler' => IdeHandle::makeFileHandler($this->viewPath, '1'),
+            'handler' => MakeFileHandler::handle(['file' => $this->viewPath, 'line' => 1]),
             'path'    => $this->viewPath,
             'line'    => 1,
         ];
