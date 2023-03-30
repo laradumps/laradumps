@@ -415,8 +415,10 @@ class InitCommand extends Command
 
         config()->set('laradumps.send_scheduled_commands', (bool) $sendScheduledCommands);
         $this->updateEnv('DS_SEND_SCHEDULED_COMMANDS', ($sendScheduledCommands ? 'true' : 'false'));
+
+        return $this;
     }
-  
+
     private function setGate(): self
     {
         $sendGate = $this->option('send_gate');
