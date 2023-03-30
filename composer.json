@@ -15,7 +15,7 @@
     "repositories": [
         {
             "type": "git",
-            "url": "git@github.com:laradumps-next/laradumps-core.git"
+            "url": "git@github.com:laradumps/laradumps-core.git"
         }
     ],
     "require": {
