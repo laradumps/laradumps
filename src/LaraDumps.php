@@ -4,7 +4,14 @@ namespace LaraDumps\LaraDumps;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Mail\Mailable;
-use LaraDumps\LaraDumps\Observers\{CacheObserver, CommandObserver, HttpClientObserver, JobsObserver, QueryObserver};
+
+use LaraDumps\LaraDumps\Observers\{CacheObserver,
+    CommandObserver,
+    GateObserver,
+    HttpClientObserver,
+    JobsObserver,
+    QueryObserver,
+    ScheduledCommandObserver};
 use LaraDumps\LaraDumps\Payloads\{MailablePayload, MarkdownPayload, ModelPayload, RoutesPayload};
 use LaraDumps\LaraDumpsCore\LaraDumps as BaseLaraDumps;
 
@@ -167,5 +174,43 @@ class LaraDumps extends BaseLaraDumps
     public function commandsOff(): void
     {
         app(CommandObserver::class)->disable();
+    }
+
+    /**
+     * Dump Scheduled Commands with custom label
+     */
+    public function scheduledCommandOn(string $label = null): void
+    {
+        $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
+
+        app(ScheduledCommandObserver::class)->setTrace($trace);
+        app(ScheduledCommandObserver::class)->enable($label);
+    }
+
+    /**
+     * Dump all Gate & Policy checkes with custom label
+     */
+    public function gateOn(string $label = null): void
+    {
+        $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
+
+        app(GateObserver::class)->setTrace($trace);
+        app(GateObserver::class)->enable($label);
+    }
+
+    /**
+     * Stop dumping Scheduled Commands
+     */
+    public function scheduledCommandOff(): void
+    {
+        app(ScheduledCommandObserver::class)->disable();
+    }
+
+    /**
+     * Stop dumping Gate
+     */
+    public function gateOff(): void
+    {
+        app(GateObserver::class)->disable();
     }
 }

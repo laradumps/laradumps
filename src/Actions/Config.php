@@ -16,7 +16,7 @@ final class Config extends \LaraDumps\LaraDumpsCore\Actions\Config
             'send_commands'             => 'DS_SEND_COMMANDS',
             'send_http_client'          => 'DS_SEND_HTTP',
             'send_scheduled_commands'   => 'DS_SEND_SCHEDULED_COMMANDS',
-            'send_gate'                 => 'DS_SEND_GATE'
+            'send_gate'                 => 'DS_SEND_GATE',
         ]);
     }
 }

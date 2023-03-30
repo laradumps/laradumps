@@ -17,7 +17,7 @@ final class GitDirtyFiles
         $process = tap(new Process(['git', 'status', '--short', '--', '*.php']))->run();
 
         if (!$process->isSuccessful()) {
-            abort(1);
+            return [];
         }
 
         return collect((array) preg_split('/\R+/', $process->getOutput(), flags: PREG_SPLIT_NO_EMPTY))
