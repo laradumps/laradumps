@@ -7,12 +7,16 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Support\{Collection, Str};
 use LaraDumps\LaraDumps\Actions\SendPayload;
 use LaraDumps\LaraDumps\Concerns\Colors;
-use LaraDumps\LaraDumps\Observers\{CacheObserver,
+use LaraDumps\LaraDumps\Observers\{
+    CacheObserver,
     CommandObserver,
     GateObserver,
     HttpClientObserver,
     JobsObserver,
-    QueryObserver};
+    QueryObserver,
+    ScheduledCommandObserver
+};
+
 use LaraDumps\LaraDumps\Payloads\{ClearPayload,
     CoffeePayload,
     ColorPayload,
@@ -403,16 +407,33 @@ class LaraDumps
     }
 
     /**
+     * Dump Scheduled Commands with custom label
+     */
+    public function scheduledCommandOn(string $label = null): void
+    {
+        $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
+
+        app(ScheduledCommandObserver::class)->setTrace($trace);
+        app(ScheduledCommandObserver::class)->enable($label);
+    }
+
+    /**
      * Dump all Gate & Policy checkes with custom label
      */
-    public function gateOn(string $label = null): self
+    public function gateOn(string $label = null): void
     {
         $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
 
         app(GateObserver::class)->setTrace($trace);
         app(GateObserver::class)->enable($label);
+    }
 
-        return $this;
+    /**
+     * Stop dumping Scheduled Commands
+     */
+    public function scheduledCommandOff(): void
+    {
+        app(ScheduledCommandObserver::class)->disable();
     }
 
     /**
