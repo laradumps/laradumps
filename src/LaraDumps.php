@@ -7,7 +7,12 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Support\{Collection, Str};
 use LaraDumps\LaraDumps\Actions\SendPayload;
 use LaraDumps\LaraDumps\Concerns\Colors;
-use LaraDumps\LaraDumps\Observers\{CacheObserver, CommandObserver, HttpClientObserver, JobsObserver, QueryObserver};
+use LaraDumps\LaraDumps\Observers\{CacheObserver,
+    CommandObserver,
+    GateObserver,
+    HttpClientObserver,
+    JobsObserver,
+    QueryObserver};
 use LaraDumps\LaraDumps\Payloads\{ClearPayload,
     CoffeePayload,
     ColorPayload,
@@ -395,5 +400,26 @@ class LaraDumps
     public function commandsOff(): void
     {
         app(CommandObserver::class)->disable();
+    }
+
+    /**
+     * Dump all Gate & Policy checkes with custom label
+     */
+    public function gateOn(string $label = null): self
+    {
+        $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
+
+        app(GateObserver::class)->setTrace($trace);
+        app(GateObserver::class)->enable($label);
+
+        return $this;
+    }
+
+    /**
+     * Stop dumping Gate
+     */
+    public function gateOff(): void
+    {
+        app(GateObserver::class)->disable();
     }
 }
