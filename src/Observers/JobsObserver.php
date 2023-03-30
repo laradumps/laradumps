@@ -57,7 +57,7 @@ class JobsObserver implements TraceableContract
     {
         $this->trace = array_slice($this->findSource(), 0, 5)[0] ?? [];
 
-        if ((bool) boolval(config('laradumps.send_jobs'))) {
+        if (!(bool) boolval(config('laradumps.send_jobs'))) {
             return $this->enabled;
         }
 

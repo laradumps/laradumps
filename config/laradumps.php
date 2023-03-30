@@ -112,6 +112,16 @@ return [
 
     'send_scheduled_commands' => env('DS_SEND_SCHEDULED_COMMANDS', false),
 
+    | Gate & Policy dump
+    |--------------------------------------------------------------------------
+    |
+    | When `true`, it allows to dump Gate & Policy and send them to Desktop App.
+    | Required for: ds()->gateOn() method.
+    |
+    */
+
+    'send_gate' => env('DS_SEND_GATE', false),
+
     /*
     |--------------------------------------------------------------------------
     | Log dump

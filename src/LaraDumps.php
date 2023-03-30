@@ -12,7 +12,9 @@ use LaraDumps\LaraDumps\Observers\{CacheObserver,
     HttpClientObserver,
     JobsObserver,
     QueryObserver,
-    ScheduledCommandObserver};
+    ScheduledCommandObserver,
+    GateObserver};
+
 use LaraDumps\LaraDumps\Payloads\{ClearPayload,
     CoffeePayload,
     ColorPayload,
@@ -411,6 +413,17 @@ class LaraDumps
 
         app(ScheduledCommandObserver::class)->setTrace($trace);
         app(ScheduledCommandObserver::class)->enable($label);
+    }
+  
+    /**
+     * Dump all Gate & Policy checkes with custom label
+     */
+    public function gateOn(string $label = null): self
+    {
+        $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
+
+        app(GateObserver::class)->setTrace($trace);
+        app(GateObserver::class)->enable($label);
 
         return $this;
     }
@@ -421,5 +434,13 @@ class LaraDumps
     public function scheduledCommandOff(): void
     {
         app(ScheduledCommandObserver::class)->disable();
+    }
+  
+    /** 
+     * Stop dumping Gate
+     */
+    public function gateOff(): void
+    {
+        app(GateObserver::class)->disable();
     }
 }

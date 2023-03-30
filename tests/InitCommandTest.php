@@ -25,6 +25,7 @@ it('updates the config non-interactively', function () {
     expect(config('laradumps.send_commands'))->toBeTrue();
     expect(config('laradumps.send_scheduled_commands'))->toBeTrue();
     expect(config('laradumps.send_cache'))->toBeTrue();
+    expect(config('laradumps.send_gate'))->toBeTrue();
     expect(config('laradumps.send_log_applications'))->toBeTrue();
     expect(config('laradumps.send_livewire_components'))->toBeTrue();
     expect(config('laradumps.send_livewire_events'))->toBeTrue();
@@ -35,6 +36,7 @@ it('updates the config non-interactively', function () {
     expect(config('laradumps.preferred_ide'))->toBe('atom');
 
     $this->artisan('ds:init --no-interaction --host=5.6.7.8 --port=2023 --send_queries=false --send_http_client_requests=false --send_jobs=false --send_commands=false --send_scheduled_commands=false --send_cache=false --send_logs=false --send_livewire=false --livewire_events=false  --livewire_validation=false --livewire_autoclear=false --auto_invoke=false  --ide=vscode');
+
     $this->artisan('config:clear');
 
     expect(config('laradumps.host'))->toBe('5.6.7.8');
@@ -45,6 +47,7 @@ it('updates the config non-interactively', function () {
     expect(config('laradumps.send_commands'))->toBeFalse();
     expect(config('laradumps.send_scheduled_commands'))->toBeFalse();
     expect(config('laradumps.send_cache'))->toBeFalse();
+    expect(config('laradumps.send_gate'))->toBeFalse();
     expect(config('laradumps.send_log_applications'))->toBeFalse();
     expect(config('laradumps.send_livewire_components'))->toBeFalse();
     expect(config('laradumps.send_livewire_events'))->toBeFalse();
@@ -66,6 +69,7 @@ it('updates the config through the wizard', function () {
         ->expectsQuestion('Allow dumping <comment>Commands</comment> to the App?', true)
         ->expectsQuestion('Allow dumping <comment>Scheduled Commands</comment> to the App?', true)
         ->expectsQuestion('Allow dumping <comment>Cache</comment> to the App?', true)
+        ->expectsQuestion('Allow dumping <comment>Gate & Policy</comment> to the App?', true)
         ->expectsQuestion('Allow dumping <comment>Laravel Logs</comment> to the App?', false)
         ->expectsQuestion('Allow dumping <comment>Livewire components</comment> to the App?', true)
         ->expectsQuestion('Allow dumping <comment>Livewire Events</comment> & <comment>Browser Events (dispatch)</comment> to the App?', true)
@@ -82,6 +86,7 @@ it('updates the config through the wizard', function () {
     expect(config('laradumps.send_commands'))->toBeTrue();
     expect(config('laradumps.send_scheduled_commands'))->toBeTrue();
     expect(config('laradumps.send_cache'))->toBeTrue();
+    expect(config('laradumps.send_gate'))->toBeTrue();
     expect(config('laradumps.send_log_applications'))->toBeFalse();
     expect(config('laradumps.send_livewire_components'))->toBeTrue();
     expect(config('laradumps.send_livewire_failed_validation.enabled'))->toBeTrue();
@@ -100,6 +105,7 @@ it('updates the config through the wizard', function () {
         ->expectsQuestion('Allow dumping <comment>Commands</comment> to the App?', false)
         ->expectsQuestion('Allow dumping <comment>Scheduled Commands</comment> to the App?', false)
         ->expectsQuestion('Allow dumping <comment>Cache</comment> to the App?', false)
+        ->expectsQuestion('Allow dumping <comment>Gate & Policy</comment> to the App?', false)
         ->expectsQuestion('Allow dumping <comment>Laravel Logs</comment> to the App?', true)
         ->expectsQuestion('Allow dumping <comment>Livewire components</comment> to the App?', false)
         ->expectsQuestion('Allow dumping <comment>Livewire Events</comment> & <comment>Browser Events (dispatch)</comment> to the App?', false)
@@ -116,6 +122,7 @@ it('updates the config through the wizard', function () {
     expect(config('laradumps.send_commands'))->toBeFalse();
     expect(config('laradumps.send_scheduled_commands'))->toBeFalse();
     expect(config('laradumps.send_cache'))->toBeFalse();
+    expect(config('laradumps.send_gate'))->toBeFalse();
     expect(config('laradumps.send_log_applications'))->toBeTrue();
     expect(config('laradumps.send_livewire_components'))->toBeFalse();
     expect(config('laradumps.send_livewire_failed_validation.enabled'))->toBeFalse();
