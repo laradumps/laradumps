@@ -1,3 +1,4 @@
+APP_KEY=abcd12345
 DS_APP_HOST=127.0.0.1
 #DS_SEND_QUERIES=true #changing this crashes the tests
 DS_SEND_HTTP_CLIENT_REQUESTS=true
@@ -15,3 +16,4 @@ DS_CHECK_IN_DIR="app,routes,resources,juca"
 DS_CHECK_IGNORE="foods,ads"
 # ******* Hide Routes *******
 DS_IGNORE_ROUTES="debugbar,ignition,horizon,livewire"
+DS_SOME_KEY=

@@ -3,8 +3,8 @@
 namespace LaraDumps\LaraDumps\Payloads;
 
 use LaraDumps\LaraDumps\Actions\MakeFileHandler;
-use LaraDumps\LaraDumps\Support;
 use LaraDumps\LaraDumpsCore\Payloads\Payload;
+use LaraDumps\LaraDumpsCore\Support\Dumper;
 
 class BladePayload extends Payload
 {
@@ -22,7 +22,7 @@ class BladePayload extends Payload
     public function content(): array
     {
         return [
-            'dump' => Support\Dumper::dump($this->dump),
+            'dump' => Dumper::dump($this->dump),
         ];
     }
 

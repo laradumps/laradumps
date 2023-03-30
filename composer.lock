@@ -655,7 +655,7 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:laradumps/laradumps-core.git",
-                "reference": "0309f0f0a51dd8afa55a3175b6ef9e9db2fc00cf"
+                "reference": "69af2a1f3b2c9343acbfaf63310110e628ecb393"
             },
             "require": {
                 "ext-curl": "*",
@@ -716,7 +716,7 @@
             ],
             "description": "A dump component for php code.",
             "homepage": "https://github.com/laradumps/laradumps-core",
-            "time": "2023-03-29T22:09:45+00:00"
+            "time": "2023-03-30T12:06:47+00:00"
         },
         {
             "name": "laravel/framework",
