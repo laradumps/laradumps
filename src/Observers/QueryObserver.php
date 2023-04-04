@@ -76,11 +76,7 @@ class QueryObserver implements TraceableContract
             return $this->enabled;
         }
 
-        if (Config::get('send_queries') === 'true') {
-            return true;
-        }
-
-        return false;
+        return Config::get('send_queries');
     }
 
     protected function fileIsInExcludedPath(string $file): bool

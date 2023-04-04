@@ -4,6 +4,7 @@ namespace LaraDumps\LaraDumps\Observers;
 
 use Illuminate\Console\Events\CommandStarting;
 use Illuminate\Console\Scheduling\{CallbackEvent, Event, Schedule};
+use LaraDumps\LaraDumps\Actions\Config;
 use LaraDumps\LaraDumps\LaraDumps;
 use LaraDumps\LaraDumpsCore\Concerns\Traceable;
 use LaraDumps\LaraDumpsCore\Contracts\TraceableContract;
@@ -58,11 +59,11 @@ class ScheduledCommandObserver implements TraceableContract
     {
         $this->trace = array_slice($this->findSource(), 0, 5)[0] ?? [];
 
-        if (!(bool) boolval(config('laradumps.send_scheduled_command'))) {
+        if (!boolval(Config::get('send_scheduled_command'))) {
             return $this->enabled;
         }
 
-        return true;
+        return Config::get('send_scheduled_command');
     }
 
     private function sendPayload(Payload $payload): void

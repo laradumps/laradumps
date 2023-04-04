@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\{Event};
+use LaraDumps\LaraDumps\Actions\Config;
 use LaraDumps\LaraDumps\LaraDumps;
 use LaraDumps\LaraDumpsCore\Concerns\Traceable;
 use LaraDumps\LaraDumpsCore\Payloads\TableV2Payload;
@@ -65,11 +66,11 @@ class GateObserver
     {
         $this->trace = array_slice($this->findSource(), 0, 5)[0] ?? [];
 
-        if (!(bool) boolval(config('laradumps.send_gate'))) {
+        if (!boolval(config('send_http_client'))) {
             return $this->enabled;
         }
 
-        return true;
+        return Config::get('send_http_client');
     }
 
     private function gateResult(null|bool|Response $result): string

@@ -56,11 +56,11 @@ class JobsObserver implements TraceableContract
     {
         $this->trace = array_slice($this->findSource(), 0, 5)[0] ?? [];
 
-        if (!(bool) boolval(Config::get('send_jobs'))) {
+        if (!boolval(Config::get('send_jobs'))) {
             return $this->enabled;
         }
 
-        return true;
+        return Config::get('send_jobs');
     }
 
     private function generatePayload(object $event): Payload
