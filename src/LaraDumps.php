@@ -17,7 +17,8 @@ use LaraDumps\LaraDumps\Observers\{
     ScheduledCommandObserver
 };
 
-use LaraDumps\LaraDumps\Payloads\{ClearPayload,
+use LaraDumps\LaraDumps\Payloads\{BenchmarkPayload,
+    ClearPayload,
     CoffeePayload,
     ColorPayload,
     DiffPayload,
@@ -32,8 +33,7 @@ use LaraDumps\LaraDumps\Payloads\{ClearPayload,
     ScreenPayload,
     TablePayload,
     TimeTrackPayload,
-    ValidateStringPayload
-};
+    ValidateStringPayload};
 
 class LaraDumps
 {
@@ -442,5 +442,16 @@ class LaraDumps
     public function gateOff(): void
     {
         app(GateObserver::class)->disable();
+    }
+
+    /**
+     * Benchmarking
+     */
+    public function benchmark(mixed ...$args): self
+    {
+        $benchmarkPayload = new BenchmarkPayload($args);
+        $this->send($benchmarkPayload);
+
+        return $this;
     }
 }
