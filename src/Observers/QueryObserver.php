@@ -25,7 +25,7 @@ class QueryObserver implements TraceableContract
                 return;
             }
 
-            $sqlQuery = str_replace(['?'], ['\'%s\''], $query->sql);
+            $sqlQuery = str_replace(['%', '?'], ['%%', '\'%s\''], $query->sql);
             $sqlQuery = vsprintf($sqlQuery, $query->bindings);
 
             if (str_contains($sqlQuery, 'telescope')) {

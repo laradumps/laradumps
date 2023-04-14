@@ -4,7 +4,6 @@ namespace LaraDumps\LaraDumps;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Mail\Mailable;
-
 use LaraDumps\LaraDumps\Observers\{CacheObserver,
     CommandObserver,
     GateObserver,
