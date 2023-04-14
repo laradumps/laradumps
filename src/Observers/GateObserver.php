@@ -70,7 +70,7 @@ class GateObserver
             return $this->enabled;
         }
 
-        return Config::get('send_http_client');
+        return boolval(Config::get('send_http_client'));
     }
 
     private function gateResult(null|bool|Response $result): string

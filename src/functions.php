@@ -4,6 +4,7 @@ use Illuminate\Support\Str;
 use Illuminate\View\Compilers\BladeCompiler;
 use LaraDumps\LaraDumps\LaraDumps;
 use LaraDumps\LaraDumps\Payloads\BladePayload;
+use LaraDumps\LaraDumpsCore\Support\Dumper;
 
 if (!function_exists('dsBlade')) {
     function dsBlade(mixed $args): void
@@ -26,6 +27,12 @@ if (!function_exists('dsBlade')) {
 
         $notificationId = Str::uuid()->toString();
         $ds             = new LaraDumps(notificationId: $notificationId, trace: $trace);
-        $ds->send(new BladePayload($args, $viewPath));
+
+        [$pre, $id] = Dumper::dump($args);
+
+        $payload = new BladePayload($pre, $viewPath);
+        $payload->dumpId($id);
+
+        $ds->send($payload);
     }
 }

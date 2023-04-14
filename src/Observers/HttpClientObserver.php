@@ -63,7 +63,7 @@ class HttpClientObserver implements TraceableContract
             return $this->enabled;
         }
 
-        return Config::get('send_http_client');
+        return boolval(Config::get('send_http_client'));
     }
 
     protected function getRequestType(Request $request): string

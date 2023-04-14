@@ -107,7 +107,7 @@ class CacheObserver
             return $this->enabled;
         }
 
-        return Config::get('send_cache');
+        return boolval(Config::get('send_cache'));
     }
 
     public function hidden(array $hidden = []): array

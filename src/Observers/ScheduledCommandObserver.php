@@ -8,7 +8,7 @@ use LaraDumps\LaraDumps\Actions\Config;
 use LaraDumps\LaraDumps\LaraDumps;
 use LaraDumps\LaraDumpsCore\Concerns\Traceable;
 use LaraDumps\LaraDumpsCore\Contracts\TraceableContract;
-use LaraDumps\LaraDumpsCore\Payloads\{DumpPayload, Payload, TableV2Payload};
+use LaraDumps\LaraDumpsCore\Payloads\{Payload, TableV2Payload};
 
 class ScheduledCommandObserver implements TraceableContract
 {
@@ -63,7 +63,7 @@ class ScheduledCommandObserver implements TraceableContract
             return $this->enabled;
         }
 
-        return Config::get('send_scheduled_command');
+        return boolval(Config::get('send_scheduled_command'));
     }
 
     private function sendPayload(Payload $payload): void

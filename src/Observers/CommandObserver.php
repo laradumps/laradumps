@@ -54,7 +54,7 @@ class CommandObserver implements TraceableContract
             return $this->enabled;
         }
 
-        return Config::get('send_commands');
+        return boolval(Config::get('send_commands'));
     }
 
     private function generatePayload(object $event): Payload
