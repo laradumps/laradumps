@@ -16,7 +16,7 @@ use LaraDumps\LaraDumpsCore\LaraDumps as BaseLaraDumps;
 
 class LaraDumps extends BaseLaraDumps
 {
-    protected function beforeWrite($args)
+    protected function beforeWrite($args): \Closure
     {
         return function () use ($args) {
             if ($args instanceof Model) {
