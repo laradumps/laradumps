@@ -3,7 +3,6 @@
 namespace LaraDumps\LaraDumps\Payloads;
 
 use Illuminate\Database\Query\Builder;
-use LaraDumps\LaraDumps\Actions\Config;
 use LaraDumps\LaraDumpsCore\Payloads\Payload;
 
 class QueryPayload extends Payload
@@ -19,8 +18,7 @@ class QueryPayload extends Payload
         $toSql = vsprintf($toSql, $this->query->getBindings());
 
         return [
-            'sql'       => $toSql,
-            'formatted' => boolval(Config::get('send_queries.formatted')),
+            'sql' => $toSql,
         ];
     }
 

@@ -166,7 +166,11 @@ HTML;
 
             $ds = new LaraDumps(trace: (array) $trace->first());
             /** @phpstan-ignore-next-line  */
-            $ds->send(new QueryPayload($this));
+
+            $payload = new QueryPayload($this);
+            $payload->dumpId(uniqid());
+
+            $ds->send($payload);
 
             return $this;
         });

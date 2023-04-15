@@ -16,6 +16,22 @@ use LaraDumps\LaraDumpsCore\LaraDumps as BaseLaraDumps;
 
 class LaraDumps extends BaseLaraDumps
 {
+    protected function beforeWrite($args)
+    {
+        return function () use ($args) {
+            if ($args instanceof Model) {
+                $payload = new ModelPayload($args);
+
+                return [
+                    $payload,
+                    uniqid(),
+                ];
+            }
+
+            return parent::beforeWrite($args)();
+        };
+    }
+
     /**
      * Send Routes
      *

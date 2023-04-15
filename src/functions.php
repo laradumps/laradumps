@@ -1,9 +1,10 @@
 <?php
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Illuminate\View\Compilers\BladeCompiler;
 use LaraDumps\LaraDumps\LaraDumps;
-use LaraDumps\LaraDumps\Payloads\BladePayload;
+use LaraDumps\LaraDumps\Payloads\{BladePayload, ModelPayload};
 use LaraDumps\LaraDumpsCore\Support\Dumper;
 
 if (!function_exists('dsBlade')) {
@@ -26,13 +27,32 @@ if (!function_exists('dsBlade')) {
         ];
 
         $notificationId = Str::uuid()->toString();
-        $ds             = new LaraDumps(notificationId: $notificationId, trace: $trace);
+        $laradumps      = new LaraDumps(notificationId: $notificationId, trace: $trace);
 
-        [$pre, $id] = Dumper::dump($args);
+        if ($args instanceof \Illuminate\Pagination\LengthAwarePaginator) {
+            $models = [];
 
-        $payload = new BladePayload($pre, $viewPath);
-        $payload->dumpId($id);
+            foreach ($args->items() as $model) {
+                $models[] = [
+                    'className'  => get_class($model),
+                    'attributes' => $model->attributesToArray(),
+                    'relations'  => $model->relationsToArray(),
+                ];
+            }
 
-        $ds->send($payload);
+            $args->setCollection(collect($models));
+        }
+
+        if ($args instanceof Model) {
+            $payload = new ModelPayload($args);
+            $payload->dumpId(uniqid());
+        } else {
+            [$pre, $id] = Dumper::dump($args);
+
+            $payload = new BladePayload($pre, $viewPath);
+            $payload->dumpId($id);
+        }
+
+        $laradumps->send($payload);
     }
 }
