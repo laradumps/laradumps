@@ -98,7 +98,7 @@ class LaraDumps extends BaseLaraDumps
     /**
      * Display all HTTP Client requests that are executed with custom label
      */
-    public function httpOn(string $label = null): self
+    public function httpOn(string $label = 'Http'): self
     {
         $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
 

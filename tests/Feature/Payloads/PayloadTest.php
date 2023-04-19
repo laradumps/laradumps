@@ -105,7 +105,7 @@ it('should return the correct payload to mailable', function () {
         ->toContain('to@example.com');
 })->group('mailable');
 
-it('should return the correct payload to table-v2', function () {
+it('should return the correct payload to table_v2', function () {
     $data = [
         'Name'  => 'Anand Pilania',
         'Email' => 'pilaniaanand@gmail.com',
@@ -127,14 +127,14 @@ it('should return the correct payload to table-v2', function () {
 
     expect($payload)
         ->id->toBe($notificationId)
-        ->type->toBe('table-v2')
+        ->type->toBe('table_v2')
         ->and($payload['content']['values']['Name'])
         ->toContain('Anand Pilania')
         ->and($payload['content']['values']['Email'])
         ->toContain('pilaniaanand@gmail.com')
         ->and($payload['content']['values']['Stack'][0])
         ->toContain('Laravel');
-})->group('table-v2');
+})->group('table_v2');
 
 it('should return the correct markdown payload to dump', function () {
     fixtureEnv('ds_env');

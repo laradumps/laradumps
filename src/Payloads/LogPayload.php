@@ -13,13 +13,11 @@ class LogPayload extends Payload
 
     public function type(): string
     {
-        return 'log';
+        return 'log_application';
     }
 
     public function content(): array
     {
-        return [
-            'value' => $this->value,
-        ];
+        return $this->value;
     }
 }

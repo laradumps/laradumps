@@ -4,8 +4,9 @@ namespace LaraDumps\LaraDumps\Observers;
 
 use Illuminate\Log\Events\MessageLogged;
 use Illuminate\Support\Facades\Event;
+use LaraDumps\LaraDumps\Actions\Config;
 use LaraDumps\LaraDumps\Payloads\LogPayload;
-use LaraDumps\LaraDumpsCore\Actions\{Config, Trace};
+use LaraDumps\LaraDumpsCore\Actions\Trace;
 use LaraDumps\LaraDumpsCore\LaraDumps;
 use LaraDumps\LaraDumpsCore\Support\Dumper;
 
