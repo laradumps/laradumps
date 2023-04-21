@@ -30,13 +30,18 @@ if (!function_exists('dsBlade')) {
         $laradumps      = new LaraDumps(notificationId: $notificationId, trace: $trace);
 
         if ($args instanceof \Illuminate\Pagination\LengthAwarePaginator) {
+            if (!$args->items()[0] instanceof Model) {
+                return;
+            }
+
             $models = [];
 
-            foreach ($args->items() as $model) {
+            /** @var Model $item */
+            foreach ($args->items() as $item) {
                 $models[] = [
-                    'className'  => get_class($model),
-                    'attributes' => $model->attributesToArray(),
-                    'relations'  => $model->relationsToArray(),
+                    'className'  => get_class($item),
+                    'attributes' => $item->attributesToArray(),
+                    'relations'  => $item->relationsToArray(),
                 ];
             }
 

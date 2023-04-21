@@ -34,12 +34,12 @@ it('should return the correct payload to dump', function () {
     expect($payload)
         ->id->toBe($notificationId)
         ->type->toBe('dump')
-        ->ideHandle->toMatchArray([
+        ->ide_handle->toMatchArray([
             'handler' => 'phpstorm://open?file=Test&line=1',
             'path'    => 'Test',
             'line'    => 1,
         ])
-        ->and($payload['content']['dump'])
+        ->and($payload['dump']['dump'])
         ->toContain(
             '<span class=sf-dump-key>name</span>',
             '<span class=sf-dump-str title="4 characters">Luan</span>'
@@ -64,16 +64,16 @@ it('should return the correct payload to model', function () {
     expect($payload)
         ->id->toBe($notificationId)
         ->type->toBe('model')
-        ->ideHandle->toMatchArray([
+        ->ide_handle->toMatchArray([
             'handler' => 'phpstorm://open?file=Test&line=1',
             'path'    => 'Test',
             'line'    => 1,
         ])
-        ->and($payload['content']['relations'])
+        ->and($payload['model']['relations'])
         ->toMatchArray([])
-        ->and($payload['content']['className'])
+        ->and($payload['model']['className'])
         ->toBe('LaraDumps\LaraDumps\Tests\Models\Dish')
-        ->and($payload['content']['attributes'])
+        ->and($payload['model']['attributes'])
         ->toContain(
             '<span class=sf-dump-key>id</span>',
             '<span class=sf-dump-key>name</span>',
@@ -97,11 +97,11 @@ it('should return the correct payload to mailable', function () {
     expect($payload)
         ->id->toBe($notificationId)
         ->type->toBe('mailable')
-        ->and($payload['content']['subject'])
+        ->and($payload['mailable']['subject'])
         ->toContain('An test mail')
-        ->and($payload['content']['from'][0]['email'])
+        ->and($payload['mailable']['from'][0]['email'])
         ->toContain('from@example.com')
-        ->and($payload['content']['to'][0]['email'])
+        ->and($payload['mailable']['to'][0]['email'])
         ->toContain('to@example.com');
 })->group('mailable');
 
@@ -128,11 +128,11 @@ it('should return the correct payload to table_v2', function () {
     expect($payload)
         ->id->toBe($notificationId)
         ->type->toBe('table_v2')
-        ->and($payload['content']['values']['Name'])
+        ->and($payload['table_v2']['values']['Name'])
         ->toContain('Anand Pilania')
-        ->and($payload['content']['values']['Email'])
+        ->and($payload['table_v2']['values']['Email'])
         ->toContain('pilaniaanand@gmail.com')
-        ->and($payload['content']['values']['Stack'][0])
+        ->and($payload['table_v2']['values']['Stack'][0])
         ->toContain('Laravel');
 })->group('table_v2');
 
@@ -154,12 +154,12 @@ it('should return the correct markdown payload to dump', function () {
     expect($payload)
         ->id->toBe($notificationId)
         ->type->toBe('dump')
-        ->ideHandle->toMatchArray([
+        ->ide_handle->toMatchArray([
             'handler' => 'phpstorm://open?file=Test&line=1',
             'path'    => 'Test',
             'line'    => 1,
         ])
-        ->and($payload['content']['dump'])
+        ->and($payload['dump']['dump'])
         ->toContain(
             '<h1>Hi, Anand Pilania!</h1>'
         );

@@ -13,10 +13,12 @@ use LaraDumps\LaraDumps\Observers\{CacheObserver,
     ScheduledCommandObserver};
 use LaraDumps\LaraDumps\Payloads\{MailablePayload, MarkdownPayload, ModelPayload, RoutesPayload};
 use LaraDumps\LaraDumpsCore\LaraDumps as BaseLaraDumps;
+use LaraDumps\LaraDumpsCore\Payloads\DumpPayload;
+use LaraDumps\LaraDumpsCore\Support\Dumper;
 
 class LaraDumps extends BaseLaraDumps
 {
-    protected function beforeWrite($args): \Closure
+    protected function beforeWrite(mixed $args): \Closure
     {
         return function () use ($args) {
             if ($args instanceof Model) {
@@ -26,6 +28,30 @@ class LaraDumps extends BaseLaraDumps
                     $payload,
                     uniqid(),
                 ];
+            }
+
+            if ($args instanceof \Illuminate\Pagination\LengthAwarePaginator) {
+                if (!$args->items()[0] instanceof Model) {
+                    return;
+                }
+
+                $models = [];
+
+                /** @var Model $item */
+                foreach ($args->items() as $item) {
+                    $models[] = [
+                        'className'  => get_class($item),
+                        'attributes' => $item->attributesToArray(),
+                        'relations'  => $item->relationsToArray(),
+                    ];
+                }
+
+                $args->setCollection(collect($models));
+
+                [$pre, $id] = Dumper::dump($args);
+
+                $payload = new DumpPayload($pre);
+                $payload->dumpId($id);
             }
 
             return parent::beforeWrite($args)();

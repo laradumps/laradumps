@@ -43,7 +43,7 @@
         "test:pint": "./vendor/bin/pint --test",
         "pint:fix": "./vendor/bin/pint",
         "test:types": "./vendor/bin/phpstan analyse --ansi --memory-limit=-1",
-        "test:tests": "./vendor/bin/pest --parallel --order-by random",
+        "test:tests": "./vendor/bin/pest --order-by random",
         "verify": [
             "@cs-fixer",
             "@test:types",

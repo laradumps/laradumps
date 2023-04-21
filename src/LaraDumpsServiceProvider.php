@@ -165,8 +165,8 @@ HTML;
                 });
 
             $ds = new LaraDumps(trace: (array) $trace->first());
-            /** @phpstan-ignore-next-line  */
 
+            /** @phpstan-ignore-next-line */
             $payload = new QueryPayload($this);
             $payload->dumpId(uniqid());
 
