@@ -11,19 +11,27 @@ class Dumper
     public static function dump(mixed $arguments): mixed
     {
         if (is_null($arguments)) {
-            return null;
+            return '❮NULL❯';
         }
 
         if (is_string($arguments)) {
-            return $arguments;
+            if (trim($arguments) === '') {
+                return '❮EMPTY STRING❯';
+            }
+
+            return '❮STRING❯ ' . $arguments;
         }
 
         if (is_int($arguments)) {
-            return $arguments;
+            return '❮INT❯ ' . strval($arguments);
+        }
+
+        if (is_float($arguments)) {
+            return '❮FLOAT❯ ' . strval($arguments);
         }
 
         if (is_bool($arguments)) {
-            return $arguments;
+            return '❮BOOL❯ ' . ($arguments  === true ? 'true' : 'false');
         }
 
         $varCloner = new VarCloner();
