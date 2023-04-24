@@ -88,11 +88,8 @@ These are some debug tools available for you:
  PHP 8.0+ and Laravel 8.75+
 
 #### Usage
-<!--LaraDumpsVersion-->
-1. Download the 🖥️ [LaraDumps](https://github.com/laradumps/app) Desktop App here: [Windows](https://github.com/laradumps/app/releases/download/v1.7.2/LaraDumps-Setup-1.7.2.exe) | [MacOS](https://github.com/laradumps/app/releases/download/v1.7.2/LaraDumps-1.7.2.dmg)
- | [Linux](https://github.com/laradumps/app/releases/download/v1.7.2/LaraDumps-1.7.2.AppImage)
-<!--EndOfLaraDumpsVersion-->
 
+1. Download the 🖥️ [LaraDumps](https://github.com/laradumps/app) Desktop App here: [LaraDumps Desktop App](https://laradumps.dev/get-started/installation.html#desktop-app)
 2. Install LaraDumps in your Laravel project, run:
 
 ```shell
