@@ -215,7 +215,8 @@ class LaraDumps
     {
         $originalContent = $args;
         $args            = Support\Dumper::dump($args);
-        if (!empty($args)) {
+
+        if (!is_null($args)) {
             $payload = new DumpPayload($args, $originalContent);
             $payload->autoInvokeApp($autoInvokeApp);
             $this->send($payload);
