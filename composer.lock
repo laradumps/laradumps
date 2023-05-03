@@ -655,29 +655,32 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/laradumps/laradumps-core.git",
-                "reference": "1e704bb505322c2f5990057de2753c6d78106511"
+                "reference": "03280e11cb805ed1cabbc027278e042988f7f118"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laradumps/laradumps-core/zipball/1e704bb505322c2f5990057de2753c6d78106511",
-                "reference": "1e704bb505322c2f5990057de2753c6d78106511",
+                "url": "https://api.github.com/repos/laradumps/laradumps-core/zipball/03280e11cb805ed1cabbc027278e042988f7f118",
+                "reference": "03280e11cb805ed1cabbc027278e042988f7f118",
                 "shasum": ""
             },
             "require": {
                 "ext-curl": "*",
                 "nesbot/carbon": "^2.66",
                 "php": "^8.0",
-                "ramsey/uuid": "^3.9|^4.7.3",
-                "symfony/console": "^6.2.7",
-                "symfony/var-dumper": "^6.2.7",
+                "ramsey/uuid": "^3.9|^4.7.4",
+                "symfony/console": "^5.0|^6.0",
+                "symfony/var-dumper": "^5.0|^6.0",
                 "vlucas/phpdotenv": "^5.5"
             },
             "require-dev": {
-                "laravel/pint": "^1.7",
-                "pestphp/pest": "^2.3",
-                "phpstan/phpstan": "^1.10.8"
+                "laravel/pint": "^1.10",
+                "pestphp/pest": "^2.6",
+                "phpstan/phpstan": "^1.10.14"
             },
             "default-branch": true,
+            "bin": [
+                "bin/laradumps"
+            ],
             "type": "library",
             "autoload": {
                 "files": [
@@ -710,7 +713,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-04-21T17:25:49+00:00"
+            "time": "2023-05-03T11:11:57+00:00"
         },
         {
             "name": "laravel/framework",
