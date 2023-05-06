@@ -41,7 +41,7 @@ class LaraDumpsServiceProvider extends ServiceProvider
 
     public function register(): void
     {
-        $file = str_replace(DIRECTORY_SEPARATOR, '/', __DIR__ . '/functions.php');
+        $file = str_replace('/', DIRECTORY_SEPARATOR, __DIR__ . '/functions.php');
 
         if (file_exists($file)) {
             require_once($file);
