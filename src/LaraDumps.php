@@ -455,4 +455,9 @@ class LaraDumps
 
         return $this;
     }
+
+    public function benchmarkUseAs(): BenchmarkPayload
+    {
+        return new BenchmarkPayload();
+    }
 }

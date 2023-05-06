@@ -8,7 +8,7 @@ use Symfony\Component\VarDumper\Dumper\HtmlDumper;
 
 class Dumper
 {
-    public static function dump(mixed $arguments): mixed
+    public static function dump(mixed $arguments, int $maxDepth = null): mixed
     {
         if (is_null($arguments)) {
             return '❮NULL❯';
@@ -37,6 +37,12 @@ class Dumper
         $varCloner = new VarCloner();
 
         $dumper = new HtmlDumper();
+
+        if (!blank($maxDepth)) {
+            $dumper->setDisplayOptions([
+                'maxDepth' => $maxDepth,
+            ]);
+        }
 
         $htmlDumper = (string) $dumper->dump($varCloner->cloneVar($arguments), true);
 
