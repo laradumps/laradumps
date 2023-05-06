@@ -21,7 +21,7 @@
     },
     "require-dev": {
         "orchestra/testbench": "^7.22 | ^8.0",
-        "symfony/var-dumper": "^5.4 | ^6.2.5",
+        "symfony/var-dumper": "^5.0 | ^6.0",
         "nunomaduro/larastan": "^2.4",
         "pestphp/pest": "^2.2",
         "laravel/pint": "^1.7"

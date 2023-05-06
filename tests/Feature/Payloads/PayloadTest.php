@@ -10,7 +10,7 @@ use LaraDumps\LaraDumpsCore\Support\Dumper;
 use Ramsey\Uuid\Uuid;
 
 beforeEach(function () {
-    putenv("DS_RUNNING_IN_TESTS=true");
+    putenv('DS_RUNNING_IN_TESTS=true');
 });
 
 it('should return the correct payload to dump', function () {
