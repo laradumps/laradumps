@@ -35,10 +35,11 @@ class LaraDumps extends BaseLaraDumps
                     return;
                 }
 
-                $models = [];
+                $models    = [];
+                $paginator = clone $args;
 
                 /** @var Model $item */
-                foreach ($args->items() as $item) {
+                foreach ($paginator->items() as $item) {
                     $models[] = [
                         'className'  => get_class($item),
                         'attributes' => $item->attributesToArray(),
@@ -46,9 +47,9 @@ class LaraDumps extends BaseLaraDumps
                     ];
                 }
 
-                $args->setCollection(collect($models));
+                $paginator->setCollection(collect($models));
 
-                [$pre, $id] = Dumper::dump($args);
+                [$pre, $id] = Dumper::dump($paginator);
 
                 $payload = new DumpPayload($pre);
                 $payload->dumpId($id);
