@@ -655,12 +655,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/laradumps/laradumps-core.git",
-                "reference": "46ca3359e0b49f91dd0759bf1d7430f6812ff39b"
+                "reference": "a53f33b0141b11f578e660d6dedbbace98780860"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laradumps/laradumps-core/zipball/46ca3359e0b49f91dd0759bf1d7430f6812ff39b",
-                "reference": "46ca3359e0b49f91dd0759bf1d7430f6812ff39b",
+                "url": "https://api.github.com/repos/laradumps/laradumps-core/zipball/a53f33b0141b11f578e660d6dedbbace98780860",
+                "reference": "a53f33b0141b11f578e660d6dedbbace98780860",
                 "shasum": ""
             },
             "require": {
@@ -713,7 +713,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-05-06T19:25:15+00:00"
+            "time": "2023-05-18T16:32:59+00:00"
         },
         {
             "name": "laravel/framework",
@@ -8930,9 +8930,7 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "laradumps/laradumps-core": 20
-    },
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
