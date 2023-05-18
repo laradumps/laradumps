@@ -26,7 +26,15 @@ class QueryObserver implements TraceableContract
             }
 
             $sqlQuery = str_replace(['%', '?'], ['%%', '\'%s\''], $query->sql);
-            $sqlQuery = vsprintf($sqlQuery, $query->bindings);
+            $bindings = array_map(function ($value) {
+                if ($value instanceof \DateTime) {
+                    return strval($value->format('Y-m-d H:i:s'));
+                }
+
+                return $value;
+            }, $query->bindings);
+
+            $sqlQuery = vsprintf($sqlQuery, $bindings);
 
             if (str_contains($sqlQuery, 'telescope')) {
                 return;
