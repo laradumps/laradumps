@@ -655,12 +655,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/laradumps/laradumps-core.git",
-                "reference": "a53f33b0141b11f578e660d6dedbbace98780860"
+                "reference": "353e40512479aee37090700e4b8ed39be7b22ad5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laradumps/laradumps-core/zipball/a53f33b0141b11f578e660d6dedbbace98780860",
-                "reference": "a53f33b0141b11f578e660d6dedbbace98780860",
+                "url": "https://api.github.com/repos/laradumps/laradumps-core/zipball/353e40512479aee37090700e4b8ed39be7b22ad5",
+                "reference": "353e40512479aee37090700e4b8ed39be7b22ad5",
                 "shasum": ""
             },
             "require": {
@@ -713,7 +713,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-05-18T16:32:59+00:00"
+            "time": "2023-05-18T16:37:08+00:00"
         },
         {
             "name": "laravel/framework",
