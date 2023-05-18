@@ -13,7 +13,7 @@ class LivewireComponentsObserver
 {
     public function register(): void
     {
-        if (class_exists(\Livewire\Livewire::class)) {
+        if (class_exists(\Livewire\LivewireManager::class)) {
             \Livewire\Livewire::listen('view:render', function (View $view) {
                 if (!$this->isEnabled()) {
                     return;
