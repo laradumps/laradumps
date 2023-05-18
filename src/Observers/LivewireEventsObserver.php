@@ -12,7 +12,7 @@ class LivewireEventsObserver
 {
     public function register(): void
     {
-        if (class_exists(\Livewire\Livewire::class)) {
+        if (class_exists(\Livewire\LivewireManager::class)) {
             \Livewire\Livewire::listen('action.returned', function ($component, $eventName, $returned) {
                 if (!$this->isEnabled()) {
                     return;

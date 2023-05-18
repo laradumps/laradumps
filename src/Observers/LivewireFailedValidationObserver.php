@@ -12,7 +12,7 @@ class LivewireFailedValidationObserver
 {
     public function register(): void
     {
-        if (class_exists(\Livewire\Livewire::class)) {
+        if (class_exists(\Livewire\LivewireManager::class)) {
             \Livewire\Livewire::listen('failed-validation', function (Validator $validator, $component) {
                 if (!$this->isEnabled()) {
                     return;

@@ -12,7 +12,7 @@ class LivewireDispatchObserver
 {
     public function register(): void
     {
-        if (class_exists(\Livewire\Livewire::class)) {
+        if (class_exists(\Livewire\LivewireManager::class)) {
             \Livewire\Livewire::listen('component.dehydrate', function ($component) {
                 if (!$this->isEnabled()) {
                     return;
