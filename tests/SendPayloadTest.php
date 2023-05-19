@@ -5,7 +5,7 @@ use LaraDumps\LaraDumps\Payloads\DumpPayload;
 use LaraDumps\LaraDumps\Support\Dumper;
 use PHPUnit\Framework\Constraint\LessThan;
 
-it('curl resets fast when app is not available', function () {
+test('curl resets fast when app is not available', function () {
     $maxExecutionTime = 30;
 
     $startTime = now();
