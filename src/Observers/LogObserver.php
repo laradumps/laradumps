@@ -25,8 +25,8 @@ class LogObserver
                 $message->level = 'info';
             }
 
-            if (!Config::get('send_deprecated')) {
-                if (str_contains($message->message, 'deprecated')) {
+            if (!Config::get('send_logs_vendors')) {
+                if (str_contains($message->message, 'vendor')) {
                     return;
                 }
             }
@@ -49,6 +49,6 @@ class LogObserver
     {
         $this->trace = Trace::findSource()->toArray();
 
-        return (bool) Config::get('send_log_applications');
+        return (bool) Config::get('send_logs_applications');
     }
 }
