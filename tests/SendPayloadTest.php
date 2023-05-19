@@ -6,19 +6,18 @@ use LaraDumps\LaraDumps\Support\Dumper;
 use PHPUnit\Framework\Constraint\LessThan;
 
 test('curl resets fast when app is not available', function () {
-    $maxExecutionTime = 100;
-
-    $startTime = now();
-
     $this->app['config']->set('laradumps.host', '192.168.0.10');
+
+    $maxExecutionTime = 100;
 
     $args = Dumper::dump([
         'name' => 'Luan',
     ]);
 
+    $startTime = now();
     (new LaraDumps())->send(new DumpPayload($args));
+    $endTime   = now();
 
-    $endTime       = now();
     $executionTime = $endTime->diffInMilliseconds($startTime);
 
     $this->assertThat(
