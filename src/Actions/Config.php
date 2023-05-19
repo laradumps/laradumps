@@ -7,9 +7,9 @@ final class Config extends \LaraDumps\LaraDumpsCore\Actions\Config
     protected static function getEnvironment(): array
     {
         return array_merge(parent::getEnvironment(), [
-            'send_queries'               => 'DS_SEND_QUERIES',
-            'send_logs_applications'     => 'DS_SEND_LOGS_APPLICATIONS',
-            'send_logs_vendors'          => 'DS_SEND_LOGS_VENDOR',
+            'send_queries'              => 'DS_SEND_QUERIES',
+            'send_logs_applications'    => 'DS_SEND_LOGS_APPLICATIONS',
+            'send_logs_vendors'         => 'DS_SEND_LOGS_VENDOR',
             'send_http_client_requests' => 'DS_SEND_HTTP_CLIENT_REQUESTS',
             'send_jobs'                 => 'DS_SEND_JOBS',
             'send_cache'                => 'DS_SEND_CACHE',
