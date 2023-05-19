@@ -20,9 +20,5 @@ test('curl resets fast when app is not available', function () {
 
     $executionTime = $endTime->diffInMilliseconds($startTime);
 
-    $this->assertThat(
-        $executionTime,
-        new LessThan($maxExecutionTime),
-        'The function execution time exceeded the maximum allowed time.'
-    );
+    $this->assertThat($executionTime, new LessThan($maxExecutionTime));
 });
