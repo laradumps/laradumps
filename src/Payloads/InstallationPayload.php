@@ -25,7 +25,7 @@ class InstallationPayload extends Payload
         return [
             'name'        => $this->appName,
             'environment' => Config::getAvailableConfig(),
-            'env_path'    => appBasePath().'.env',
+            'env_path'    => appBasePath() . '.env',
             'ide_list'    => $this->editors,
         ];
     }
