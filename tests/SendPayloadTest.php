@@ -16,9 +16,9 @@ it('curl resets fast when app is not available', function () {
         'name' => 'Luan',
     ]);
 
-    (new LaraDumps)->send(new DumpPayload($args));
+    (new LaraDumps())->send(new DumpPayload($args));
 
-    $endTime = now();
+    $endTime       = now();
     $executionTime = $endTime->diffInMilliseconds($startTime);
 
     $this->assertThat(
