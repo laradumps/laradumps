@@ -4,7 +4,6 @@ namespace LaraDumps\LaraDumps\Tests;
 
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\File;
-use LaraDumps\LaraDumps\Actions\SendPayload;
 use LaraDumps\LaraDumps\LaraDumpsServiceProvider;
 use LaraDumps\LaraDumps\Tests\Actions\TestDatabase;
 use Orchestra\Testbench\TestCase as BaseTestCase;
@@ -20,16 +19,6 @@ class TestCase extends BaseTestCase
         $this->clearViewsCache();
 
         TestDatabase::up();
-
-        $sendPayload = \Mockery::mock('overload:' . SendPayload::class);
-
-        $sendPayload->shouldReceive('handle')
-                ->andReturn(md5(uniqid(rand(), true)));
-    }
-
-    protected function tearDown(): void
-    {
-        \Mockery::close();
     }
 
     /**
