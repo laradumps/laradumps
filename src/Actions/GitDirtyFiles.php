@@ -21,7 +21,9 @@ final class GitDirtyFiles
         }
 
         return collect((array) preg_split('/\R+/', $process->getOutput(), flags: PREG_SPLIT_NO_EMPTY))
-            ->mapWithKeys(fn ($file) => [substr(strval($file), 3) => trim(substr(strval($file), 0, 3))])
+            ->mapWithKeys(fn ($file) => [substr(strval($file), 3) => substr(strval($file), 0, 3)])
+            ->reject(fn ($status) => !str_ends_with($status, '  '))
+            ->map(fn ($status) => trim($status))
             ->reject(fn ($status) => $status === 'D')
             ->map(fn ($status, $file) => $status === 'R' ? Str::after($file, ' -> ') : $file)
             ->map(fn ($file) => getcwd() . '/' . $file)
