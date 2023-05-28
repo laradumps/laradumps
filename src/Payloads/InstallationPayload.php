@@ -3,13 +3,10 @@
 namespace LaraDumps\LaraDumps\Payloads;
 
 use LaraDumps\LaraDumps\Actions\Config;
-use LaraDumps\LaraDumpsCore\Concerns\WithEditors;
 use LaraDumps\LaraDumpsCore\Payloads\Payload;
 
 class InstallationPayload extends Payload
 {
-    use WithEditors;
-
     public function __construct(
         public ?string $appName = null
     ) {
@@ -26,7 +23,6 @@ class InstallationPayload extends Payload
             'name'        => $this->appName,
             'environment' => Config::getAvailableConfig(),
             'env_path'    => appBasePath() . '.env',
-            'ide_list'    => $this->editors,
         ];
     }
 }
