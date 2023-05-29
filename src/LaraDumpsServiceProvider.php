@@ -6,7 +6,6 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\{Collection, ServiceProvider, Stringable};
 use LaraDumps\LaraDumps\Actions\Config;
-use LaraDumps\LaraDumps\Commands\CheckCommand;
 use LaraDumps\LaraDumps\Observers\LogObserver;
 use LaraDumps\LaraDumps\Observers\{CacheObserver,
     CommandObserver,
@@ -31,12 +30,6 @@ class LaraDumpsServiceProvider extends ServiceProvider
         $this->bootObservers();
 
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'laradumps');
-
-        if ($this->app->runningInConsole()) {
-            $this->commands([
-                CheckCommand::class,
-            ]);
-        }
     }
 
     public function register(): void
