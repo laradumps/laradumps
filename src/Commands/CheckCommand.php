@@ -47,7 +47,11 @@ class CheckCommand extends Command
 
         $finder = new Finder();
 
-        $finder->files()->in($directories);
+        $finder->files()
+            ->in($directories)
+            ->ignoreVCS(true)
+            ->exclude('node_modules')
+            ->name('*.php');
 
         $progressBar = $this->output->createProgressBar(count($dirtyFiles) ?: $finder->count());
 
