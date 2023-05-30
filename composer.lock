@@ -655,20 +655,23 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/laradumps/laradumps-core.git",
-                "reference": "4fd3729b67824b970d028c98e7df82fda31fb357"
+                "reference": "0ab6ca976fe3bb4b3b237b35fade8cab61034a43"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laradumps/laradumps-core/zipball/4fd3729b67824b970d028c98e7df82fda31fb357",
-                "reference": "4fd3729b67824b970d028c98e7df82fda31fb357",
+                "url": "https://api.github.com/repos/laradumps/laradumps-core/zipball/0ab6ca976fe3bb4b3b237b35fade8cab61034a43",
+                "reference": "0ab6ca976fe3bb4b3b237b35fade8cab61034a43",
                 "shasum": ""
             },
             "require": {
                 "ext-curl": "*",
                 "nesbot/carbon": "^2.66",
+                "nunomaduro/termwind": "^1.15",
                 "php": "^8.0",
                 "ramsey/uuid": "^3.9|^4.7.4",
                 "symfony/console": "^5.0|^6.0",
+                "symfony/finder": "^5.0|^6.0",
+                "symfony/process": "^5.0|^6.0",
                 "symfony/var-dumper": "^5.0|^6.0",
                 "vlucas/phpdotenv": "^5.5"
             },
@@ -713,7 +716,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-05-28T17:41:26+00:00"
+            "time": "2023-05-30T16:43:51+00:00"
         },
         {
             "name": "laravel/framework",
@@ -8930,9 +8933,7 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "laradumps/laradumps-core": 20
-    },
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
