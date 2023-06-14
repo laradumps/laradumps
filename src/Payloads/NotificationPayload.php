@@ -4,6 +4,7 @@ namespace LaraDumps\LaraDumps\Payloads;
 
 use Illuminate\Notifications\Events\NotificationSent;
 use LaraDumps\LaraDumpsCore\Payloads\Payload;
+use LaraDumps\LaraDumpsCore\Support\Dumper;
 use ReflectionClass;
 use Symfony\Component\Mime\Part\DataPart;
 
@@ -54,6 +55,13 @@ class NotificationPayload extends Payload
                 $dataPartsData[] = $dataPartData;
             }
         }
+
+        $this->notificationProperties['details'] = Dumper::dump([
+            'notifiable'   => $notificationSent->notifiable,
+            'notification' => $notificationSent->notification,
+        ]);
+
+        $this->notificationProperties['channel'] = $notificationSent->channel;
 
         $this->notificationProperties['attachments'] = $dataPartsData;
         /** @phpstan-ignore-next-line */

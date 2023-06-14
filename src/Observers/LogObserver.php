@@ -4,6 +4,7 @@ namespace LaraDumps\LaraDumps\Observers;
 
 use Illuminate\Log\Events\MessageLogged;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Str;
 use LaraDumps\LaraDumps\Actions\Config;
 use LaraDumps\LaraDumps\Payloads\LogPayload;
 use LaraDumps\LaraDumpsCore\Actions\Trace;
@@ -35,6 +36,10 @@ class LogObserver
                 if (str_contains($message->message, 'deprecated')) {
                     return;
                 }
+            }
+
+            if (Str::containsAll($message->message, ['From:', 'To:', 'Subject:'])) {
+                return;
             }
 
             $log = [
