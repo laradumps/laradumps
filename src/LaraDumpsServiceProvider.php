@@ -12,6 +12,7 @@ use LaraDumps\LaraDumps\Observers\{CacheObserver,
     GateObserver,
     HttpClientObserver,
     JobsObserver,
+    NotificationObserver,
     QueryObserver,
     ScheduledCommandObserver};
 use LaraDumps\LaraDumps\Payloads\QueryPayload;
@@ -97,6 +98,7 @@ HTML;
         app(HttpClientObserver::class)->register();
         app(LogObserver::class)->register();
         app(QueryObserver::class)->register();
+        app(NotificationObserver::class)->register();
     }
 
     private function registerMacros(): void
