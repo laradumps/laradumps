@@ -50,12 +50,12 @@ if (!function_exists('dsBlade')) {
 
         if ($args instanceof Model) {
             $payload = new ModelPayload($args);
-            $payload->dumpId(uniqid());
+            $payload->setDumpId(uniqid());
         } else {
             [$pre, $id] = Dumper::dump($args);
 
             $payload = new BladePayload($pre, $viewPath);
-            $payload->dumpId($id);
+            $payload->setDumpId($id);
         }
 
         $laradumps->send($payload);

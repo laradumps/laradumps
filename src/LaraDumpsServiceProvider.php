@@ -163,7 +163,7 @@ HTML;
 
             /** @phpstan-ignore-next-line */
             $payload = new QueryPayload($this);
-            $payload->dumpId(uniqid());
+            $payload->setDumpId(uniqid());
 
             $ds->send($payload);
 

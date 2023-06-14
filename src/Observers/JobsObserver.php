@@ -73,7 +73,7 @@ class JobsObserver implements TraceableContract
         );
 
         $payload = new DumpPayload($pre);
-        $payload->dumpId($id);
+        $payload->setDumpId($id);
 
         return $payload;
     }

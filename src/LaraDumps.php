@@ -52,7 +52,7 @@ class LaraDumps extends BaseLaraDumps
                 [$pre, $id] = Dumper::dump($paginator);
 
                 $payload = new DumpPayload($pre);
-                $payload->dumpId($id);
+                $payload->setDumpId($id);
             }
 
             return parent::beforeWrite($args)();
