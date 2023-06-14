@@ -31,6 +31,12 @@ class LogObserver
                 }
             }
 
+            if (!Config::get('send_logs_deprecated')) {
+                if (str_contains($message->message, 'deprecated')) {
+                    return;
+                }
+            }
+
             $log = [
                 'message' => $message->message,
                 'level'   => $message->level,
