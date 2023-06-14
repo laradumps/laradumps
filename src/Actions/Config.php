@@ -18,6 +18,7 @@ final class Config extends \LaraDumps\LaraDumpsCore\Actions\Config
             'send_scheduled_commands'   => 'DS_SEND_SCHEDULED_COMMANDS',
             'send_gate'                 => 'DS_SEND_GATE',
             'send_logs_deprecated'      => 'DS_SEND_LOGS_DEPRECATED',
+            'send_notifications'        => 'DS_SEND_NOTIFICATIONS',
         ]);
     }
 }
