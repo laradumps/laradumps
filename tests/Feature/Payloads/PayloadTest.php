@@ -29,7 +29,7 @@ it('should return the correct payload to dump', function () {
     ];
 
     $laradumps = new LaraDumps(notificationId: $notificationId, trace: $trace);
-    $payload   = $laradumps->send(new DumpPayload($args));
+    $payload   = $laradumps->send(new DumpPayload($args))->toArray();
 
     expect($payload)
         ->id->toBe($notificationId)
@@ -59,7 +59,7 @@ it('should return the correct payload to model', function () {
     ];
 
     $laradumps = new LaraDumps($notificationId, trace: $trace);
-    $payload   = $laradumps->send(new ModelPayload($dish));
+    $payload   = $laradumps->send(new ModelPayload($dish))->toArray();
 
     expect($payload)
         ->id->toBe($notificationId)
@@ -92,7 +92,7 @@ it('should return the correct payload to mailable', function () {
     ];
 
     $laradumps = new LaraDumps($notificationId, trace: $trace);
-    $payload   = $laradumps->send(new MailablePayload($mailable));
+    $payload   = $laradumps->send(new MailablePayload($mailable))->toArray();
 
     expect($payload)
         ->id->toBe($notificationId)
@@ -123,7 +123,7 @@ it('should return the correct payload to table_v2', function () {
     $notificationId = Uuid::uuid4()->toString();
 
     $laradumps = new LaraDumps($notificationId, trace: $trace);
-    $payload   = $laradumps->send(new TableV2Payload($data));
+    $payload   = $laradumps->send(new TableV2Payload($data))->toArray();
 
     expect($payload)
         ->id->toBe($notificationId)
@@ -149,7 +149,7 @@ it('should return the correct markdown payload to dump', function () {
     ];
 
     $laradumps = new LaraDumps(notificationId: $notificationId, trace: $trace);
-    $payload   = $laradumps->send(new MarkdownPayload($args));
+    $payload   = $laradumps->send(new MarkdownPayload($args))->toArray();
 
     expect($payload)
         ->id->toBe($notificationId)
