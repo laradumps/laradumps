@@ -65,12 +65,17 @@ class JobsObserver implements TraceableContract
 
     private function generatePayload(object $event): Payload
     {
-        return new DumpPayload(Dumper::dump(
+        [$pre, $id] = Dumper::dump(
             /* @phpstan-ignore-next-line */
             $event->job instanceof Job
                 ? unserialize($event->job->payload()['data']['command'], ['allowed_classes' => true])
                 : $event->job
-        ));
+        );
+
+        $payload = new DumpPayload($pre);
+        $payload->dumpId($id);
+
+        return $payload;
     }
 
     private function sendPayload(Payload $payload): void
