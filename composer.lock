@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f94c248df42eb23a22607515645cc2aa",
+    "content-hash": "a3667635387ecc662d4b3a574c02a0bf",
     "packages": [
         {
             "name": "brick/math",
@@ -651,16 +651,16 @@
         },
         {
             "name": "laradumps/laradumps-core",
-            "version": "dev-main",
+            "version": "v0.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laradumps/laradumps-core.git",
-                "reference": "b1003163d424fa04d9ab3ea4bfa0315836a0efe0"
+                "reference": "1d01107db57a8dd6156ae054e147b521333c069e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laradumps/laradumps-core/zipball/b1003163d424fa04d9ab3ea4bfa0315836a0efe0",
-                "reference": "b1003163d424fa04d9ab3ea4bfa0315836a0efe0",
+                "url": "https://api.github.com/repos/laradumps/laradumps-core/zipball/1d01107db57a8dd6156ae054e147b521333c069e",
+                "reference": "1d01107db57a8dd6156ae054e147b521333c069e",
                 "shasum": ""
             },
             "require": {
@@ -680,7 +680,6 @@
                 "pestphp/pest": "^2.6",
                 "phpstan/phpstan": "^1.10.14"
             },
-            "default-branch": true,
             "bin": [
                 "bin/laradumps"
             ],
@@ -708,7 +707,7 @@
             "homepage": "https://github.com/laradumps/laradumps-core",
             "support": {
                 "issues": "https://github.com/laradumps/laradumps-core/issues",
-                "source": "https://github.com/laradumps/laradumps-core/tree/main"
+                "source": "https://github.com/laradumps/laradumps-core/tree/v0.1.0"
             },
             "funding": [
                 {
@@ -716,7 +715,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-06-14T14:32:04+00:00"
+            "time": "2023-06-15T20:07:57+00:00"
         },
         {
             "name": "laravel/framework",
