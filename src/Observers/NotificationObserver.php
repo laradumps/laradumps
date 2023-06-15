@@ -20,6 +20,7 @@ class NotificationObserver
             $dumps = new LaraDumps(trace: []);
 
             $dumps->send(new NotificationPayload($notificationSent));
+            $dumps->label('Notification - '.$notificationSent->channel);
         });
     }
 
