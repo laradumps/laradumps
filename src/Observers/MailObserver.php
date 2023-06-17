@@ -7,15 +7,24 @@ use Illuminate\Mail\SentMessage;
 use Illuminate\Notifications\Events\NotificationSent;
 use Illuminate\Support\Facades\Event;
 use LaraDumps\LaraDumps\Actions\Config;
-use LaraDumps\LaraDumps\Payloads\NotificationPayload;
+use LaraDumps\LaraDumps\Payloads\MailPayload;
 use LaraDumps\LaraDumpsCore\LaraDumps;
 use LaraDumps\LaraDumpsCore\Support\Dumper;
-use ReflectionClass;
 
-class NotificationObserver
+class MailObserver
 {
     public function register(): void
     {
+        Event::listen(MessageSent::class, function (MessageSent $messageSent) {
+            if (!$this->isEnabled()) {
+                return;
+            }
+
+            $dumps = new LaraDumps(trace: []);
+            $dumps->send(new MailPayload($messageSent->sent, Dumper::dump($messageSent->data), $messageSent->sent->getMessageId()));
+            $dumps->label('Notification - Mail');
+        });
+
         Event::listen(NotificationSent::class, function (NotificationSent $notificationSent) {
             if (!$this->isEnabled() || is_null($notificationSent->response)) {
                 return;
@@ -32,31 +41,13 @@ class NotificationObserver
 
             $dumps = new LaraDumps(trace: []);
 
-            $dumps->send(new NotificationPayload($sentMessage, $details));
+            $dumps->send(new MailPayload($sentMessage, $details, $sentMessage->getMessageId()));
             $dumps->label('Notification - ' . $notificationSent->channel);
-        });
-
-        Event::listen(MessageSent::class, function (MessageSent $messageSent) {
-            if (!$this->isEnabled()) {
-                return;
-            }
-
-            $reflection = new ReflectionClass($messageSent);
-
-            $sentProperty = $reflection->getProperty('sent');
-            $sentProperty->setAccessible(true);
-
-            /** @var SentMessage $sentMessage */
-            $sentMessage = $sentProperty->getValue($messageSent);
-
-            $dumps = new LaraDumps(trace: []);
-            $dumps->send(new NotificationPayload($sentMessage, []));
-            $dumps->label('Notification - Mail');
         });
     }
 
     public function isEnabled(): bool
     {
-        return (bool) Config::get('send_notifications');
+        return (bool) Config::get('send_mail');
     }
 }
