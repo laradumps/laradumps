@@ -49,7 +49,7 @@ class MailPayload extends Payload
             'details'     => $details,
             'attachments' => $dataPartsData,
             /** @phpstan-ignore-next-line */
-            'headers'     => $sentMessage->getHeaders()->toArray(),
+            'headers' => $sentMessage->getHeaders()->toArray(),
         ];
     }
 
