@@ -14,7 +14,7 @@ class CacheObserver
 {
     use Traceable;
 
-    protected ?string $label = 'Cache';
+    protected ?string $label = null;
 
     protected array $hidden = [];
 
@@ -31,7 +31,7 @@ class CacheObserver
                 'Type'  => 'hit',
                 'Key'   => $event->key,
                 'Value' => $this->formatValue($event),
-            ], 'width: 120px', 'Cache Hit');
+            ], 'width: 120px');
         });
 
         Event::listen(CacheMissed::class, function (CacheMissed $event) {
@@ -42,7 +42,7 @@ class CacheObserver
             $this->sendCache($event, [
                 'Type' => 'missed',
                 'Key'  => $event->key,
-            ], 'width: 120px', 'Cache Missed');
+            ], 'width: 120px');
         });
 
         Event::listen(KeyForgotten::class, function (KeyForgotten $event) {
@@ -53,7 +53,7 @@ class CacheObserver
             $this->sendCache($event, [
                 'Type' => 'forget',
                 'Key'  => $event->key,
-            ], 'width: 120px', 'Cache Forgot');
+            ], 'width: 120px');
         });
 
         Event::listen(KeyWritten::class, function (KeyWritten $event) {
@@ -66,11 +66,11 @@ class CacheObserver
                 'Key'        => $event->key,
                 'Value'      => $this->formatValue($event),
                 'Expiration' => $this->formatExpiration($event),
-            ], 'width: 120px', 'Cache Written');
+            ], 'width: 120px');
         });
     }
 
-    protected function sendCache(CacheEvent $event, array $data, string $headerStyle = '', string $label = ''): void
+    protected function sendCache(CacheEvent $event, array $data, string $headerStyle = ''): void
     {
         if (!$this->isEnabled() || $this->shouldIgnore($event)) {
             return;
@@ -82,12 +82,14 @@ class CacheObserver
             new TableV2Payload($data, $headerStyle)
         );
 
-        $dumps->label($this->label ?: $label);
+        if (!empty($this->label)) {
+            $dumps->label($this->label);
+        }
     }
 
-    public function enable(string $label = ''): void
+    public function enable(string $label = null): void
     {
-        $this->label = $label;
+        $this->label = $label ?? 'Cache';
 
         $this->enabled = true;
     }
