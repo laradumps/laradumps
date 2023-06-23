@@ -18,7 +18,7 @@ class HttpClientObserver implements TraceableContract
 
     private bool $enabled = false;
 
-    private ?string $label = null;
+    private string $label = '';
 
     public function register(): void
     {
@@ -28,7 +28,8 @@ class HttpClientObserver implements TraceableContract
             }
 
             $this->sendPayload(
-                $this->handleRequest($event->request)
+                $this->handleRequest($event->request),
+                'Http Sending'
             );
         });
 
@@ -38,12 +39,13 @@ class HttpClientObserver implements TraceableContract
             }
 
             $this->sendPayload(
-                $this->handleResponse($event->request, $event->response)
+                $this->handleResponse($event->request, $event->response),
+                'Http Received'
             );
         });
     }
 
-    public function enable(string $label = null): void
+    public function enable(string $label = ''): void
     {
         $this->label = $label;
 
@@ -107,17 +109,15 @@ class HttpClientObserver implements TraceableContract
             'Connection time' => $response->handlerStats()['connect_time'] ?? null,
             'Duration'        => $response->handlerStats()['total_time'] ?? null,
             'Request Size'    => $response->handlerStats()['request_size'] ?? null,
-        ], 'Http', 'http-client');
+        ], 'Http');
     }
 
-    private function sendPayload(Payload $payload): void
+    private function sendPayload(Payload $payload, string $label): void
     {
         $dumps = new LaraDumps(trace: $this->trace);
 
         $dumps->send($payload);
 
-        if ($this->label) {
-            $dumps->label($this->label);
-        }
+        $dumps->label($this->label ?: $label);
     }
 }
