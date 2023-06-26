@@ -6,13 +6,13 @@
   <br />
   <!--LaraDumpsVersion-->
   <p align="center">
-    <a href="https://github.com/laradumps/app/releases/download/v1.7.2/LaraDumps-Setup-1.7.2.exe">
+    <a href="https://github.com/laradumps/app/releases/download/v2.0.1/LaraDumps-Setup-2.0.1.exe">
       <img src="./art/os/windows.png" height="60" alt="LaraDumps Windows App" />
     </a>
-    <a href="https://github.com/laradumps/app/releases/download/v1.7.2/LaraDumps-1.7.2-universal.dmg">
+    <a href="https://github.com/laradumps/app/releases/download/v2.0.1/LaraDumps-2.0.1-universal.dmg">
       <img src="./art/os/macos.png" height="60" alt="LaraDumps MacOS App" />
     </a>
-    <a href="https://github.com/laradumps/app/releases/download/v1.7.2/LaraDumps-1.7.2.AppImage">
+    <a href="https://github.com/laradumps/app/releases/download/v2.0.1/LaraDumps-2.0.1.AppImage">
       <img src="./art/os/linux.png" height="60" alt="LaraDumps Linux App" />
     </a>
   </p>
