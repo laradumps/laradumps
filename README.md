@@ -3,21 +3,7 @@
 </p>
 <h1 align="center">LaraDumps</h1>
 <div align="center">
-  <br />
-  <!--LaraDumpsVersion-->
-  <p align="center">
-    <a href="https://github.com/laradumps/app/releases/download/v2.2.0/LaraDumps-Setup-2.2.0.exe">
-      <img src="./art/os/windows.png" height="60" alt="LaraDumps Windows App" />
-    </a>
-    <a href="https://github.com/laradumps/app/releases/download/v2.2.0/LaraDumps-2.2.0-universal.dmg">
-      <img src="./art/os/macos.png" height="60" alt="LaraDumps MacOS App" />
-    </a>
-    <a href="https://github.com/laradumps/app/releases/download/v2.2.0/LaraDumps-2.2.0.AppImage">
-      <img src="./art/os/linux.png" height="60" alt="LaraDumps Linux App" />
-    </a>
-  </p>
-  <!--EndOfLaraDumpsVersion-->
-  <h3>Click to Download the App</h3>
+  <h4><a href="https://laradumps.dev/get-started/installation.html" target="_blank">Download the App</a></h4>
   <sub>Available for Windows, Linux and macOS.</sub>
   <br />
   <br />
@@ -56,30 +42,19 @@ When using LaraDumps, you can see the result of your debug displayed in a standa
 
 These are some debug tools available for you:
 
-- [Dump](https://laradumps.dev/#/laravel/debug/usage?id=dump) single or multiple variables at once.
-- See your dumped values in a [Table](https://laradumps.dev/#/laravel/debug/usage?id=table), with a built-in search feature.
-- Improve your debugging experience using different [screens](https://laradumps.dev/#/laravel/debug/usage?id=screens).
-- Watch [SQL Queries](https://laradumps.dev/#/laravel/debug/usage?id=sql-queries).
-- Monitor [Laravel Logs](https://laravel.com/docs/9.x/logging).
-- Validate [JSON strings](https://laradumps.dev/#/laravel/debug/usage?id=json).
-- Compare strings with [diff](https://laradumps.dev/#/laravel/debug/usage?id=diff).
-- Verify if a string [contains](https://laradumps.dev/#/laravel/debug/usage?id=contains) a substring.
+- [Dump](https://laradumps.dev/debug/usage.html#dump) single or multiple variables at once.
+- See your dumped values in a [Table](https://laradumps.dev/debug/usage.html#table), with a built-in search feature.
+- Improve your debugging experience using different [screens](https://laradumps.dev/debug/usage.html#screens).
+- Watch [SQL Queries](hhttps://laradumps.dev/debug/usage.html#sql-queries).
+- Monitor [Laravel Logs](https://laravel.com/docs/10.x/logging).
+- Validate [JSON strings](https://laradumps.dev/debug/usage.html#json).
+- Verify if a string [contains](https://laradumps.dev/debug/usage.html#contains) a substring.
 - View `phpinfo()` configuration.
-- Debug [Livewire](https://laravel-livewire.com) Components & Events.
-- List your [Laravel Routes](https://laravel.com/docs/9.x/routing).
-- Inspect [Model](https://laravel.com/docs/9.x/eloquent) attributes.
-- Learn more in our [Reference Sheet](https://laradumps.dev/#/laravel/debug/reference-sheet).
+- List your [Laravel Routes](https://laravel.com/docs/10.x/routing).
+- Inspect [Model](https://laravel.com/docs/10.x/eloquent) attributes.
+- Learn more in our [Reference Sheet](https://laradumps.dev/debug/reference-sheet.html).
 
 <br/>
-<table>
-  <tr>
-    <td>
-      <p>🔥 Run <a href="https://laradumps.dev/#/laravel/debug/deploying-to-production" target="_blank">artisan ds:check()</a> in your CI Pipeline to make sure there is no <a href="https://laradumps.dev/#/laravel/debug/reference-sheet" target="_blank">ds()</a> shipped to Production.</p>
-    </td>
-  </tr>
-</table>
-
-<br>
 
 ### Get Started
 
@@ -87,24 +62,21 @@ These are some debug tools available for you:
 
  PHP 8.0+ and Laravel 8.75+
 
-#### Usage
-
-1. Download the 🖥️ [LaraDumps](https://github.com/laradumps/app) Desktop App here: [LaraDumps Desktop App](https://laradumps.dev/get-started/installation.html#desktop-app)
-2. Install LaraDumps in your Laravel project, run:
-
+#### Using Laravel
 ```shell
  composer require laradumps/laradumps --dev
  ```
 
-3. Configure LaraDumps, run:
-
+#### PHP Project
 ```shell
-php artisan ds:init
+ composer require laradumps/laradumps-core --dev
  ```
 
-4. Debug your code using `ds()` in the same way you would use Laravel's native functions dump() or dd().
+See also: https://laradumps.dev/get-started/release-notes.html#php-package
 
-5. Run your Laravel application and see the debug dump in LaraDumps App window.
+* Debug your code using `ds()` in the same way you would use Laravel's native functions dump() or dd().
+
+* Run your Laravel application and see the debug dump in LaraDumps App window.
 
 ### Example
 
@@ -124,7 +96,8 @@ Route::get('/', function () {
 The Desktop App receives:
 
 <p align="center">
-  <img src="./art/example.png" height="500" alt="" />
+  <img src="./art/light_mode_example.png" height="500" alt="" />
+  <img src="./art/dark_mode_example.png" height="500" alt="" />
 </p>
 
 ### Credits
