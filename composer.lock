@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a7bfc393d0ccac232a18976e4fa1f70e",
+    "content-hash": "dbe97ba37905034f4001d5c40bc7e590",
     "packages": [
         {
             "name": "brick/math",
@@ -647,16 +647,16 @@
         },
         {
             "name": "laradumps/laradumps-core",
-            "version": "v0.4.0",
+            "version": "v0.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laradumps/laradumps-core.git",
-                "reference": "a8a1051a6b3b37a1f1de4bb493f3c4f79ee86f32"
+                "reference": "af5131a57fcdbe6b9ba4c25c3519d40dd6b132f3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laradumps/laradumps-core/zipball/a8a1051a6b3b37a1f1de4bb493f3c4f79ee86f32",
-                "reference": "a8a1051a6b3b37a1f1de4bb493f3c4f79ee86f32",
+                "url": "https://api.github.com/repos/laradumps/laradumps-core/zipball/af5131a57fcdbe6b9ba4c25c3519d40dd6b132f3",
+                "reference": "af5131a57fcdbe6b9ba4c25c3519d40dd6b132f3",
                 "shasum": ""
             },
             "require": {
@@ -703,7 +703,7 @@
             "homepage": "https://github.com/laradumps/laradumps-core",
             "support": {
                 "issues": "https://github.com/laradumps/laradumps-core/issues",
-                "source": "https://github.com/laradumps/laradumps-core/tree/v0.4.0"
+                "source": "https://github.com/laradumps/laradumps-core/tree/v0.5.0"
             },
             "funding": [
                 {
@@ -711,7 +711,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-11-14T14:08:05+00:00"
+            "time": "2023-11-14T15:27:03+00:00"
         },
         {
             "name": "laravel/framework",
