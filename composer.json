@@ -17,14 +17,14 @@
         "nunomaduro/termwind": "^1.15.1",
         "illuminate/support": "^9.0|^10.0",
         "illuminate/mail": "^9.0|^10.0",
-        "laradumps/laradumps-core": "^0.3.0"
+        "laradumps/laradumps-core": "^0.4.0"
     },
     "require-dev": {
-        "orchestra/testbench": "^7.22|^8.8",
-        "symfony/var-dumper": "^5.0|^6.3.3",
+        "orchestra/testbench": "^7.22|^8.15",
+        "symfony/var-dumper": "^5.0|^6.3.8",
         "nunomaduro/larastan": "^2.6.4",
-        "pestphp/pest": "^2.14",
-        "laravel/pint": "^1.10.6"
+        "pestphp/pest": "^2.24.3",
+        "laravel/pint": "^1.13.6"
     },
     "autoload": {
         "psr-4": {
