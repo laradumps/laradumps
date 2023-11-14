@@ -23,6 +23,7 @@ class RoutesPayload extends Payload
     public function content(): array
     {
         $routes = [];
+
         /** @var Route $route */
         /** @phpstan-ignore-next-line */
         foreach (\Route::getRoutes()->getIterator() as $route) {
