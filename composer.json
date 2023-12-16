@@ -3,7 +3,7 @@
     "description": "A Dump Component for Laravel.",
     "homepage": "https://github.com/laradumps/laradumps",
     "license": "MIT",
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "prefer-stable": true,
     "authors": [
         {
@@ -13,18 +13,18 @@
         }
     ],
     "require": {
-        "php": "^8.0",
+        "php": "^8.1",
         "nunomaduro/termwind": "^1.15.1",
         "illuminate/support": "^9.0|^10.0",
         "illuminate/mail": "^9.0|^10.0",
-        "laradumps/laradumps-core": "^0.5.0"
+        "laradumps/laradumps-core": "^1.0"
     },
     "require-dev": {
-        "orchestra/testbench": "^7.22|^8.15",
-        "symfony/var-dumper": "^5.0|^6.3.8",
-        "nunomaduro/larastan": "^2.6.4",
-        "pestphp/pest": "^2.24.3",
-        "laravel/pint": "^1.13.6"
+        "orchestra/testbench": "^8.17",
+        "symfony/var-dumper": "^6.4.0",
+        "pestphp/pest": "^2.28.1",
+        "laravel/pint": "^1.13.7",
+        "larastan/larastan": "^2.7"
     },
     "autoload": {
         "psr-4": {

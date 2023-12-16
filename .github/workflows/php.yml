@@ -8,7 +8,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        php: [ 8.2, 8.1 ]
+        php: [ 8.3, 8.2, 8.1 ]
         laravel: [ 10.* ]
         dependency-version: [ prefer-stable ]
         include:
@@ -21,13 +21,13 @@ jobs:
     name: "PHP: ${{ matrix.php }} /  ${{ matrix.os }} / Lrvl: ${{ matrix.laravel }} (${{ matrix.dependency-version }})"
     steps:
       - name: Checkout
-        uses: actions/checkout@v3.1.0
+        uses: actions/checkout@v4
 
       - name: Setup PHP, with composer and extensions
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick, fileinfo
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, fileinfo
           tools: composer:v2
           coverage: none
 
