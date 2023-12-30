@@ -13,8 +13,6 @@ use LaraDumps\LaraDumps\Observers\{CacheObserver,
     ScheduledCommandObserver};
 use LaraDumps\LaraDumps\Payloads\{MailablePayload, MarkdownPayload, ModelPayload, RoutesPayload};
 use LaraDumps\LaraDumpsCore\LaraDumps as BaseLaraDumps;
-use LaraDumps\LaraDumpsCore\Payloads\DumpPayload;
-use LaraDumps\LaraDumpsCore\Support\Dumper;
 
 class LaraDumps extends BaseLaraDumps
 {
@@ -28,31 +26,6 @@ class LaraDumps extends BaseLaraDumps
                     $payload,
                     uniqid(),
                 ];
-            }
-
-            if ($args instanceof \Illuminate\Pagination\LengthAwarePaginator) {
-                if (!$args->items()[0] instanceof Model) {
-                    return;
-                }
-
-                $models    = [];
-                $paginator = clone $args;
-
-                /** @var Model $item */
-                foreach ($paginator->items() as $item) {
-                    $models[] = [
-                        'className'  => get_class($item),
-                        'attributes' => $item->attributesToArray(),
-                        'relations'  => $item->relationsToArray(),
-                    ];
-                }
-
-                $paginator->setCollection(collect($models));
-
-                [$pre, $id] = Dumper::dump($paginator);
-
-                $payload = new DumpPayload($pre);
-                $payload->setDumpId($id);
             }
 
             return parent::beforeWrite($args)();
