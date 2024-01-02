@@ -722,22 +722,22 @@
         },
         {
             "name": "laradumps/laradumps-core",
-            "version": "v1.0.0",
+            "version": "v1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laradumps/laradumps-core.git",
-                "reference": "97b2e3c28781d0cc13e6c17545ae3374f0267c2d"
+                "reference": "00bb99f7c3c5585e8a9e1221ff5541f58fe412b2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laradumps/laradumps-core/zipball/97b2e3c28781d0cc13e6c17545ae3374f0267c2d",
-                "reference": "97b2e3c28781d0cc13e6c17545ae3374f0267c2d",
+                "url": "https://api.github.com/repos/laradumps/laradumps-core/zipball/00bb99f7c3c5585e8a9e1221ff5541f58fe412b2",
+                "reference": "00bb99f7c3c5585e8a9e1221ff5541f58fe412b2",
                 "shasum": ""
             },
             "require": {
                 "ext-curl": "*",
-                "nesbot/carbon": "^2.72.1",
-                "nunomaduro/termwind": "^1.15.1",
+                "nesbot/carbon": "^2.72",
+                "nunomaduro/termwind": "^1.15|^2.0",
                 "php": "^8.1",
                 "ramsey/uuid": "^4.7.5",
                 "symfony/console": "^6.4|^7.0",
@@ -778,7 +778,7 @@
             "homepage": "https://github.com/laradumps/laradumps-core",
             "support": {
                 "issues": "https://github.com/laradumps/laradumps-core/issues",
-                "source": "https://github.com/laradumps/laradumps-core/tree/v1.0.0"
+                "source": "https://github.com/laradumps/laradumps-core/tree/v1.1.0"
             },
             "funding": [
                 {
@@ -786,7 +786,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-12-16T14:06:21+00:00"
+            "time": "2023-12-28T18:04:20+00:00"
         },
         {
             "name": "laravel/framework",
