@@ -11,11 +11,16 @@ jobs:
         php: [ 8.3, 8.2, 8.1 ]
         laravel: [ 11.*, 10.* ]
         dependency-version: [ prefer-stable ]
+        include:
+          - laravel: 11.*
+            testbench: 9.*
+          - laravel: 10.*
+            testbench: 8.*
         exclude:
           - php: 8.1
             laravel: 11.*
 
-    name: "PHP: ${{ matrix.php }} /  ${{ matrix.os }} / Lrvl: ${{ matrix.laravel }} (${{ matrix.dependency-version }})"
+    name: "PHP: ${{ matrix.php }} / ${{ matrix.os }} / Laravel: ${{ matrix.laravel }} (${{ matrix.dependency-version }})"
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -37,8 +42,8 @@ jobs:
 
       - name: Install Composer dependencies
         run: |
-          composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update
-          composer install
+          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
+          composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction
 
       - name: Pint 👨‍🏭
         if: matrix.php == '8.1' && matrix.os == 'ubuntu-latest'

@@ -20,8 +20,8 @@
         "laradumps/laradumps-core": "^1.1.2"
     },
     "require-dev": {
-        "orchestra/testbench": "^8.17",
-        "symfony/var-dumper": "^6.4.0",
+        "orchestra/testbench": "^8.17|^9.0",
+        "symfony/var-dumper": "^6.4.0|^7.0.3",
         "pestphp/pest": "^2.28.1",
         "laravel/pint": "^1.13.7",
         "larastan/larastan": "^2.7"
