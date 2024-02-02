@@ -38,6 +38,7 @@ jobs:
       - name: Install Composer dependencies
         run: |
           composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update
+          composer install
 
       - name: Pint 👨‍🏭
         if: matrix.php == '8.1' && matrix.os == 'ubuntu-latest'
