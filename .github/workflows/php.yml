@@ -11,9 +11,6 @@ jobs:
         php: [ 8.3, 8.2, 8.1 ]
         laravel: [ 11.*, 10.* ]
         dependency-version: [ prefer-stable ]
-        include:
-          - laravel: 10.*
-            testbench: 8.*
         exclude:
           - php: 8.1
             laravel: 11.*
