@@ -44,13 +44,14 @@ class JobsObserver implements TraceableContract, GeneratePayload
         });
     }
 
-    public function getLabelClassNameBased($className): string
+    public function getLabelClassNameBased(string $className): string
     {
         return match ($className) {
             JobQueued::class     => 'Job - Queued',
             JobProcessing::class => 'Job - Processing',
             JobProcessed::class  => 'Job - Processed',
             JobFailed::class     => 'Job - Failed',
+            default              => 'Job'
         };
     }
 
@@ -81,7 +82,7 @@ class JobsObserver implements TraceableContract, GeneratePayload
     {
         [$pre, $id] = Dumper::dump(
             /* @phpstan-ignore-next-line */
-            $event->job instanceof Job && $event->job->payload()
+            $event->job instanceof Job && $event?->job->payload()
                 ? unserialize($event->job->payload()['data']['command'], ['allowed_classes' => true])
                 : $event->job
         );
