@@ -17,7 +17,6 @@ use LaraDumps\LaraDumpsCore\Support\Dumper;
 class JobsObserver implements TraceableContract, GeneratePayload
 {
     use Traceable;
-    use SendPayload;
 
     private bool $enabled = false;
 
@@ -91,5 +90,13 @@ class JobsObserver implements TraceableContract, GeneratePayload
         $payload->setDumpId($id);
 
         return $payload;
+    }
+
+    protected function sendPayload(Payload $payload, string $className): void
+    {
+        $dumps = new LaraDumps(trace: $this->trace);
+
+        $dumps->send($payload);
+        $dumps->label($this->label ?? $this->getLabelClassNameBased($className));
     }
 }
