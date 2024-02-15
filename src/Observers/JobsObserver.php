@@ -6,19 +6,20 @@ use Illuminate\Queue\Events\{JobFailed, JobProcessed, JobProcessing, JobQueued};
 use Illuminate\Queue\Jobs\Job;
 use Illuminate\Support\Facades\Event;
 use LaraDumps\LaraDumps\Actions\Config;
+use LaraDumps\LaraDumps\Observers\Contracts\GeneratePayload;
 use LaraDumps\LaraDumpsCore\Concerns\Traceable;
 use LaraDumps\LaraDumpsCore\Contracts\TraceableContract;
 use LaraDumps\LaraDumpsCore\LaraDumps;
 use LaraDumps\LaraDumpsCore\Payloads\{DumpPayload, Payload};
 use LaraDumps\LaraDumpsCore\Support\Dumper;
 
-class JobsObserver implements TraceableContract
+class JobsObserver implements TraceableContract, GeneratePayload
 {
     use Traceable;
 
     private bool $enabled = false;
 
-    private string $label = 'Job';
+    private ?string $label = null;
 
     public function register(): void
     {
@@ -32,10 +33,24 @@ class JobsObserver implements TraceableContract
                 return;
             }
 
+            $this->trace = array_slice($this->findSource(), 0, 5)[0] ?? [];
+
             $this->sendPayload(
-                $this->generatePayload($event)
+                $this->generatePayload($event),
+                get_class($event)
             );
         });
+    }
+
+    public function getLabelClassNameBased(string $className): string
+    {
+        return match ($className) {
+            JobQueued::class     => 'Job - Queued',
+            JobProcessing::class => 'Job - Processing',
+            JobProcessed::class  => 'Job - Processed',
+            JobFailed::class     => 'Job - Failed',
+            default              => 'Job'
+        };
     }
 
     public function enable(string $label = null): void
@@ -54,8 +69,6 @@ class JobsObserver implements TraceableContract
 
     public function isEnabled(): bool
     {
-        $this->trace = array_slice($this->findSource(), 0, 5)[0] ?? [];
-
         if (!boolval(Config::get('send_jobs'))) {
             return $this->enabled;
         }
@@ -63,11 +76,11 @@ class JobsObserver implements TraceableContract
         return boolval(Config::get('send_jobs'));
     }
 
-    private function generatePayload(object $event): Payload
+    public function generatePayload(object $event): Payload
     {
         [$pre, $id] = Dumper::dump(
             /* @phpstan-ignore-next-line */
-            $event->job instanceof Job
+            $event->job instanceof Job && $event?->job->payload()
                 ? unserialize($event->job->payload()['data']['command'], ['allowed_classes' => true])
                 : $event->job
         );
@@ -78,11 +91,11 @@ class JobsObserver implements TraceableContract
         return $payload;
     }
 
-    private function sendPayload(Payload $payload): void
+    protected function sendPayload(Payload $payload, string $className): void
     {
         $dumps = new LaraDumps(trace: $this->trace);
 
         $dumps->send($payload);
-        $dumps->label($this->label);
+        $dumps->label($this->label ?? $this->getLabelClassNameBased($className));
     }
 }
