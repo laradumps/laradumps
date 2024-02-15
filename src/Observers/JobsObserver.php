@@ -6,7 +6,6 @@ use Illuminate\Queue\Events\{JobFailed, JobProcessed, JobProcessing, JobQueued};
 use Illuminate\Queue\Jobs\Job;
 use Illuminate\Support\Facades\Event;
 use LaraDumps\LaraDumps\Actions\Config;
-use LaraDumps\LaraDumps\Observers\Concerns\SendPayload;
 use LaraDumps\LaraDumps\Observers\Contracts\GeneratePayload;
 use LaraDumps\LaraDumpsCore\Concerns\Traceable;
 use LaraDumps\LaraDumpsCore\Contracts\TraceableContract;
