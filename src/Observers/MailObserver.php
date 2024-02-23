@@ -8,11 +8,15 @@ use Illuminate\Notifications\Events\NotificationSent;
 use Illuminate\Support\Facades\Event;
 use LaraDumps\LaraDumps\Actions\Config;
 use LaraDumps\LaraDumps\Payloads\MailPayload;
+use LaraDumps\LaraDumpsCore\Concerns\Traceable;
 use LaraDumps\LaraDumpsCore\LaraDumps;
 use LaraDumps\LaraDumpsCore\Support\Dumper;
+use Spatie\Backtrace\Backtrace;
 
 class MailObserver
 {
+    use Traceable;
+
     public function register(): void
     {
         Event::listen(MessageSent::class, function (MessageSent $messageSent) {
@@ -20,8 +24,16 @@ class MailObserver
                 return;
             }
 
-            $dumps = new LaraDumps(trace: []);
-            $dumps->send(new MailPayload($messageSent->sent, Dumper::dump($messageSent->data), $messageSent->sent->getMessageId()));
+            $backtrace = Backtrace::create();
+            $backtrace = $backtrace->applicationPath(base_path());
+            $frame     = $this->parseFrame($backtrace);
+
+            $dumps = new LaraDumps();
+
+            $payload = new MailPayload($messageSent->sent, Dumper::dump($messageSent->data), $messageSent->sent->getMessageId());
+            $payload->setFrame($frame);
+
+            $dumps->send($payload);
             $dumps->label('Notification - Mail');
         });
 
@@ -39,9 +51,16 @@ class MailObserver
                 'channel'      => $notificationSent->channel,
             ]);
 
-            $dumps = new LaraDumps(trace: []);
+            $backtrace = Backtrace::create();
+            $backtrace = $backtrace->applicationPath(base_path());
+            $frame     = $this->parseFrame($backtrace);
 
-            $dumps->send(new MailPayload($sentMessage, $details, $sentMessage->getMessageId()));
+            $dumps = new LaraDumps();
+
+            $payload = new MailPayload($sentMessage, $details, $sentMessage->getMessageId());
+            $payload->setFrame($frame);
+
+            $dumps->send($payload);
             $dumps->label('Notification - ' . $notificationSent->channel);
         });
     }

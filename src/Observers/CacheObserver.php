@@ -9,6 +9,7 @@ use LaraDumps\LaraDumps\Actions\Config;
 use LaraDumps\LaraDumpsCore\Concerns\Traceable;
 use LaraDumps\LaraDumpsCore\LaraDumps;
 use LaraDumps\LaraDumpsCore\Payloads\TableV2Payload;
+use Spatie\Backtrace\Backtrace;
 
 class CacheObserver
 {
@@ -76,11 +77,15 @@ class CacheObserver
             return;
         }
 
-        $dumps = new LaraDumps(trace: $this->trace);
+        $backtrace = Backtrace::create();
+        $backtrace = $backtrace->applicationPath(base_path());
+        $frame     = $this->parseFrame($backtrace);
 
-        $dumps->send(
-            new TableV2Payload($data, $headerStyle)
-        );
+        $dumps   = new LaraDumps();
+        $payload = new TableV2Payload($data, $headerStyle);
+        $payload->setFrame($frame);
+
+        $dumps->send($payload);
 
         $dumps->label($this->label ?: $label);
     }
@@ -99,8 +104,6 @@ class CacheObserver
 
     public function isEnabled(): bool
     {
-        $this->trace = array_slice($this->findSource(), 0, 5)[0] ?? [];
-
         if (!boolval(Config::get('send_cache'))) {
             return $this->enabled;
         }

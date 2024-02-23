@@ -7,13 +7,14 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Str;
 use LaraDumps\LaraDumps\Actions\Config;
 use LaraDumps\LaraDumps\Payloads\LogPayload;
-use LaraDumps\LaraDumpsCore\Actions\Trace;
+use LaraDumps\LaraDumpsCore\Concerns\Traceable;
 use LaraDumps\LaraDumpsCore\LaraDumps;
 use LaraDumps\LaraDumpsCore\Support\Dumper;
+use Spatie\Backtrace\Backtrace;
 
 class LogObserver
 {
-    private array $trace = [];
+    use Traceable;
 
     public function register(): void
     {
@@ -42,15 +43,28 @@ class LogObserver
                 return;
             }
 
+            $backtrace = Backtrace::create();
+
+            $backtrace = $backtrace->applicationPath(base_path());
+
+            $frame = $this->parseFrame($backtrace);
+
+            if (empty($frame)) {
+                return;
+            }
+
+            $dumps = new LaraDumps();
+
             $log = [
                 'message' => $message->message,
                 'level'   => $message->level,
                 'context' => Dumper::dump($message->context),
             ];
 
-            $dumps = new LaraDumps(trace: $this->trace);
+            $payload = new LogPayload($log);
+            $payload->setFrame($frame);
 
-            $dumps->send(new LogPayload($log));
+            $dumps->send($payload);
 
             $dumps->toScreen('Logs');
         });
@@ -58,8 +72,6 @@ class LogObserver
 
     public function isEnabled(): bool
     {
-        $this->trace = Trace::findSource()->toArray();
-
         return (bool) Config::get('send_logs_applications');
     }
 }

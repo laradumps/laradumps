@@ -7,10 +7,10 @@ use Illuminate\Support\Facades\DB;
 use LaraDumps\LaraDumps\Actions\Config;
 use LaraDumps\LaraDumps\Payloads\QueriesPayload;
 use LaraDumps\LaraDumpsCore\Concerns\Traceable;
-use LaraDumps\LaraDumpsCore\Contracts\TraceableContract;
 use LaraDumps\LaraDumpsCore\LaraDumps;
+use Spatie\Backtrace\Backtrace;
 
-class QueryObserver implements TraceableContract
+class QueryObserver
 {
     use Traceable;
 
@@ -48,9 +48,20 @@ class QueryObserver implements TraceableContract
                 'query'          => $query,
             ];
 
-            $dumps = new LaraDumps(trace: $this->trace);
+            $backtrace = Backtrace::create();
+            $backtrace = $backtrace->applicationPath(base_path());
+            $frame     = $this->parseFrame($backtrace);
 
-            $dumps->send(new QueriesPayload($queries));
+            if (empty($frame)) {
+                return;
+            }
+
+            $dumps = new LaraDumps();
+
+            $payload = new QueriesPayload($queries);
+            $payload->setFrame($frame);
+
+            $dumps->send($payload);
 
             if ($this->label) {
                 $dumps->label($this->label);
@@ -78,8 +89,6 @@ class QueryObserver implements TraceableContract
 
     public function isEnabled(): bool
     {
-        $this->trace = array_slice($this->findSource(), 0, 5)[0] ?? [];
-
         if (!boolval(Config::get('send_queries'))) {
             return $this->enabled;
         }

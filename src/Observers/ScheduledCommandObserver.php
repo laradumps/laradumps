@@ -7,10 +7,10 @@ use Illuminate\Console\Scheduling\{CallbackEvent, Event, Schedule};
 use LaraDumps\LaraDumps\Actions\Config;
 use LaraDumps\LaraDumps\LaraDumps;
 use LaraDumps\LaraDumpsCore\Concerns\Traceable;
-use LaraDumps\LaraDumpsCore\Contracts\TraceableContract;
 use LaraDumps\LaraDumpsCore\Payloads\{Payload, TableV2Payload};
+use Spatie\Backtrace\Backtrace;
 
-class ScheduledCommandObserver implements TraceableContract
+class ScheduledCommandObserver
 {
     use Traceable;
 
@@ -31,13 +31,18 @@ class ScheduledCommandObserver implements TraceableContract
                 return;
             }
 
-            collect(app(Schedule::class)->events())->each(function ($event) {
-                $event->then(function () use ($event) {
-                    $this->sendPayload(
-                        $this->generatePayload($event)
-                    );
+            $backtrace = Backtrace::create();
+            $backtrace = $backtrace->applicationPath(base_path());
+            $frame     = $this->parseFrame($backtrace);
+
+            collect(app(Schedule::class)->events())
+                ->each(function ($event) use ($frame) {
+                    $event->then(function () use ($event, $frame) {
+                        $payload = $this->generatePayload($event);
+                        $payload->setFrame($frame);
+                        $this->sendPayload($payload);
+                    });
                 });
-            });
         });
     }
 
@@ -57,8 +62,6 @@ class ScheduledCommandObserver implements TraceableContract
 
     public function isEnabled(): bool
     {
-        $this->trace = array_slice($this->findSource(), 0, 5)[0] ?? [];
-
         if (!boolval(Config::get('send_scheduled_command'))) {
             return $this->enabled;
         }
@@ -68,7 +71,7 @@ class ScheduledCommandObserver implements TraceableContract
 
     private function sendPayload(Payload $payload): void
     {
-        $dumps = new LaraDumps(trace: $this->trace);
+        $dumps = new LaraDumps();
 
         $dumps->send($payload);
         $dumps->label($this->label);

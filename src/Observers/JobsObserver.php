@@ -8,12 +8,12 @@ use Illuminate\Support\Facades\Event;
 use LaraDumps\LaraDumps\Actions\Config;
 use LaraDumps\LaraDumps\Observers\Contracts\GeneratePayload;
 use LaraDumps\LaraDumpsCore\Concerns\Traceable;
-use LaraDumps\LaraDumpsCore\Contracts\TraceableContract;
 use LaraDumps\LaraDumpsCore\LaraDumps;
 use LaraDumps\LaraDumpsCore\Payloads\{DumpPayload, Payload};
 use LaraDumps\LaraDumpsCore\Support\Dumper;
+use Spatie\Backtrace\Backtrace;
 
-class JobsObserver implements TraceableContract, GeneratePayload
+class JobsObserver implements GeneratePayload
 {
     use Traceable;
 
@@ -33,10 +33,15 @@ class JobsObserver implements TraceableContract, GeneratePayload
                 return;
             }
 
-            $this->trace = array_slice($this->findSource(), 0, 5)[0] ?? [];
+            $backtrace = Backtrace::create();
+            $backtrace = $backtrace->applicationPath(base_path());
+            $frame     = $this->parseFrame($backtrace);
 
+            $payload = $this->generatePayload($event);
+
+            $payload->setFrame($frame);
             $this->sendPayload(
-                $this->generatePayload($event),
+                $payload,
                 get_class($event)
             );
         });
@@ -93,7 +98,7 @@ class JobsObserver implements TraceableContract, GeneratePayload
 
     protected function sendPayload(Payload $payload, string $className): void
     {
-        $dumps = new LaraDumps(trace: $this->trace);
+        $dumps = new LaraDumps();
 
         $dumps->send($payload);
         $dumps->label($this->label ?? $this->getLabelClassNameBased($className));

@@ -6,12 +6,12 @@ use Illuminate\Console\Events\CommandFinished;
 use Illuminate\Support\Facades\Event;
 use LaraDumps\LaraDumps\Actions\Config;
 use LaraDumps\LaraDumpsCore\Concerns\Traceable;
-use LaraDumps\LaraDumpsCore\Contracts\TraceableContract;
 use LaraDumps\LaraDumpsCore\LaraDumps;
 use LaraDumps\LaraDumpsCore\Payloads\{DumpPayload, Payload};
 use LaraDumps\LaraDumpsCore\Support\Dumper;
+use Spatie\Backtrace\Backtrace;
 
-class CommandObserver implements TraceableContract
+class CommandObserver
 {
     use Traceable;
 
@@ -26,9 +26,14 @@ class CommandObserver implements TraceableContract
                 return;
             }
 
-            $this->sendPayload(
-                $this->generatePayload($event)
-            );
+            $backtrace = Backtrace::create();
+            $backtrace = $backtrace->applicationPath(base_path());
+            $frame     = $this->parseFrame($backtrace);
+
+            $payload = $this->generatePayload($event);
+            $payload->setFrame($frame);
+
+            $this->sendPayload($frame);
         });
     }
 
@@ -48,8 +53,6 @@ class CommandObserver implements TraceableContract
 
     public function isEnabled(): bool
     {
-        $this->trace = array_slice($this->findSource(), 0, 5)[0] ?? [];
-
         if (!(bool) boolval(Config::get('send_commands'))) {
             return $this->enabled;
         }
@@ -70,7 +73,7 @@ class CommandObserver implements TraceableContract
 
     private function sendPayload(Payload $payload): void
     {
-        $dumps = new LaraDumps(trace: $this->trace);
+        $dumps = new LaraDumps();
 
         $dumps->send($payload);
         $dumps->label($this->label);

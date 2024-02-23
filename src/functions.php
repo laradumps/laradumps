@@ -21,32 +21,13 @@ if (!function_exists('dsBlade')) {
         $blade    = $trace['object'];
         $viewPath = $blade->getPath();
 
-        $trace = [
+        $frame = [
             'file' => $viewPath,
             'line' => 1,
         ];
 
         $notificationId = Str::uuid()->toString();
-        $laradumps      = new LaraDumps(notificationId: $notificationId, trace: $trace);
-
-        if ($args instanceof \Illuminate\Pagination\LengthAwarePaginator) {
-            if (!$args->items()[0] instanceof Model) {
-                return;
-            }
-
-            $models = [];
-
-            /** @var Model $item */
-            foreach ($args->items() as $item) {
-                $models[] = [
-                    'className'  => get_class($item),
-                    'attributes' => $item->attributesToArray(),
-                    'relations'  => $item->relationsToArray(),
-                ];
-            }
-
-            $args->setCollection(collect($models));
-        }
+        $laradumps      = new LaraDumps(notificationId: $notificationId);
 
         if ($args instanceof Model) {
             $payload = new ModelPayload($args);
@@ -57,6 +38,8 @@ if (!function_exists('dsBlade')) {
             $payload = new BladePayload($pre, $viewPath);
             $payload->setDumpId($id);
         }
+
+        $payload->setFrame($frame);
 
         $laradumps->send($payload);
     }

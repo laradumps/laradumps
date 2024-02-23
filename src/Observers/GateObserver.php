@@ -14,6 +14,7 @@ use LaraDumps\LaraDumps\LaraDumps;
 use LaraDumps\LaraDumpsCore\Concerns\Traceable;
 use LaraDumps\LaraDumpsCore\Payloads\TableV2Payload;
 use LaraDumps\LaraDumpsCore\Support\Dumper;
+use Spatie\Backtrace\Backtrace;
 
 class GateObserver
 {
@@ -30,19 +31,24 @@ class GateObserver
                 return;
             }
 
-            $dumps = new LaraDumps(trace: $this->trace);
+            $backtrace = Backtrace::create();
+            $backtrace = $backtrace->applicationPath(base_path());
+            $frame     = $this->parseFrame($backtrace);
+
+            $dumps = new LaraDumps();
             $user  = $event->user;
 
-            $dumps->send(
-                new TableV2Payload([
-                    'Ability'   => $event->ability,
-                    'Result'    => $this->gateResult($event->result),
-                    'Arguments' => Dumper::dump(collect($event->arguments)->map(function ($argument) {
-                        return $argument instanceof Model ? $this->formatModel($argument) : $argument;
-                    })->toArray()),
-                    'User' => Dumper::dump($user instanceof Authenticatable ? $user->toArray() : null),
-                ])
-            );
+            $payload = new TableV2Payload([
+                'Ability'   => $event->ability,
+                'Result'    => $this->gateResult($event->result),
+                'Arguments' => Dumper::dump(collect($event->arguments)->map(function ($argument) {
+                    return $argument instanceof Model ? $this->formatModel($argument) : $argument;
+                })->toArray()),
+                'User' => Dumper::dump($user instanceof Authenticatable ? $user->toArray() : null),
+            ]);
+
+            $payload->setFrame($frame);
+            $dumps->send($payload);
 
             if (!empty($this->label)) {
                 $dumps->label($this->label);
@@ -64,8 +70,6 @@ class GateObserver
 
     public function isEnabled(): bool
     {
-        $this->trace = array_slice($this->findSource(), 0, 5)[0] ?? [];
-
         if (!boolval(config('send_http_client'))) {
             return $this->enabled;
         }
