@@ -12,9 +12,9 @@ if (!function_exists('dsBlade')) {
     function dsBlade(mixed $args): void
     {
         $frame = collect(debug_backtrace())
-            ->filter(function ($trace) {
-                /** @var array $trace */
-                return $trace['function'] === 'render' && $trace['class'] === 'Illuminate\View\View';
+            ->filter(function ($frame) {
+                /** @var array $frame */
+                return $frame['function'] === 'render' && $frame['class'] === 'Illuminate\View\View';
             })->first();
 
         /** @var BladeCompiler $blade
