@@ -11,15 +11,11 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\{Event};
 use LaraDumps\LaraDumps\Actions\Config;
 use LaraDumps\LaraDumps\LaraDumps;
-use LaraDumps\LaraDumpsCore\Concerns\Traceable;
 use LaraDumps\LaraDumpsCore\Payloads\TableV2Payload;
 use LaraDumps\LaraDumpsCore\Support\Dumper;
-use Spatie\Backtrace\Backtrace;
 
 class GateObserver
 {
-    use Traceable;
-
     protected ?string $label = null;
 
     private bool $enabled = false;
@@ -30,10 +26,6 @@ class GateObserver
             if (!$this->isEnabled()) {
                 return;
             }
-
-            $backtrace = Backtrace::create();
-            $backtrace = $backtrace->applicationPath(base_path());
-            $frame     = $this->parseFrame($backtrace);
 
             $dumps = new LaraDumps();
             $user  = $event->user;
@@ -47,7 +39,6 @@ class GateObserver
                 'User' => Dumper::dump($user instanceof Authenticatable ? $user->toArray() : null),
             ]);
 
-            $payload->setFrame($frame);
             $dumps->send($payload);
 
             if (!empty($this->label)) {

@@ -5,16 +5,12 @@ namespace LaraDumps\LaraDumps\Observers;
 use Illuminate\Console\Events\CommandFinished;
 use Illuminate\Support\Facades\Event;
 use LaraDumps\LaraDumps\Actions\Config;
-use LaraDumps\LaraDumpsCore\Concerns\Traceable;
 use LaraDumps\LaraDumpsCore\LaraDumps;
 use LaraDumps\LaraDumpsCore\Payloads\{DumpPayload, Payload};
 use LaraDumps\LaraDumpsCore\Support\Dumper;
-use Spatie\Backtrace\Backtrace;
 
 class CommandObserver
 {
-    use Traceable;
-
     private bool $enabled = false;
 
     private string $label = 'Command';
@@ -26,14 +22,9 @@ class CommandObserver
                 return;
             }
 
-            $backtrace = Backtrace::create();
-            $backtrace = $backtrace->applicationPath(base_path());
-            $frame     = $this->parseFrame($backtrace);
-
             $payload = $this->generatePayload($event);
-            $payload->setFrame($frame);
 
-            $this->sendPayload($frame);
+            $this->sendPayload($payload);
         });
     }
 

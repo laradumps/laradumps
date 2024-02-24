@@ -6,16 +6,12 @@ use Illuminate\Http\Client\Events\{RequestSending, ResponseReceived};
 use Illuminate\Http\Client\{Request, Response};
 use Illuminate\Support\Facades\Event;
 use LaraDumps\LaraDumps\Actions\Config;
-use LaraDumps\LaraDumpsCore\Concerns\Traceable;
 use LaraDumps\LaraDumpsCore\LaraDumps;
 use LaraDumps\LaraDumpsCore\Payloads\{Payload, TableV2Payload};
 use LaraDumps\LaraDumpsCore\Support\Dumper;
-use Spatie\Backtrace\Backtrace;
 
 class HttpClientObserver
 {
-    use Traceable;
-
     private bool $enabled = false;
 
     private string $label = '';
@@ -27,12 +23,7 @@ class HttpClientObserver
                 return;
             }
 
-            $backtrace = Backtrace::create();
-            $backtrace = $backtrace->applicationPath(base_path());
-            $frame     = $this->parseFrame($backtrace);
-
             $payload = $this->handleRequest($event->request);
-            $payload->setFrame($frame);
 
             $this->sendPayload(
                 $payload,
@@ -45,12 +36,7 @@ class HttpClientObserver
                 return;
             }
 
-            $backtrace = Backtrace::create();
-            $backtrace = $backtrace->applicationPath(base_path());
-            $frame     = $this->parseFrame($backtrace);
-
             $payload = $this->handleResponse($event->request, $event->response);
-            $payload->setFrame($frame);
 
             $this->sendPayload(
                 $payload,

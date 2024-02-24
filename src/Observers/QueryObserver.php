@@ -6,14 +6,10 @@ use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Support\Facades\DB;
 use LaraDumps\LaraDumps\Actions\Config;
 use LaraDumps\LaraDumps\Payloads\QueriesPayload;
-use LaraDumps\LaraDumpsCore\Concerns\Traceable;
 use LaraDumps\LaraDumpsCore\LaraDumps;
-use Spatie\Backtrace\Backtrace;
 
 class QueryObserver
 {
-    use Traceable;
-
     private bool $enabled = false;
 
     private ?string $label = null;
@@ -48,18 +44,9 @@ class QueryObserver
                 'query'          => $query,
             ];
 
-            $backtrace = Backtrace::create();
-            $backtrace = $backtrace->applicationPath(base_path());
-            $frame     = $this->parseFrame($backtrace);
-
-            if (empty($frame)) {
-                return;
-            }
-
             $dumps = new LaraDumps();
 
             $payload = new QueriesPayload($queries);
-            $payload->setFrame($frame);
 
             $dumps->send($payload);
 
@@ -94,18 +81,5 @@ class QueryObserver
         }
 
         return boolval(Config::get('send_queries'));
-    }
-
-    protected function fileIsInExcludedPath(string $file): bool
-    {
-        $normalizedPath = str_replace('\\', '/', $file);
-
-        foreach ($this->backtraceExcludePaths as $excludedPath) {
-            if (str_contains($normalizedPath, $excludedPath)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

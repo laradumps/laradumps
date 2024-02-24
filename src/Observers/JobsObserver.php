@@ -6,17 +6,12 @@ use Illuminate\Queue\Events\{JobFailed, JobProcessed, JobProcessing, JobQueued};
 use Illuminate\Queue\Jobs\Job;
 use Illuminate\Support\Facades\Event;
 use LaraDumps\LaraDumps\Actions\Config;
-use LaraDumps\LaraDumps\Observers\Contracts\GeneratePayload;
-use LaraDumps\LaraDumpsCore\Concerns\Traceable;
 use LaraDumps\LaraDumpsCore\LaraDumps;
 use LaraDumps\LaraDumpsCore\Payloads\{DumpPayload, Payload};
 use LaraDumps\LaraDumpsCore\Support\Dumper;
-use Spatie\Backtrace\Backtrace;
 
-class JobsObserver implements GeneratePayload
+class JobsObserver
 {
-    use Traceable;
-
     private bool $enabled = false;
 
     private ?string $label = null;
@@ -33,17 +28,9 @@ class JobsObserver implements GeneratePayload
                 return;
             }
 
-            $backtrace = Backtrace::create();
-            $backtrace = $backtrace->applicationPath(base_path());
-            $frame     = $this->parseFrame($backtrace);
-
             $payload = $this->generatePayload($event);
 
-            $payload->setFrame($frame);
-            $this->sendPayload(
-                $payload,
-                get_class($event)
-            );
+            $this->sendPayload($payload, get_class($event));
         });
     }
 

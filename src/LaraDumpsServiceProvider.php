@@ -103,73 +103,41 @@ HTML;
 
     private function registerMacros(): void
     {
-        //        Collection::macro('ds', function (string $label = '') {
-        //            $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-        //
-        //            $trace = collect($trace)
-        //                ->filter(function ($trace) {
-        //                    /** @var array $trace */
-        //                    /** @var string $file */
-        //                    $file = $trace['file'] ?? '';
-        //
-        //                    return !str_contains($file, 'vendor');
-        //                });
-        //
-        //            $ds = new LaraDumps(trace: (array) $trace->first());
-        //            /** @phpstan-ignore-next-line  */
-        //            $ds->write($this->items);
-        //
-        //            if ($label) {
-        //                $ds->label($label);
-        //            }
-        //
-        //            return $this;
-        //        });
-        //
-        //        Stringable::macro('ds', function (string $label = '') {
-        //            $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-        //
-        //            $trace = collect($trace)
-        //                ->filter(function ($trace) {
-        //                    /** @var array $trace */
-        //                    /** @var string $file */
-        //                    $file = $trace['file'] ?? '';
-        //
-        //                    return !str_contains($file, 'vendor');
-        //                });
-        //
-        //            $ds = new LaraDumps(frame: (array) $trace->first());
-        //            /** @phpstan-ignore-next-line  */
-        //            $ds->write($this->value);
-        //
-        //            if ($label) {
-        //                $ds->label($label);
-        //            }
-        //
-        //            return $this;
-        //        });
-        //
-        //        Builder::macro('ds', function () {
-        //            $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-        //
-        //            $trace = collect($trace)
-        //                ->filter(function ($trace) {
-        //                    /** @var array $trace */
-        //                    /** @var string $file */
-        //                    $file = $trace['file'] ?? '';
-        //
-        //                    return !str_contains($file, 'vendor');
-        //                });
-        //
-        //            $ds = new LaraDumps(frame: (array) $trace->first());
-        //
-        //            /** @phpstan-ignore-next-line */
-        //            $payload = new QueryPayload($this);
-        //            $payload->setDumpId(uniqid());
-        //
-        //            $ds->send($payload);
-        //
-        //            return $this;
-        //        });
+        Collection::macro('ds', function (string $label = '') {
+            $laradumps = app(LaraDumps::class);
+
+            /** @phpstan-ignore-next-line  */
+            $laradumps->write($this->items);
+
+            if ($label) {
+                $laradumps->label($label);
+            }
+
+            return $this;
+        });
+
+        Stringable::macro('ds', function (string $label = '') {
+            $laradumps = app(LaraDumps::class);
+            /** @phpstan-ignore-next-line  */
+            $laradumps->write($this->value);
+
+            if ($label) {
+                $laradumps->label($label);
+            }
+
+            return $this;
+        });
+
+        Builder::macro('ds', function () {
+            $laradumps = app(LaraDumps::class);
+
+            /** @phpstan-ignore-next-line */
+            $payload = new QueryPayload($this);
+            $payload->setDumpId(uniqid());
+
+            $laradumps->send($payload);
+
+            return $this;
+        });
     }
 }

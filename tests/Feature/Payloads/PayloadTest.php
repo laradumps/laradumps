@@ -23,13 +23,16 @@ it('should return the correct payload to dump', function () {
     [$args, $id]    = Dumper::dump($args);
     $notificationId = Uuid::uuid4()->toString();
 
-    $trace = [
+    $frame = [
         'file' => 'Test',
         'line' => 1,
     ];
 
-    $laradumps = new LaraDumps(notificationId: $notificationId, trace: $trace);
-    $payload   = $laradumps->send(new DumpPayload($args))->toArray();
+    $laradumps = new LaraDumps(notificationId: $notificationId);
+    $payload   = new DumpPayload($args);
+    $payload->setFrame($frame);
+
+    $payload = $laradumps->send($payload, withFrame: false)->toArray();
 
     expect($payload)
         ->id->toBe($notificationId)
@@ -53,13 +56,16 @@ it('should return the correct payload to model', function () {
 
     Config::set('preferred_ide', 'phpstorm');
 
-    $trace = [
+    $frame = [
         'file' => 'Test',
         'line' => 1,
     ];
 
-    $laradumps = new LaraDumps($notificationId, trace: $trace);
-    $payload   = $laradumps->send(new ModelPayload($dish))->toArray();
+    $laradumps = new LaraDumps($notificationId);
+    $payload   = new ModelPayload($dish);
+    $payload->setFrame($frame);
+
+    $payload = $laradumps->send($payload, withFrame: false)->toArray();
 
     expect($payload)
         ->id->toBe($notificationId)
@@ -86,13 +92,16 @@ it('should return the correct payload to mailable', function () {
 
     $notificationId = Uuid::uuid4()->toString();
 
-    $trace = [
+    $frame = [
         'file' => 'Test',
         'line' => 1,
     ];
 
-    $laradumps = new LaraDumps($notificationId, trace: $trace);
-    $payload   = $laradumps->send(new MailablePayload($mailable))->toArray();
+    $laradumps = new LaraDumps($notificationId, );
+    $payload   = new MailablePayload($mailable);
+    $payload->setFrame($frame);
+
+    $payload = $laradumps->send($payload, withFrame: false)->toArray();
 
     expect($payload)
         ->id->toBe($notificationId)
@@ -115,15 +124,18 @@ it('should return the correct payload to table_v2', function () {
         ],
     ];
 
-    $trace = [
+    $frame = [
         'file' => 'Test',
         'line' => 1,
     ];
 
     $notificationId = Uuid::uuid4()->toString();
 
-    $laradumps = new LaraDumps($notificationId, trace: $trace);
-    $payload   = $laradumps->send(new TableV2Payload($data))->toArray();
+    $laradumps = new LaraDumps($notificationId);
+    $payload   = new TableV2Payload($data);
+    $payload->setFrame($frame);
+
+    $payload = $laradumps->send($payload, withFrame: false)->toArray();
 
     expect($payload)
         ->id->toBe($notificationId)
@@ -143,13 +155,16 @@ it('should return the correct markdown payload to dump', function () {
 
     $notificationId = Uuid::uuid4()->toString();
 
-    $trace = [
+    $frame = [
         'file' => 'Test',
         'line' => 1,
     ];
 
-    $laradumps = new LaraDumps(notificationId: $notificationId, trace: $trace);
-    $payload   = $laradumps->send(new MarkdownPayload($args))->toArray();
+    $laradumps = new LaraDumps(notificationId: $notificationId);
+    $payload   = new MarkdownPayload($args);
+    $payload->setFrame($frame);
+
+    $payload = $laradumps->send($payload, withFrame: false)->toArray();
 
     expect($payload)
         ->id->toBe($notificationId)

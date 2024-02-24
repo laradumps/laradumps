@@ -6,14 +6,10 @@ use Illuminate\Console\Events\CommandStarting;
 use Illuminate\Console\Scheduling\{CallbackEvent, Event, Schedule};
 use LaraDumps\LaraDumps\Actions\Config;
 use LaraDumps\LaraDumps\LaraDumps;
-use LaraDumps\LaraDumpsCore\Concerns\Traceable;
 use LaraDumps\LaraDumpsCore\Payloads\{Payload, TableV2Payload};
-use Spatie\Backtrace\Backtrace;
 
 class ScheduledCommandObserver
 {
-    use Traceable;
-
     private bool $enabled = false;
 
     private string $label = 'Schedule';
@@ -31,15 +27,10 @@ class ScheduledCommandObserver
                 return;
             }
 
-            $backtrace = Backtrace::create();
-            $backtrace = $backtrace->applicationPath(base_path());
-            $frame     = $this->parseFrame($backtrace);
-
             collect(app(Schedule::class)->events())
-                ->each(function ($event) use ($frame) {
-                    $event->then(function () use ($event, $frame) {
+                ->each(function ($event) {
+                    $event->then(function () use ($event) {
                         $payload = $this->generatePayload($event);
-                        $payload->setFrame($frame);
                         $this->sendPayload($payload);
                     });
                 });

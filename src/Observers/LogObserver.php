@@ -7,15 +7,11 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Str;
 use LaraDumps\LaraDumps\Actions\Config;
 use LaraDumps\LaraDumps\Payloads\LogPayload;
-use LaraDumps\LaraDumpsCore\Concerns\Traceable;
 use LaraDumps\LaraDumpsCore\LaraDumps;
 use LaraDumps\LaraDumpsCore\Support\Dumper;
-use Spatie\Backtrace\Backtrace;
 
 class LogObserver
 {
-    use Traceable;
-
     public function register(): void
     {
         Event::listen(MessageLogged::class, function (MessageLogged $message) {
@@ -43,16 +39,6 @@ class LogObserver
                 return;
             }
 
-            $backtrace = Backtrace::create();
-
-            $backtrace = $backtrace->applicationPath(base_path());
-
-            $frame = $this->parseFrame($backtrace);
-
-            if (empty($frame)) {
-                return;
-            }
-
             $dumps = new LaraDumps();
 
             $log = [
@@ -62,7 +48,6 @@ class LogObserver
             ];
 
             $payload = new LogPayload($log);
-            $payload->setFrame($frame);
 
             $dumps->send($payload);
 

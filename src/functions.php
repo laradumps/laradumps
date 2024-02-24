@@ -6,11 +6,12 @@ use Illuminate\View\Compilers\BladeCompiler;
 use LaraDumps\LaraDumps\LaraDumps;
 use LaraDumps\LaraDumps\Payloads\{BladePayload, ModelPayload};
 use LaraDumps\LaraDumpsCore\Support\Dumper;
+use Spatie\Backtrace\Backtrace;
 
 if (!function_exists('dsBlade')) {
     function dsBlade(mixed $args): void
     {
-        $trace = collect(debug_backtrace())
+        $frame = collect(debug_backtrace())
             ->filter(function ($trace) {
                 /** @var array $trace */
                 return $trace['function'] === 'render' && $trace['class'] === 'Illuminate\View\View';
@@ -18,12 +19,16 @@ if (!function_exists('dsBlade')) {
 
         /** @var BladeCompiler $blade
         * @phpstan-ignore-next-line */
-        $blade    = $trace['object'];
+        $blade    = $frame['object'];
         $viewPath = $blade->getPath();
+
+        $backtrace = Backtrace::create();
+        $backtrace = $backtrace->applicationPath(appBasePath());
+        $frame     = app(LaraDumps::class)->parseFrame($backtrace);
 
         $frame = [
             'file' => $viewPath,
-            'line' => 1,
+            'line' => $frame->lineNumber,
         ];
 
         $notificationId = Str::uuid()->toString();
@@ -35,12 +40,12 @@ if (!function_exists('dsBlade')) {
         } else {
             [$pre, $id] = Dumper::dump($args);
 
-            $payload = new BladePayload($pre, $viewPath);
+            $payload = new BladePayload($pre);
             $payload->setDumpId($id);
         }
 
         $payload->setFrame($frame);
 
-        $laradumps->send($payload);
+        $laradumps->send($payload, withFrame: false);
     }
 }

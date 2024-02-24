@@ -6,15 +6,11 @@ use Illuminate\Cache\Events\{CacheEvent, CacheHit, CacheMissed, KeyForgotten, Ke
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Str;
 use LaraDumps\LaraDumps\Actions\Config;
-use LaraDumps\LaraDumpsCore\Concerns\Traceable;
 use LaraDumps\LaraDumpsCore\LaraDumps;
 use LaraDumps\LaraDumpsCore\Payloads\TableV2Payload;
-use Spatie\Backtrace\Backtrace;
 
 class CacheObserver
 {
-    use Traceable;
-
     protected ?string $label = 'Cache';
 
     protected array $hidden = [];
@@ -77,13 +73,8 @@ class CacheObserver
             return;
         }
 
-        $backtrace = Backtrace::create();
-        $backtrace = $backtrace->applicationPath(base_path());
-        $frame     = $this->parseFrame($backtrace);
-
         $dumps   = new LaraDumps();
         $payload = new TableV2Payload($data, $headerStyle);
-        $payload->setFrame($frame);
 
         $dumps->send($payload);
 
