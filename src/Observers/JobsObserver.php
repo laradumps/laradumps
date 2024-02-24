@@ -6,17 +6,12 @@ use Illuminate\Queue\Events\{JobFailed, JobProcessed, JobProcessing, JobQueued};
 use Illuminate\Queue\Jobs\Job;
 use Illuminate\Support\Facades\Event;
 use LaraDumps\LaraDumps\Actions\Config;
-use LaraDumps\LaraDumps\Observers\Contracts\GeneratePayload;
-use LaraDumps\LaraDumpsCore\Concerns\Traceable;
-use LaraDumps\LaraDumpsCore\Contracts\TraceableContract;
 use LaraDumps\LaraDumpsCore\LaraDumps;
 use LaraDumps\LaraDumpsCore\Payloads\{DumpPayload, Payload};
 use LaraDumps\LaraDumpsCore\Support\Dumper;
 
-class JobsObserver implements TraceableContract, GeneratePayload
+class JobsObserver
 {
-    use Traceable;
-
     private bool $enabled = false;
 
     private ?string $label = null;
@@ -33,12 +28,9 @@ class JobsObserver implements TraceableContract, GeneratePayload
                 return;
             }
 
-            $this->trace = array_slice($this->findSource(), 0, 5)[0] ?? [];
+            $payload = $this->generatePayload($event);
 
-            $this->sendPayload(
-                $this->generatePayload($event),
-                get_class($event)
-            );
+            $this->sendPayload($payload, get_class($event));
         });
     }
 
@@ -93,7 +85,7 @@ class JobsObserver implements TraceableContract, GeneratePayload
 
     protected function sendPayload(Payload $payload, string $className): void
     {
-        $dumps = new LaraDumps(trace: $this->trace);
+        $dumps = new LaraDumps();
 
         $dumps->send($payload);
         $dumps->label($this->label ?? $this->getLabelClassNameBased($className));

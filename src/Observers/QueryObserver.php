@@ -6,14 +6,10 @@ use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Support\Facades\DB;
 use LaraDumps\LaraDumps\Actions\Config;
 use LaraDumps\LaraDumps\Payloads\QueriesPayload;
-use LaraDumps\LaraDumpsCore\Concerns\Traceable;
-use LaraDumps\LaraDumpsCore\Contracts\TraceableContract;
 use LaraDumps\LaraDumpsCore\LaraDumps;
 
-class QueryObserver implements TraceableContract
+class QueryObserver
 {
-    use Traceable;
-
     private bool $enabled = false;
 
     private ?string $label = null;
@@ -48,9 +44,11 @@ class QueryObserver implements TraceableContract
                 'query'          => $query,
             ];
 
-            $dumps = new LaraDumps(trace: $this->trace);
+            $dumps = new LaraDumps();
 
-            $dumps->send(new QueriesPayload($queries));
+            $payload = new QueriesPayload($queries);
+
+            $dumps->send($payload);
 
             if ($this->label) {
                 $dumps->label($this->label);
@@ -78,25 +76,10 @@ class QueryObserver implements TraceableContract
 
     public function isEnabled(): bool
     {
-        $this->trace = array_slice($this->findSource(), 0, 5)[0] ?? [];
-
         if (!boolval(Config::get('send_queries'))) {
             return $this->enabled;
         }
 
         return boolval(Config::get('send_queries'));
-    }
-
-    protected function fileIsInExcludedPath(string $file): bool
-    {
-        $normalizedPath = str_replace('\\', '/', $file);
-
-        foreach ($this->backtraceExcludePaths as $excludedPath) {
-            if (str_contains($normalizedPath, $excludedPath)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

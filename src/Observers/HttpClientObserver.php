@@ -6,16 +6,12 @@ use Illuminate\Http\Client\Events\{RequestSending, ResponseReceived};
 use Illuminate\Http\Client\{Request, Response};
 use Illuminate\Support\Facades\Event;
 use LaraDumps\LaraDumps\Actions\Config;
-use LaraDumps\LaraDumpsCore\Concerns\Traceable;
-use LaraDumps\LaraDumpsCore\Contracts\TraceableContract;
 use LaraDumps\LaraDumpsCore\LaraDumps;
 use LaraDumps\LaraDumpsCore\Payloads\{Payload, TableV2Payload};
 use LaraDumps\LaraDumpsCore\Support\Dumper;
 
-class HttpClientObserver implements TraceableContract
+class HttpClientObserver
 {
-    use Traceable;
-
     private bool $enabled = false;
 
     private string $label = '';
@@ -27,8 +23,10 @@ class HttpClientObserver implements TraceableContract
                 return;
             }
 
+            $payload = $this->handleRequest($event->request);
+
             $this->sendPayload(
-                $this->handleRequest($event->request),
+                $payload,
                 'Http Sending'
             );
         });
@@ -38,8 +36,10 @@ class HttpClientObserver implements TraceableContract
                 return;
             }
 
+            $payload = $this->handleResponse($event->request, $event->response);
+
             $this->sendPayload(
-                $this->handleResponse($event->request, $event->response),
+                $payload,
                 'Http Received'
             );
         });
@@ -59,8 +59,6 @@ class HttpClientObserver implements TraceableContract
 
     public function isEnabled(): bool
     {
-        $this->trace = array_slice($this->findSource(), 0, 5)[0] ?? [];
-
         if (!boolval(Config::get('send_http_client'))) {
             return $this->enabled;
         }
@@ -114,7 +112,7 @@ class HttpClientObserver implements TraceableContract
 
     private function sendPayload(Payload $payload, string $label): void
     {
-        $dumps = new LaraDumps(trace: $this->trace);
+        $dumps = new LaraDumps();
 
         $dumps->send($payload);
 

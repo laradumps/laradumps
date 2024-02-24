@@ -7,14 +7,11 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Str;
 use LaraDumps\LaraDumps\Actions\Config;
 use LaraDumps\LaraDumps\Payloads\LogPayload;
-use LaraDumps\LaraDumpsCore\Actions\Trace;
 use LaraDumps\LaraDumpsCore\LaraDumps;
 use LaraDumps\LaraDumpsCore\Support\Dumper;
 
 class LogObserver
 {
-    private array $trace = [];
-
     public function register(): void
     {
         Event::listen(MessageLogged::class, function (MessageLogged $message) {
@@ -42,15 +39,17 @@ class LogObserver
                 return;
             }
 
+            $dumps = new LaraDumps();
+
             $log = [
                 'message' => $message->message,
                 'level'   => $message->level,
                 'context' => Dumper::dump($message->context),
             ];
 
-            $dumps = new LaraDumps(trace: $this->trace);
+            $payload = new LogPayload($log);
 
-            $dumps->send(new LogPayload($log));
+            $dumps->send($payload);
 
             $dumps->toScreen('Logs');
         });
@@ -58,8 +57,6 @@ class LogObserver
 
     public function isEnabled(): bool
     {
-        $this->trace = Trace::findSource()->toArray();
-
         return (bool) Config::get('send_logs_applications');
     }
 }

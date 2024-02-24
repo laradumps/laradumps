@@ -7,7 +7,7 @@ use LaraDumps\LaraDumpsCore\Payloads\Payload;
 class LogPayload extends Payload
 {
     public function __construct(
-        protected array $value
+        protected array $value,
     ) {
     }
 

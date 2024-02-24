@@ -6,14 +6,11 @@ use Illuminate\Cache\Events\{CacheEvent, CacheHit, CacheMissed, KeyForgotten, Ke
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Str;
 use LaraDumps\LaraDumps\Actions\Config;
-use LaraDumps\LaraDumpsCore\Concerns\Traceable;
 use LaraDumps\LaraDumpsCore\LaraDumps;
 use LaraDumps\LaraDumpsCore\Payloads\TableV2Payload;
 
 class CacheObserver
 {
-    use Traceable;
-
     protected ?string $label = 'Cache';
 
     protected array $hidden = [];
@@ -76,11 +73,10 @@ class CacheObserver
             return;
         }
 
-        $dumps = new LaraDumps(trace: $this->trace);
+        $dumps   = new LaraDumps();
+        $payload = new TableV2Payload($data, $headerStyle);
 
-        $dumps->send(
-            new TableV2Payload($data, $headerStyle)
-        );
+        $dumps->send($payload);
 
         $dumps->label($this->label ?: $label);
     }
@@ -99,8 +95,6 @@ class CacheObserver
 
     public function isEnabled(): bool
     {
-        $this->trace = array_slice($this->findSource(), 0, 5)[0] ?? [];
-
         if (!boolval(Config::get('send_cache'))) {
             return $this->enabled;
         }

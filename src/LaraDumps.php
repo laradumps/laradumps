@@ -52,7 +52,6 @@ class LaraDumps extends BaseLaraDumps
         foreach ($models as $model) {
             if ($model instanceof Model) {
                 $payload = new ModelPayload($model);
-                $payload->setTrace(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0]);
                 $this->send($payload);
             }
         }
@@ -66,9 +65,6 @@ class LaraDumps extends BaseLaraDumps
      */
     public function queriesOn(string $label = null): void
     {
-        $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
-
-        app(QueryObserver::class)->setTrace($trace);
         app(QueryObserver::class)->enable($label);
     }
 
@@ -88,7 +84,6 @@ class LaraDumps extends BaseLaraDumps
     public function mailable(Mailable $mailable): self
     {
         $payload = new MailablePayload($mailable);
-        $payload->setTrace(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0]);
 
         $this->send($payload);
 
@@ -100,9 +95,6 @@ class LaraDumps extends BaseLaraDumps
      */
     public function httpOn(string $label = ''): self
     {
-        $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
-
-        app(HttpClientObserver::class)->setTrace($trace);
         app(HttpClientObserver::class)->enable($label);
 
         return $this;
@@ -122,7 +114,6 @@ class LaraDumps extends BaseLaraDumps
     public function markdown(string $markdown): self
     {
         $payload = new MarkdownPayload($markdown);
-        $payload->setTrace(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0]);
         $this->send($payload);
 
         return $this;
@@ -133,9 +124,6 @@ class LaraDumps extends BaseLaraDumps
      */
     public function jobsOn(string $label = null): self
     {
-        $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
-
-        app(JobsObserver::class)->setTrace($trace);
         app(JobsObserver::class)->enable($label);
 
         return $this;
@@ -154,9 +142,6 @@ class LaraDumps extends BaseLaraDumps
      */
     public function cacheOn(string $label = ''): self
     {
-        $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
-
-        app(CacheObserver::class)->setTrace($trace);
         app(CacheObserver::class)->enable($label);
 
         return $this;
@@ -175,9 +160,6 @@ class LaraDumps extends BaseLaraDumps
      */
     public function commandsOn(string $label = null): self
     {
-        $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
-
-        app(CommandObserver::class)->setTrace($trace);
         app(CommandObserver::class)->enable($label);
 
         return $this;
@@ -196,9 +178,6 @@ class LaraDumps extends BaseLaraDumps
      */
     public function scheduledCommandOn(string $label = null): void
     {
-        $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
-
-        app(ScheduledCommandObserver::class)->setTrace($trace);
         app(ScheduledCommandObserver::class)->enable($label);
     }
 
@@ -207,9 +186,6 @@ class LaraDumps extends BaseLaraDumps
      */
     public function gateOn(string $label = null): void
     {
-        $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
-
-        app(GateObserver::class)->setTrace($trace);
         app(GateObserver::class)->enable($label);
     }
 

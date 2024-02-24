@@ -20,8 +20,11 @@ class MailObserver
                 return;
             }
 
-            $dumps = new LaraDumps(trace: []);
-            $dumps->send(new MailPayload($messageSent->sent, Dumper::dump($messageSent->data), $messageSent->sent->getMessageId()));
+            $dumps = new LaraDumps();
+
+            $payload = new MailPayload($messageSent->sent, Dumper::dump($messageSent->data), $messageSent->sent->getMessageId());
+
+            $dumps->send($payload);
             $dumps->label('Notification - Mail');
         });
 
@@ -39,9 +42,11 @@ class MailObserver
                 'channel'      => $notificationSent->channel,
             ]);
 
-            $dumps = new LaraDumps(trace: []);
+            $dumps = new LaraDumps();
 
-            $dumps->send(new MailPayload($sentMessage, $details, $sentMessage->getMessageId()));
+            $payload = new MailPayload($sentMessage, $details, $sentMessage->getMessageId());
+
+            $dumps->send($payload);
             $dumps->label('Notification - ' . $notificationSent->channel);
         });
     }

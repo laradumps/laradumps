@@ -8,7 +8,6 @@ class QueriesPayload extends Payload
 {
     public function __construct(
         private array $queries = [],
-        public array  $trace = [],
     ) {
     }
 

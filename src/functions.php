@@ -6,47 +6,33 @@ use Illuminate\View\Compilers\BladeCompiler;
 use LaraDumps\LaraDumps\LaraDumps;
 use LaraDumps\LaraDumps\Payloads\{BladePayload, ModelPayload};
 use LaraDumps\LaraDumpsCore\Support\Dumper;
+use Spatie\Backtrace\Backtrace;
 
 if (!function_exists('dsBlade')) {
     function dsBlade(mixed $args): void
     {
-        $trace = collect(debug_backtrace())
-            ->filter(function ($trace) {
-                /** @var array $trace */
-                return $trace['function'] === 'render' && $trace['class'] === 'Illuminate\View\View';
+        $frame = collect(debug_backtrace())
+            ->filter(function ($frame) {
+                /** @var array $frame */
+                return $frame['function'] === 'render' && $frame['class'] === 'Illuminate\View\View';
             })->first();
 
         /** @var BladeCompiler $blade
         * @phpstan-ignore-next-line */
-        $blade    = $trace['object'];
+        $blade    = $frame['object'];
         $viewPath = $blade->getPath();
 
-        $trace = [
+        $backtrace = Backtrace::create();
+        $backtrace = $backtrace->applicationPath(appBasePath());
+        $frame     = app(LaraDumps::class)->parseFrame($backtrace);
+
+        $frame = [
             'file' => $viewPath,
-            'line' => 1,
+            'line' => data_get($frame, 'lineNumber'),
         ];
 
         $notificationId = Str::uuid()->toString();
-        $laradumps      = new LaraDumps(notificationId: $notificationId, trace: $trace);
-
-        if ($args instanceof \Illuminate\Pagination\LengthAwarePaginator) {
-            if (!$args->items()[0] instanceof Model) {
-                return;
-            }
-
-            $models = [];
-
-            /** @var Model $item */
-            foreach ($args->items() as $item) {
-                $models[] = [
-                    'className'  => get_class($item),
-                    'attributes' => $item->attributesToArray(),
-                    'relations'  => $item->relationsToArray(),
-                ];
-            }
-
-            $args->setCollection(collect($models));
-        }
+        $laradumps      = new LaraDumps(notificationId: $notificationId);
 
         if ($args instanceof Model) {
             $payload = new ModelPayload($args);
@@ -54,10 +40,12 @@ if (!function_exists('dsBlade')) {
         } else {
             [$pre, $id] = Dumper::dump($args);
 
-            $payload = new BladePayload($pre, $viewPath);
+            $payload = new BladePayload($pre);
             $payload->setDumpId($id);
         }
 
-        $laradumps->send($payload);
+        $payload->setFrame($frame);
+
+        $laradumps->send($payload, withFrame: false);
     }
 }

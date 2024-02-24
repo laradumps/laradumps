@@ -6,14 +6,10 @@ use Illuminate\Console\Events\CommandStarting;
 use Illuminate\Console\Scheduling\{CallbackEvent, Event, Schedule};
 use LaraDumps\LaraDumps\Actions\Config;
 use LaraDumps\LaraDumps\LaraDumps;
-use LaraDumps\LaraDumpsCore\Concerns\Traceable;
-use LaraDumps\LaraDumpsCore\Contracts\TraceableContract;
 use LaraDumps\LaraDumpsCore\Payloads\{Payload, TableV2Payload};
 
-class ScheduledCommandObserver implements TraceableContract
+class ScheduledCommandObserver
 {
-    use Traceable;
-
     private bool $enabled = false;
 
     private string $label = 'Schedule';
@@ -31,13 +27,13 @@ class ScheduledCommandObserver implements TraceableContract
                 return;
             }
 
-            collect(app(Schedule::class)->events())->each(function ($event) {
-                $event->then(function () use ($event) {
-                    $this->sendPayload(
-                        $this->generatePayload($event)
-                    );
+            collect(app(Schedule::class)->events())
+                ->each(function ($event) {
+                    $event->then(function () use ($event) {
+                        $payload = $this->generatePayload($event);
+                        $this->sendPayload($payload);
+                    });
                 });
-            });
         });
     }
 
@@ -57,8 +53,6 @@ class ScheduledCommandObserver implements TraceableContract
 
     public function isEnabled(): bool
     {
-        $this->trace = array_slice($this->findSource(), 0, 5)[0] ?? [];
-
         if (!boolval(Config::get('send_scheduled_command'))) {
             return $this->enabled;
         }
@@ -68,7 +62,7 @@ class ScheduledCommandObserver implements TraceableContract
 
     private function sendPayload(Payload $payload): void
     {
-        $dumps = new LaraDumps(trace: $this->trace);
+        $dumps = new LaraDumps();
 
         $dumps->send($payload);
         $dumps->label($this->label);
