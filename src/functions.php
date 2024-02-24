@@ -28,7 +28,7 @@ if (!function_exists('dsBlade')) {
 
         $frame = [
             'file' => $viewPath,
-            'line' => $frame->lineNumber,
+            'line' => data_get($frame, 'lineNumber'),
         ];
 
         $notificationId = Str::uuid()->toString();
