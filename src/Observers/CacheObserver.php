@@ -95,11 +95,11 @@ class CacheObserver
 
     public function isEnabled(): bool
     {
-        if (!boolval(Config::get('laravel_observers.cache'))) {
+        if (!boolval(Config::get('observers.laravel_cache'))) {
             return $this->enabled;
         }
 
-        return boolval(Config::get('laravel_observers.cache'));
+        return boolval(Config::get('observers.laravel_cache'));
     }
 
     public function hidden(array $hidden = []): array

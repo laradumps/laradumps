@@ -44,11 +44,11 @@ class CommandObserver
 
     public function isEnabled(): bool
     {
-        if (!(bool) boolval(Config::get('laravel_observers.commands'))) {
+        if (!(bool) boolval(Config::get('observers.laravel_commands'))) {
             return $this->enabled;
         }
 
-        return boolval(Config::get('laravel_observers.commands'));
+        return boolval(Config::get('observers.laravel_commands'));
     }
 
     private function generatePayload(object $event): Payload

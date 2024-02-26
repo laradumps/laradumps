@@ -53,6 +53,6 @@ class MailObserver
 
     public function isEnabled(): bool
     {
-        return (bool) Config::get('laravel_observers.mail');
+        return (bool) Config::get('observers.laravel_mail');
     }
 }

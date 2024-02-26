@@ -23,13 +23,13 @@ class LogObserver
                 $message->level = 'info';
             }
 
-            if (!Config::get('laravel_observers.logs_vendor')) {
+            if (!Config::get('observers.laravel_logs_vendor')) {
                 if (str_contains($message->message, 'vendor')) {
                     return;
                 }
             }
 
-            if (!Config::get('laravel_observers.logs_deprecated')) {
+            if (!Config::get('observers.laravel_logs_deprecated')) {
                 if (str_contains($message->message, 'deprecated')) {
                     return;
                 }
@@ -57,6 +57,6 @@ class LogObserver
 
     public function isEnabled(): bool
     {
-        return (bool) Config::get('laravel_observers.logs_applications');
+        return (bool) Config::get('observers.laravel_logs_applications');
     }
 }
