@@ -5,8 +5,8 @@ namespace LaraDumps\LaraDumps\Observers;
 use Illuminate\Log\Events\MessageLogged;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Str;
-use LaraDumps\LaraDumps\Actions\Config;
 use LaraDumps\LaraDumps\Payloads\LogPayload;
+use LaraDumps\LaraDumpsCore\Actions\Config;
 use LaraDumps\LaraDumpsCore\LaraDumps;
 use LaraDumps\LaraDumpsCore\Support\Dumper;
 
@@ -23,13 +23,13 @@ class LogObserver
                 $message->level = 'info';
             }
 
-            if (!Config::get('send_logs_vendors')) {
+            if (!Config::get('laravel_observers.logs_vendor')) {
                 if (str_contains($message->message, 'vendor')) {
                     return;
                 }
             }
 
-            if (!Config::get('send_logs_deprecated')) {
+            if (!Config::get('laravel_observers.logs_deprecated')) {
                 if (str_contains($message->message, 'deprecated')) {
                     return;
                 }
@@ -57,6 +57,6 @@ class LogObserver
 
     public function isEnabled(): bool
     {
-        return (bool) Config::get('send_logs_applications');
+        return (bool) Config::get('laravel_observers.logs_applications');
     }
 }

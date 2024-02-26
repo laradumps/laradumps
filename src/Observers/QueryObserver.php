@@ -4,8 +4,8 @@ namespace LaraDumps\LaraDumps\Observers;
 
 use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Support\Facades\DB;
-use LaraDumps\LaraDumps\Actions\Config;
 use LaraDumps\LaraDumps\Payloads\QueriesPayload;
+use LaraDumps\LaraDumpsCore\Actions\Config;
 use LaraDumps\LaraDumpsCore\LaraDumps;
 
 class QueryObserver
@@ -76,10 +76,10 @@ class QueryObserver
 
     public function isEnabled(): bool
     {
-        if (!boolval(Config::get('send_queries'))) {
+        if (!boolval(Config::get('laravel_observers.queries'))) {
             return $this->enabled;
         }
 
-        return boolval(Config::get('send_queries'));
+        return boolval(Config::get('laravel_observers.queries'));
     }
 }

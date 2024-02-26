@@ -5,7 +5,7 @@ namespace LaraDumps\LaraDumps\Observers;
 use Illuminate\Cache\Events\{CacheEvent, CacheHit, CacheMissed, KeyForgotten, KeyWritten};
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Str;
-use LaraDumps\LaraDumps\Actions\Config;
+use LaraDumps\LaraDumpsCore\Actions\Config;
 use LaraDumps\LaraDumpsCore\LaraDumps;
 use LaraDumps\LaraDumpsCore\Payloads\TableV2Payload;
 
@@ -95,11 +95,11 @@ class CacheObserver
 
     public function isEnabled(): bool
     {
-        if (!boolval(Config::get('send_cache'))) {
+        if (!boolval(Config::get('laravel_observers.cache'))) {
             return $this->enabled;
         }
 
-        return boolval(Config::get('send_cache'));
+        return boolval(Config::get('laravel_observers.cache'));
     }
 
     public function hidden(array $hidden = []): array

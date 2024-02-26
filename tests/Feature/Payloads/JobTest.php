@@ -1,10 +1,11 @@
 <?php
 
 use Illuminate\Queue\Events\{JobFailed, JobProcessed, JobProcessing, JobQueued};
-use Illuminate\Queue\{InteractsWithQueue, Jobs\SyncJob, SerializesModels};
+use Illuminate\Queue\{Jobs\SyncJob};
 use Illuminate\Support\Facades\Event;
-use LaraDumps\LaraDumps\Actions\Config;
 use LaraDumps\LaraDumps\Observers\JobsObserver;
+
+use LaraDumps\LaraDumpsCore\Actions\Config;
 
 use function PHPUnit\Framework\assertStringContainsString;
 
@@ -42,7 +43,7 @@ it('enables and disables observer', function () {
 });
 
 it('returns false when disabled by config', function () {
-    Config::set('send_jobs', false);
+    Config::set('laravel_observers.jobs', false);
 
     $observer = new JobsObserver();
 
@@ -50,7 +51,7 @@ it('returns false when disabled by config', function () {
 });
 
 it('returns true when enabled by config', function () {
-    Config::set('send_jobs', false);
+    Config::set('laravel_observers.jobs', false);
 
     $observer = new JobsObserver();
 

@@ -5,7 +5,7 @@ namespace LaraDumps\LaraDumps\Observers;
 use Illuminate\Queue\Events\{JobFailed, JobProcessed, JobProcessing, JobQueued};
 use Illuminate\Queue\Jobs\Job;
 use Illuminate\Support\Facades\Event;
-use LaraDumps\LaraDumps\Actions\Config;
+use LaraDumps\LaraDumpsCore\Actions\Config;
 use LaraDumps\LaraDumpsCore\LaraDumps;
 use LaraDumps\LaraDumpsCore\Payloads\{DumpPayload, Payload};
 use LaraDumps\LaraDumpsCore\Support\Dumper;
@@ -61,11 +61,11 @@ class JobsObserver
 
     public function isEnabled(): bool
     {
-        if (!boolval(Config::get('send_jobs'))) {
+        if (!boolval(Config::get('laravel_observers.jobs'))) {
             return $this->enabled;
         }
 
-        return boolval(Config::get('send_jobs'));
+        return boolval(Config::get('laravel_observers.jobs'));
     }
 
     public function generatePayload(object $event): Payload

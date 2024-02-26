@@ -9,8 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\{Event};
-use LaraDumps\LaraDumps\Actions\Config;
 use LaraDumps\LaraDumps\LaraDumps;
+use LaraDumps\LaraDumpsCore\Actions\Config;
 use LaraDumps\LaraDumpsCore\Payloads\TableV2Payload;
 use LaraDumps\LaraDumpsCore\Support\Dumper;
 
@@ -61,11 +61,11 @@ class GateObserver
 
     public function isEnabled(): bool
     {
-        if (!boolval(config('send_http_client'))) {
+        if (!boolval(Config::get('laravel_observers.http_client'))) {
             return $this->enabled;
         }
 
-        return boolval(Config::get('send_http_client'));
+        return boolval(Config::get('laravel_observers.http_client'));
     }
 
     private function gateResult(null|bool|Response $result): string

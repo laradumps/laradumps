@@ -6,8 +6,8 @@ use Illuminate\Mail\Events\MessageSent;
 use Illuminate\Mail\SentMessage;
 use Illuminate\Notifications\Events\NotificationSent;
 use Illuminate\Support\Facades\Event;
-use LaraDumps\LaraDumps\Actions\Config;
 use LaraDumps\LaraDumps\Payloads\MailPayload;
+use LaraDumps\LaraDumpsCore\Actions\Config;
 use LaraDumps\LaraDumpsCore\LaraDumps;
 use LaraDumps\LaraDumpsCore\Support\Dumper;
 
@@ -53,6 +53,6 @@ class MailObserver
 
     public function isEnabled(): bool
     {
-        return (bool) Config::get('send_mail');
+        return (bool) Config::get('laravel_observers.mail');
     }
 }

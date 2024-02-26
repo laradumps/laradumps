@@ -4,8 +4,8 @@ namespace LaraDumps\LaraDumps\Observers;
 
 use Illuminate\Console\Events\CommandStarting;
 use Illuminate\Console\Scheduling\{CallbackEvent, Event, Schedule};
-use LaraDumps\LaraDumps\Actions\Config;
 use LaraDumps\LaraDumps\LaraDumps;
+use LaraDumps\LaraDumpsCore\Actions\Config;
 use LaraDumps\LaraDumpsCore\Payloads\{Payload, TableV2Payload};
 
 class ScheduledCommandObserver
@@ -53,11 +53,11 @@ class ScheduledCommandObserver
 
     public function isEnabled(): bool
     {
-        if (!boolval(Config::get('send_scheduled_command'))) {
+        if (!boolval(Config::get('laravel_observers.scheduled_command'))) {
             return $this->enabled;
         }
 
-        return boolval(Config::get('send_scheduled_command'));
+        return boolval(Config::get('laravel_observers.scheduled_command'));
     }
 
     private function sendPayload(Payload $payload): void

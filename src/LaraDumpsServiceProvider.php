@@ -5,7 +5,6 @@ namespace LaraDumps\LaraDumps;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\{Collection, ServiceProvider, Stringable};
-use LaraDumps\LaraDumps\Actions\Config;
 use LaraDumps\LaraDumps\Observers\LogObserver;
 use LaraDumps\LaraDumps\Observers\{CacheObserver,
     CommandObserver,
@@ -16,6 +15,7 @@ use LaraDumps\LaraDumps\Observers\{CacheObserver,
     QueryObserver,
     ScheduledCommandObserver};
 use LaraDumps\LaraDumps\Payloads\QueryPayload;
+use LaraDumps\LaraDumpsCore\Actions\Config;
 
 class LaraDumpsServiceProvider extends ServiceProvider
 {
@@ -66,7 +66,7 @@ class LaraDumpsServiceProvider extends ServiceProvider
         });
 
         Blade::directive('dsAutoClearOnPageReload', function ($args) {
-            if (boolval(Config::get('auto_clear_on_page_reload')) === false) {
+            if (boolval(Config::get('config.auto_clear_on_page_reload')) === false) {
                 return '';
             }
 

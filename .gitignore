@@ -6,3 +6,4 @@
 composer.lock
 .phpunit.cache
 .env
+laradumps.yaml

@@ -5,7 +5,7 @@ namespace LaraDumps\LaraDumps\Observers;
 use Illuminate\Http\Client\Events\{RequestSending, ResponseReceived};
 use Illuminate\Http\Client\{Request, Response};
 use Illuminate\Support\Facades\Event;
-use LaraDumps\LaraDumps\Actions\Config;
+use LaraDumps\LaraDumpsCore\Actions\Config;
 use LaraDumps\LaraDumpsCore\LaraDumps;
 use LaraDumps\LaraDumpsCore\Payloads\{Payload, TableV2Payload};
 use LaraDumps\LaraDumpsCore\Support\Dumper;
@@ -59,11 +59,11 @@ class HttpClientObserver
 
     public function isEnabled(): bool
     {
-        if (!boolval(Config::get('send_http_client'))) {
+        if (!boolval(Config::get('laravel_observers.http_client'))) {
             return $this->enabled;
         }
 
-        return boolval(Config::get('send_http_client'));
+        return boolval(Config::get('laravel_observers.http_client'));
     }
 
     protected function getRequestType(Request $request): string

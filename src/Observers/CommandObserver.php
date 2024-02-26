@@ -4,7 +4,7 @@ namespace LaraDumps\LaraDumps\Observers;
 
 use Illuminate\Console\Events\CommandFinished;
 use Illuminate\Support\Facades\Event;
-use LaraDumps\LaraDumps\Actions\Config;
+use LaraDumps\LaraDumpsCore\Actions\Config;
 use LaraDumps\LaraDumpsCore\LaraDumps;
 use LaraDumps\LaraDumpsCore\Payloads\{DumpPayload, Payload};
 use LaraDumps\LaraDumpsCore\Support\Dumper;
@@ -44,11 +44,11 @@ class CommandObserver
 
     public function isEnabled(): bool
     {
-        if (!(bool) boolval(Config::get('send_commands'))) {
+        if (!(bool) boolval(Config::get('laravel_observers.commands'))) {
             return $this->enabled;
         }
 
-        return boolval(Config::get('send_commands'));
+        return boolval(Config::get('laravel_observers.commands'));
     }
 
     private function generatePayload(object $event): Payload
