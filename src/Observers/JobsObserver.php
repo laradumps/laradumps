@@ -61,11 +61,11 @@ class JobsObserver
 
     public function isEnabled(): bool
     {
-        if (!boolval(Config::get('observers.laravel_jobs'))) {
+        if (!boolval(Config::get('observers.jobs'))) {
             return $this->enabled;
         }
 
-        return boolval(Config::get('observers.laravel_jobs'));
+        return boolval(Config::get('observers.jobs'));
     }
 
     public function generatePayload(object $event): Payload

@@ -43,7 +43,7 @@ it('enables and disables observer', function () {
 });
 
 it('returns false when disabled by config', function () {
-    Config::set('laravel_observers.jobs', false);
+    Config::set('observers.jobs', false);
 
     $observer = new JobsObserver();
 
@@ -51,7 +51,7 @@ it('returns false when disabled by config', function () {
 });
 
 it('returns true when enabled by config', function () {
-    Config::set('laravel_observers.jobs', false);
+    Config::set('observers.jobs', false);
 
     $observer = new JobsObserver();
 

@@ -5,6 +5,7 @@ namespace LaraDumps\LaraDumps;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\{Collection, ServiceProvider, Stringable};
+use LaraDumps\LaraDumps\Commands\InitCommand;
 use LaraDumps\LaraDumps\Observers\LogObserver;
 use LaraDumps\LaraDumps\Observers\{CacheObserver,
     CommandObserver,
@@ -29,6 +30,8 @@ class LaraDumpsServiceProvider extends ServiceProvider
         $this->createDirectives();
 
         $this->bootObservers();
+
+        $this->commands([InitCommand::class]);
 
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'laradumps');
     }

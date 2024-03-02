@@ -76,10 +76,10 @@ class QueryObserver
 
     public function isEnabled(): bool
     {
-        if (!boolval(Config::get('observers.laravel_queries'))) {
+        if (!boolval(Config::get('observers.queries'))) {
             return $this->enabled;
         }
 
-        return boolval(Config::get('observers.laravel_queries'));
+        return boolval(Config::get('observers.queries'));
     }
 }
