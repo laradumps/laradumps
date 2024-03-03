@@ -5,8 +5,7 @@ namespace LaraDumps\LaraDumps\Commands;
 use LaraDumps\LaraDumpsCore\Actions\Config;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\{InputArgument, InputInterface};
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Yaml;
 
@@ -30,19 +29,18 @@ class InitCommand extends Command
             return Command::FAILURE;
         }
 
-        $defaultYaml = appBasePath(). 'vendor/laradumps/laradumps-core/src/Actions/laradumps-sample.yaml';
+        $defaultYaml = appBasePath() . 'vendor/laradumps/laradumps-core/src/Actions/laradumps-sample.yaml';
 
         $publish = Config::publish(
-            pwd: $input->getArgument('pwd'). DIRECTORY_SEPARATOR,
+            pwd: $input->getArgument('pwd') . DIRECTORY_SEPARATOR,
             filepath: $defaultYaml
         );
 
-
-        $newYaml = appBasePath(). 'laradumps.yaml';
+        $newYaml = appBasePath() . 'laradumps.yaml';
 
         if ($publish) {
-            $yamlFile = Yaml::parseFile(__DIR__.'/laradumps-sample.yaml');
-            $default = Yaml::parseFile($defaultYaml);
+            $yamlFile = Yaml::parseFile(__DIR__ . '/laradumps-sample.yaml');
+            $default  = Yaml::parseFile($defaultYaml);
 
             foreach ($default as $key => $values) {
                 foreach ($values as $key1 => $value) {
@@ -50,7 +48,7 @@ class InitCommand extends Command
                 }
             }
 
-            $yamlFile['app']['project_path'] = $input->getArgument('pwd'). DIRECTORY_SEPARATOR;
+            $yamlFile['app']['project_path'] = $input->getArgument('pwd') . DIRECTORY_SEPARATOR;
 
             $mergedYaml = array_replace_recursive($default, $yamlFile);
 
