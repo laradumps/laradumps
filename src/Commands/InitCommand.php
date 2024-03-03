@@ -50,6 +50,8 @@ class InitCommand extends Command
                 }
             }
 
+            $yamlFile['app']['project_path'] = $input->getArgument('pwd'). DIRECTORY_SEPARATOR;
+
             $mergedYaml = array_replace_recursive($default, $yamlFile);
 
             $yaml = Yaml::dump($mergedYaml);

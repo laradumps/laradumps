@@ -11,3 +11,7 @@ observers:
   scheduled_commands: false
   gate: false
   auto_clear_on_page_reload: false
+
+laravel:
+  queries:
+    ignore_telescope: true

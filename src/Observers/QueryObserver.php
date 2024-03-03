@@ -32,7 +32,9 @@ class QueryObserver
 
             $sqlQuery = vsprintf($sqlQuery, $bindings);
 
-            if (str_contains($sqlQuery, 'telescope')) {
+            if (str_contains($sqlQuery, 'telescope') &&
+                Config::get('laravel.queries.ignore_telescope', true)
+            ) {
                 return;
             }
 
