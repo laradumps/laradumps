@@ -39,7 +39,9 @@ class InitCommand extends Command
         $newYaml = appBasePath() . 'laradumps.yaml';
 
         if ($publish) {
+            /** @var array $yamlFile */
             $yamlFile = Yaml::parseFile(__DIR__ . '/laradumps-sample.yaml');
+            /** @var array $default */
             $default  = Yaml::parseFile($defaultYaml);
 
             foreach ($default as $key => $values) {
