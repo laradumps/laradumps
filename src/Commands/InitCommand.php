@@ -18,15 +18,21 @@ class InitCommand extends Command
 {
     protected function configure(): void
     {
-        $this->addArgument('pwd', InputArgument::REQUIRED);
+        $this->addArgument('pwd', InputArgument::OPTIONAL);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if (Config::exists()) {
-            // override ?
+            ds('Welcome back to the LaraDumps!');
 
-            return Command::FAILURE;
+            $output->writeln('laradumps.yaml has already been published');
+
+            return Command::SUCCESS;
+        }
+
+        if (is_null($input->getArgument('pwd'))) {
+            $output->writeln('Please, run again with the parameter $(pwd): <comment>php artisan ds:init $(pwd)</comment>');
         }
 
         $defaultYaml = appBasePath() . 'vendor/laradumps/laradumps-core/src/Actions/laradumps-sample.yaml';
@@ -56,8 +62,15 @@ class InitCommand extends Command
 
             $yaml = Yaml::dump($mergedYaml);
             file_put_contents($newYaml, $yaml);
+
+            $this->sendMessageToApp();
         }
 
         return Command::SUCCESS;
+    }
+
+    private function sendMessageToApp(): void
+    {
+        ds('Welcome to the LaraDumps!');
     }
 }
