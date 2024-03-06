@@ -48,7 +48,7 @@ class InitCommand extends Command
             /** @var array $yamlFile */
             $yamlFile = Yaml::parseFile(__DIR__ . '/laradumps-sample.yaml');
             /** @var array $default */
-            $default  = Yaml::parseFile($defaultYaml);
+            $default = Yaml::parseFile($defaultYaml);
 
             foreach ($default as $key => $values) {
                 foreach ($values as $key1 => $value) {

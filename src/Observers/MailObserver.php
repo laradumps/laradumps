@@ -40,7 +40,7 @@ class MailObserver
             /** @var SentMessage $sentMessage */
             $sentMessage = $notificationSent->response;
 
-            if (!method_exists($sentMessage, 'getMessageId')) {
+            if (!$sentMessage instanceof SentMessage) {
                 return;
             }
 
