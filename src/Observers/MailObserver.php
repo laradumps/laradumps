@@ -20,10 +20,6 @@ class MailObserver
                 return;
             }
 
-            if (!method_exists($messageSent->sent, 'getMessageId')) {
-                return;
-            }
-
             $dumps = new LaraDumps();
 
             $payload = new MailPayload($messageSent->sent, Dumper::dump($messageSent->data), $messageSent->sent->getMessageId());
