@@ -35,7 +35,7 @@ class InitCommand extends Command
             $output->writeln('Please, run again with the parameter $(pwd): <comment>php artisan ds:init $(pwd)</comment>');
         }
 
-        $defaultYaml = appBasePath() . 'vendor/laradumps/laradumps-core/src/Actions/laradumps-sample.yaml';
+        $defaultYaml = appBasePath() . 'vendor/laradumps/laradumps-core/src/Actions/laradumps-base.yaml';
 
         $publish = Config::publish(
             pwd: $input->getArgument('pwd') . DIRECTORY_SEPARATOR,
@@ -46,7 +46,7 @@ class InitCommand extends Command
 
         if ($publish) {
             /** @var array $yamlFile */
-            $yamlFile = Yaml::parseFile(__DIR__ . '/laradumps-sample.yaml');
+            $yamlFile = Yaml::parseFile(__DIR__ . '/laradumps-base.yaml');
             /** @var array $default */
             $default = Yaml::parseFile($defaultYaml);
 
