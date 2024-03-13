@@ -1,10 +1,11 @@
 observers:
+  dump: false
+  original_dump: false
   queries: false
   mail: false
   logs_applications: false
   logs_vendor: false
   logs_deprecated: false
-  http_client_requests: false
   http: false
   jobs: false
   commands: false

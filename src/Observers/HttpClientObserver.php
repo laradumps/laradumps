@@ -59,11 +59,11 @@ class HttpClientObserver
 
     public function isEnabled(): bool
     {
-        if (!boolval(Config::get('observers.http_client'))) {
+        if (!boolval(Config::get('observers.http', false))) {
             return $this->enabled;
         }
 
-        return boolval(Config::get('observers.http_client'));
+        return boolval(Config::get('observers.http', false));
     }
 
     protected function getRequestType(Request $request): string

@@ -95,11 +95,11 @@ class CacheObserver
 
     public function isEnabled(): bool
     {
-        if (!boolval(Config::get('observers.cache'))) {
+        if (!boolval(Config::get('observers.cache', false))) {
             return $this->enabled;
         }
 
-        return boolval(Config::get('observers.cache'));
+        return boolval(Config::get('observers.cache', false));
     }
 
     public function hidden(array $hidden = []): array

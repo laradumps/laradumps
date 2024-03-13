@@ -53,11 +53,11 @@ class ScheduledCommandObserver
 
     public function isEnabled(): bool
     {
-        if (!boolval(Config::get('observers.scheduled_command'))) {
+        if (!boolval(Config::get('observers.scheduled_command', false))) {
             return $this->enabled;
         }
 
-        return boolval(Config::get('observers.scheduled_command'));
+        return boolval(Config::get('observers.scheduled_command', false));
     }
 
     private function sendPayload(Payload $payload): void

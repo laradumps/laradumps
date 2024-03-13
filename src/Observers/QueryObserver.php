@@ -76,10 +76,10 @@ class QueryObserver
 
     public function isEnabled(): bool
     {
-        if (!boolval(Config::get('observers.queries'))) {
+        if (!boolval(Config::get('observers.queries', false))) {
             return $this->enabled;
         }
 
-        return boolval(Config::get('observers.queries'));
+        return boolval(Config::get('observers.queries', false));
     }
 }

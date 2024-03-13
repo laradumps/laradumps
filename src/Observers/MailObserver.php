@@ -57,6 +57,6 @@ class MailObserver
 
     public function isEnabled(): bool
     {
-        return (bool) Config::get('observers.mail');
+        return (bool) Config::get('observers.mail', false);
     }
 }

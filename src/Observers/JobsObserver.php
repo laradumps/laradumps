@@ -61,11 +61,11 @@ class JobsObserver
 
     public function isEnabled(): bool
     {
-        if (!boolval(Config::get('observers.jobs'))) {
+        if (!boolval(Config::get('observers.jobs', false))) {
             return $this->enabled;
         }
 
-        return boolval(Config::get('observers.jobs'));
+        return boolval(Config::get('observers.jobs', false));
     }
 
     public function generatePayload(object $event): Payload

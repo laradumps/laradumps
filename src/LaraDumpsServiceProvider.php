@@ -9,6 +9,7 @@ use LaraDumps\LaraDumps\Commands\InitCommand;
 use LaraDumps\LaraDumps\Observers\LogObserver;
 use LaraDumps\LaraDumps\Observers\{CacheObserver,
     CommandObserver,
+    DumpObserver,
     GateObserver,
     HttpClientObserver,
     JobsObserver,
@@ -53,6 +54,7 @@ class LaraDumpsServiceProvider extends ServiceProvider
         $this->app->singleton(GateObserver::class);
         $this->app->singleton(QueryObserver::class);
         $this->app->singleton(HttpClientObserver::class);
+        $this->app->singleton(DumpObserver::class);
 
         $this->registerMacros();
     }
@@ -102,6 +104,7 @@ HTML;
         app(LogObserver::class)->register();
         app(QueryObserver::class)->register();
         app(MailObserver::class)->register();
+        app(DumpObserver::class)->register();
     }
 
     private function registerMacros(): void
