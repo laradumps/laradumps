@@ -1,5 +1,5 @@
 observers:
-  queries: true
+  queries: false
   mail: false
   logs_applications: false
   logs_vendor: false
