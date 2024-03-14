@@ -7,8 +7,7 @@ use Illuminate\Mail\SentMessage;
 use Illuminate\Notifications\Events\NotificationSent;
 use Illuminate\Support\Facades\Event;
 use LaraDumps\LaraDumps\Payloads\MailPayload;
-use LaraDumps\LaraDumpsCore\Actions\Config;
-use LaraDumps\LaraDumpsCore\Actions\Dumper;
+use LaraDumps\LaraDumpsCore\Actions\{Config, Dumper};
 use LaraDumps\LaraDumpsCore\LaraDumps;
 
 class MailObserver

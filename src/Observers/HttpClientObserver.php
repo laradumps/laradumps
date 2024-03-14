@@ -2,11 +2,10 @@
 
 namespace LaraDumps\LaraDumps\Observers;
 
-use Illuminate\Http\Client\{Request, Response};
 use Illuminate\Http\Client\Events\{RequestSending, ResponseReceived};
+use Illuminate\Http\Client\{Request, Response};
 use Illuminate\Support\Facades\Event;
-use LaraDumps\LaraDumpsCore\Actions\Config;
-use LaraDumps\LaraDumpsCore\Actions\Dumper;
+use LaraDumps\LaraDumpsCore\Actions\{Config, Dumper};
 use LaraDumps\LaraDumpsCore\LaraDumps;
 use LaraDumps\LaraDumpsCore\Payloads\{Payload, TableV2Payload};
 

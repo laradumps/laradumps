@@ -5,8 +5,7 @@ namespace LaraDumps\LaraDumps\Observers;
 use Illuminate\Queue\Events\{JobFailed, JobProcessed, JobProcessing, JobQueued};
 use Illuminate\Queue\Jobs\Job;
 use Illuminate\Support\Facades\Event;
-use LaraDumps\LaraDumpsCore\Actions\Config;
-use LaraDumps\LaraDumpsCore\Actions\Dumper;
+use LaraDumps\LaraDumpsCore\Actions\{Config, Dumper};
 use LaraDumps\LaraDumpsCore\LaraDumps;
 use LaraDumps\LaraDumpsCore\Payloads\{DumpPayload, Payload};
 

@@ -10,8 +10,7 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\{Event};
 use LaraDumps\LaraDumps\LaraDumps;
-use LaraDumps\LaraDumpsCore\Actions\Config;
-use LaraDumps\LaraDumpsCore\Actions\Dumper;
+use LaraDumps\LaraDumpsCore\Actions\{Config, Dumper};
 use LaraDumps\LaraDumpsCore\Payloads\TableV2Payload;
 
 class GateObserver
