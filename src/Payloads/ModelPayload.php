@@ -3,8 +3,8 @@
 namespace LaraDumps\LaraDumps\Payloads;
 
 use Illuminate\Database\Eloquent\Model;
+use LaraDumps\LaraDumpsCore\Actions\Dumper;
 use LaraDumps\LaraDumpsCore\Payloads\Payload;
-use LaraDumps\LaraDumpsCore\Support\Dumper;
 
 class ModelPayload extends Payload
 {

@@ -8,8 +8,8 @@ use Illuminate\Notifications\Events\NotificationSent;
 use Illuminate\Support\Facades\Event;
 use LaraDumps\LaraDumps\Payloads\MailPayload;
 use LaraDumps\LaraDumpsCore\Actions\Config;
+use LaraDumps\LaraDumpsCore\Actions\Dumper;
 use LaraDumps\LaraDumpsCore\LaraDumps;
-use LaraDumps\LaraDumpsCore\Support\Dumper;
 
 class MailObserver
 {

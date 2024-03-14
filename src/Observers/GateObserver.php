@@ -11,8 +11,8 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\{Event};
 use LaraDumps\LaraDumps\LaraDumps;
 use LaraDumps\LaraDumpsCore\Actions\Config;
+use LaraDumps\LaraDumpsCore\Actions\Dumper;
 use LaraDumps\LaraDumpsCore\Payloads\TableV2Payload;
-use LaraDumps\LaraDumpsCore\Support\Dumper;
 
 class GateObserver
 {

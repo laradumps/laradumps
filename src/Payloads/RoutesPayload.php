@@ -29,7 +29,7 @@ class RoutesPayload extends Payload
         foreach (\Route::getRoutes()->getIterator() as $route) {
             $ignore = false;
 
-            foreach ($this->getAllExcepts() as $except) {
+            foreach (Arr::wrap($this->except) as $except) {
                 if (Str::contains($route->uri, $except)) {
                     $ignore = true;
                 }
@@ -61,13 +61,5 @@ class RoutesPayload extends Payload
             ],
             'label' => 'Routes',
         ];
-    }
-
-    public function getAllExcepts(): array
-    {
-        return array_merge(
-            (array) GetRoutesToIgnore::handle(),
-            Arr::wrap($this->except),
-        );
     }
 }

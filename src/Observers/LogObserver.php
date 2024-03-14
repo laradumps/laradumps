@@ -7,8 +7,8 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Str;
 use LaraDumps\LaraDumps\Payloads\LogPayload;
 use LaraDumps\LaraDumpsCore\Actions\Config;
+use LaraDumps\LaraDumpsCore\Actions\Dumper;
 use LaraDumps\LaraDumpsCore\LaraDumps;
-use LaraDumps\LaraDumpsCore\Support\Dumper;
 
 class LogObserver
 {

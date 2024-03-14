@@ -5,7 +5,7 @@ use Illuminate\Support\Str;
 use Illuminate\View\Compilers\BladeCompiler;
 use LaraDumps\LaraDumps\LaraDumps;
 use LaraDumps\LaraDumps\Payloads\{BladePayload, ModelPayload};
-use LaraDumps\LaraDumpsCore\Support\Dumper;
+use LaraDumps\LaraDumpsCore\Actions\Dumper;
 use Spatie\Backtrace\Backtrace;
 
 if (!function_exists('dsBlade')) {

@@ -3,9 +3,9 @@
 use LaraDumps\LaraDumps\Payloads\{MailablePayload, MarkdownPayload, ModelPayload};
 use LaraDumps\LaraDumps\Tests\Models\Dish;
 use LaraDumps\LaraDumps\Tests\Support\Classes\TestMail;
+use LaraDumps\LaraDumpsCore\Actions\Dumper;
 use LaraDumps\LaraDumpsCore\LaraDumps;
 use LaraDumps\LaraDumpsCore\Payloads\{DumpPayload, TableV2Payload};
-use LaraDumps\LaraDumpsCore\Support\Dumper;
 use Ramsey\Uuid\Uuid;
 
 beforeEach(function () {
@@ -87,21 +87,18 @@ it('should return the correct payload to model', function () {
 it('should return the correct payload to mailable', function () {
     $mailable = new TestMail();
 
-    $notificationId = Uuid::uuid4()->toString();
-
     $frame = [
         'file' => 'Test',
         'line' => 1,
     ];
 
-    $laradumps = new LaraDumps($notificationId, );
+    $laradumps = new LaraDumps();
     $payload   = new MailablePayload($mailable);
     $payload->setFrame($frame);
 
     $payload = $laradumps->send($payload, withFrame: false)->toArray();
 
     expect($payload)
-        ->id->toBe($notificationId)
         ->type->toBe('mailable')
         ->and($payload['mailable']['subject'])
         ->toContain('An test mail')
@@ -126,16 +123,13 @@ it('should return the correct payload to table_v2', function () {
         'line' => 1,
     ];
 
-    $notificationId = Uuid::uuid4()->toString();
-
-    $laradumps = new LaraDumps($notificationId);
+    $laradumps = new LaraDumps();
     $payload   = new TableV2Payload($data);
     $payload->setFrame($frame);
 
     $payload = $laradumps->send($payload, withFrame: false)->toArray();
 
     expect($payload)
-        ->id->toBe($notificationId)
         ->type->toBe('table_v2')
         ->and($payload['table_v2']['values']['Name'])
         ->toContain('Anand Pilania')
