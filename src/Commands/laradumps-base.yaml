@@ -11,4 +11,4 @@ observers:
   commands: false
   scheduled_commands: false
   gate: false
-  auto_clear_on_page_reload: false
+  cache: false

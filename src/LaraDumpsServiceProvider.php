@@ -27,7 +27,6 @@ class LaraDumpsServiceProvider extends ServiceProvider
             define('LARADUMPS_REQUEST_ID', uniqid());
         }
 
-        $this->loadConfigs();
         $this->createDirectives();
 
         $this->bootObservers();
@@ -59,37 +58,10 @@ class LaraDumpsServiceProvider extends ServiceProvider
         $this->registerMacros();
     }
 
-    private function loadConfigs(): void
-    {
-        $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
-    }
-
     private function createDirectives(): void
     {
         Blade::directive('ds', function ($args) {
             return "<?php dsBlade($args); ?>";
-        });
-
-        Blade::directive('dsAutoClearOnPageReload', function ($args) {
-            if (boolval(Config::get('config.auto_clear_on_page_reload')) === false) {
-                return '';
-            }
-
-            $csrf = csrf_token();
-
-            return <<<HTML
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    window.onbeforeunload = () => {
-       const xmlhttp = new XMLHttpRequest();
-       xmlhttp.open("POST", "/__ds__/clear");
-       xmlhttp.setRequestHeader('X-CSRF-TOKEN', '{$csrf}');
-       xmlhttp.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-       xmlhttp.send(JSON.stringify({ "ds": true }));
-    }
-}, false);
-</script>
-HTML;
         });
     }
 
