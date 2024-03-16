@@ -17,7 +17,6 @@ use LaraDumps\LaraDumps\Observers\{CacheObserver,
     QueryObserver,
     ScheduledCommandObserver};
 use LaraDumps\LaraDumps\Payloads\QueryPayload;
-use LaraDumps\LaraDumpsCore\Actions\Config;
 
 class LaraDumpsServiceProvider extends ServiceProvider
 {
