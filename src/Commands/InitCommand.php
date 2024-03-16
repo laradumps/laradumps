@@ -26,7 +26,9 @@ class InitCommand extends Command
         if (Config::exists()) {
             ds('Welcome back to the LaraDumps!');
 
-            $output->writeln('laradumps.yaml has already been published');
+            $output->writeln('');
+            $output->writeln('  ✅  <info><comment>laradumps.yaml</comment> has already been published</info>');
+            $output->writeln('');
 
             return Command::SUCCESS;
         }
@@ -62,6 +64,12 @@ class InitCommand extends Command
 
             $yaml = Yaml::dump($mergedYaml);
             file_put_contents($newYaml, $yaml);
+
+            $output->writeln('');
+            $output->writeln('  ✅  <info>LaraDumps has been successfully configured!</info>');
+            $output->writeln('');
+            $output->writeln('  ✏️ <info>A file with the settings was created in the root of your project: </info>');
+            $output->writeln('');
 
             $this->sendMessageToApp();
         }
