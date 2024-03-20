@@ -68,6 +68,6 @@ class DumpObserver
 
     public function displayOriginalDump(): bool
     {
-        return (bool) Config::get('observers.original_dump', false);
+        return (bool) Config::get('observers.original_dump', true);
     }
 }

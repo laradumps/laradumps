@@ -20,6 +20,7 @@ class InitCommand extends Command
 
     public function handle(): void
     {
+        /** @var string $pwd */
         $pwd = $this->argument('pwd');
 
         if (Config::exists()) {

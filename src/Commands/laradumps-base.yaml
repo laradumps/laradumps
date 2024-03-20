@@ -1,6 +1,6 @@
 observers:
   dump: false
-  original_dump: false
+  original_dump: true
   auto_invoke_app: false
   queries: false
   slow_queries: false

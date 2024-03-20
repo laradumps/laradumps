@@ -22,12 +22,13 @@ class LogObserver
                 $message->level = 'info';
             }
 
-            $logs = Config::get('logs');
+            $logs = (array) Config::get('logs');
 
             $shouldReturn = [];
 
             collect($logs)
                 ->map(function ($value, $key) use ($message, &$shouldReturn) {
+                    /** @var string $key */
                     if ($message->level == $key && strval($value) == '1') {
                         if ($key === 'vendor') {
                             if (str_contains($message->message, 'vendor')) {
