@@ -22,16 +22,29 @@ class LogObserver
                 $message->level = 'info';
             }
 
-            if (!Config::get('observers.logs_vendor', false)) {
-                if (str_contains($message->message, 'vendor')) {
-                    return;
-                }
-            }
+            $logs = Config::get('logs');
 
-            if (!Config::get('observers.logs_deprecated', false)) {
-                if (str_contains($message->message, 'deprecated')) {
-                    return;
-                }
+            $shouldReturn = [];
+
+            collect($logs)
+                ->map(function ($value, $key) use ($message, &$shouldReturn) {
+                    if ($message->level == $key && strval($value) == '1') {
+                        if ($key === 'vendor') {
+                            if (str_contains($message->message, 'vendor')) {
+                                $shouldReturn[] = $key;
+                            }
+                        } elseif ($key === 'deprecated_message') {
+                            if (str_contains($message->message, 'deprecated')) {
+                                $shouldReturn[] = $key;
+                            }
+                        } else {
+                            $shouldReturn[] = $key;
+                        }
+                    }
+                });
+
+            if (in_array($message->level, $shouldReturn)) {
+                return;
             }
 
             if (Str::containsAll($message->message, ['From:', 'To:', 'Subject:'])) {

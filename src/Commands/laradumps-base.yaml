@@ -1,14 +1,26 @@
 observers:
   dump: false
   original_dump: false
+  auto_invoke_app: false
   queries: false
+  slow_queries: false
   mail: false
-  logs_applications: false
-  logs_vendor: false
-  logs_deprecated: false
+  logs: false
   http: false
   jobs: false
   commands: false
   scheduled_commands: false
   gate: false
-  cache: false
+logs:
+  info: false
+  warning: false
+  emergency: false
+  alert: false
+  debug: false
+  error: true
+  critical: true
+  notice: true
+  vendor: false
+  deprecated_message: false
+slow_queries:
+  threshold_in_ms: 500

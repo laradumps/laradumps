@@ -15,7 +15,8 @@ use LaraDumps\LaraDumps\Observers\{CacheObserver,
     JobsObserver,
     MailObserver,
     QueryObserver,
-    ScheduledCommandObserver};
+    ScheduledCommandObserver,
+    SlowQueryObserver};
 use LaraDumps\LaraDumps\Payloads\QueryPayload;
 
 class LaraDumpsServiceProvider extends ServiceProvider
@@ -53,6 +54,7 @@ class LaraDumpsServiceProvider extends ServiceProvider
         $this->app->singleton(QueryObserver::class);
         $this->app->singleton(HttpClientObserver::class);
         $this->app->singleton(DumpObserver::class);
+        $this->app->singleton(SlowQueryObserver::class);
 
         $this->registerMacros();
     }
@@ -76,6 +78,7 @@ class LaraDumpsServiceProvider extends ServiceProvider
         app(QueryObserver::class)->register();
         app(MailObserver::class)->register();
         app(DumpObserver::class)->register();
+        app(SlowQueryObserver::class)->register();
     }
 
     private function registerMacros(): void

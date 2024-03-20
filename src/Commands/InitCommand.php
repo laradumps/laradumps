@@ -2,11 +2,9 @@
 
 namespace LaraDumps\LaraDumps\Commands;
 
+use Illuminate\Console\Command;
 use LaraDumps\LaraDumpsCore\Actions\Config;
 use Symfony\Component\Console\Attribute\AsCommand;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\{InputArgument, InputInterface};
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Yaml;
 
 #[AsCommand(
@@ -16,31 +14,26 @@ use Symfony\Component\Yaml\Yaml;
 )]
 class InitCommand extends Command
 {
-    protected function configure(): void
-    {
-        $this->addArgument('pwd', InputArgument::OPTIONAL);
-    }
+    protected $signature = 'ds:init {pwd}';
 
-    protected function execute(InputInterface $input, OutputInterface $output): int
+    protected $description = 'Laradumps Init';
+
+    public function handle(): void
     {
+        $pwd = $this->argument('pwd');
+
         if (Config::exists()) {
             ds('Welcome back to the LaraDumps!');
 
-            $output->writeln('');
-            $output->writeln('  ✅  <info><comment>laradumps.yaml</comment> has already been published</info>');
-            $output->writeln('');
+            $this->components->info('laradumps.yaml has already been published');
 
-            return Command::SUCCESS;
+            return;
         }
 
-        if (is_null($input->getArgument('pwd'))) {
-            $output->writeln('Please, run again with the parameter $(pwd): <comment>php artisan ds:init $(pwd)</comment>');
-        }
-
-        $defaultYaml = appBasePath() . 'vendor/laradumps/laradumps-core/src/Actions/laradumps-base.yaml';
+        $defaultYaml = appBasePath() . 'vendor/laradumps/laradumps-core/src/Commands/laradumps-base.yaml';
 
         $publish = Config::publish(
-            pwd: $input->getArgument('pwd') . DIRECTORY_SEPARATOR,
+            pwd: $pwd . DIRECTORY_SEPARATOR,
             filepath: $defaultYaml
         );
 
@@ -58,23 +51,18 @@ class InitCommand extends Command
                 }
             }
 
-            $yamlFile['app']['project_path'] = $input->getArgument('pwd') . DIRECTORY_SEPARATOR;
+            $yamlFile['app']['project_path'] = $pwd . DIRECTORY_SEPARATOR;
 
             $mergedYaml = array_replace_recursive($default, $yamlFile);
 
             $yaml = Yaml::dump($mergedYaml);
             file_put_contents($newYaml, $yaml);
 
-            $output->writeln('');
-            $output->writeln('  ✅  <info>LaraDumps has been successfully configured!</info>');
-            $output->writeln('');
-            $output->writeln('  ✏️ <info>A file with the settings was created in the root of your project: </info>');
-            $output->writeln('');
-
             $this->sendMessageToApp();
-        }
 
-        return Command::SUCCESS;
+            $this->components->info('The laradumps.yaml file was published in <comment>' . $pwd . '</comment>');
+            $this->components->info('Read the docs: https://laradumps.dev/debug/usage.html');
+        };
     }
 
     private function sendMessageToApp(): void
