@@ -13,6 +13,10 @@ class SlowQueryObserver
     public function register(): void
     {
         DB::listen(function (QueryExecuted $query) {
+            if (!$this->isEnabled()) {
+                return;
+            }
+
             $minimumTimeInMs = (float) Config::get('slow_queries.threshold_in_ms');
 
             if (($query->time * 1000) >= $minimumTimeInMs) {
@@ -49,9 +53,7 @@ class SlowQueryObserver
     public function isEnabled(): bool
     {
         if (app()->bound('db')) {
-            collect(DB::getConnections())->each(function ($connection) {
-                $connection->enableQueryLog();
-            });
+            collect(DB::getConnections())->each(fn ($connection) => $connection->enableQueryLog());
         }
 
         return boolval(Config::get('observers.slow_queries', false));
