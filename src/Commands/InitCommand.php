@@ -14,7 +14,7 @@ use Symfony\Component\Yaml\Yaml;
 )]
 class InitCommand extends Command
 {
-    protected $signature = 'ds:init {pwd}';
+    protected $signature = 'ds:init {pwd=0}';
 
     protected $description = 'Laradumps Init';
 
@@ -22,6 +22,10 @@ class InitCommand extends Command
     {
         /** @var string $pwd */
         $pwd = $this->argument('pwd');
+
+        if ($pwd == "0" && isset($_ENV['IGNITION_LOCAL_SITES_PATH'])) {
+            $pwd = $_ENV['IGNITION_LOCAL_SITES_PATH'];
+        }
 
         if (Config::exists()) {
             ds('Welcome back to the LaraDumps!');
