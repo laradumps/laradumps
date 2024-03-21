@@ -17,7 +17,8 @@ class SlowQueryObserver
                 return;
             }
 
-            $minimumTimeInMs = (float) Config::get('slow_queries.threshold_in_ms');
+            /** @var float $minimumTimeInMs */
+            $minimumTimeInMs = Config::get('slow_queries.threshold_in_ms', 500);
 
             if (($query->time * 1000) >= $minimumTimeInMs) {
                 $sqlQuery = str_replace(['%', '?'], ['%%', '\'%s\''], $query->sql);
