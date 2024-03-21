@@ -28,8 +28,9 @@ class LogObserver
 
             collect($logs)
                 ->map(function ($value, $key) use ($message, &$shouldReturn) {
+
                     /** @var string $key */
-                    if ($message->level == $key && strval($value) == '1') {
+                    if ($message->level === $key & $value === true) {
                         if ($key === 'vendor') {
                             if (str_contains($message->message, 'vendor')) {
                                 $shouldReturn[] = $key;
@@ -44,7 +45,7 @@ class LogObserver
                     }
                 });
 
-            if (in_array($message->level, $shouldReturn)) {
+            if (!in_array($message->level, $shouldReturn)) {
                 return;
             }
 
@@ -54,10 +55,16 @@ class LogObserver
 
             $dumps = new LaraDumps();
 
+            $context = $message->context;
+
+            if (blank($message->context) && class_exists(\Illuminate\Support\Facades\Context::class)) {
+                $context = \Illuminate\Support\Facades\Context::all();
+            }
+
             $log = [
                 'message' => $message->message,
                 'level'   => $message->level,
-                'context' => Dumper::dump($message->context),
+                'context' => Dumper::dump($context),
             ];
 
             $payload = new LogPayload($log);
@@ -70,6 +77,6 @@ class LogObserver
 
     public function isEnabled(): bool
     {
-        return (bool) Config::get('observers.logs_applications', false);
+        return (bool) Config::get('observers.logs', false);
     }
 }
