@@ -28,7 +28,6 @@ class LogObserver
 
             collect($logs)
                 ->map(function ($value, $key) use ($message, &$shouldReturn) {
-
                     /** @var string $key */
                     if ($message->level === $key & $value === true) {
                         if ($key === 'vendor') {
