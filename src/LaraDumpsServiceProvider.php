@@ -117,6 +117,8 @@ class LaraDumpsServiceProvider extends ServiceProvider
 
             $laradumps->send($payload);
 
+            $laradumps->label('Queries Macro');
+
             return $this;
         });
     }
