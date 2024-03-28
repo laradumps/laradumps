@@ -36,7 +36,7 @@
 
 <br/>
 
-LaraDumps is a friendly app designed to boost your [Laravel](https://larvel.com/) PHP coding and debugging experience.
+LaraDumps is a friendly app that boosts your [Laravel](https://larvel.com/) PHP coding and debugging experience.
 
 When using LaraDumps, you can see the result of your debug displayed in a standalone Desktop application.
 
@@ -46,12 +46,12 @@ These are some debug tools available for you:
 - See your dumped values in a [Table](https://laradumps.dev/debug/usage.html#table), with a built-in search feature.
 - Improve your debugging experience using different [screens](https://laradumps.dev/debug/usage.html#screens).
 - Watch [SQL Queries](hhttps://laradumps.dev/debug/usage.html#sql-queries).
-- Monitor [Laravel Logs](https://laravel.com/docs/10.x/logging).
+- Monitor [Laravel Logs](https://laravel.com/docs/logging).
 - Validate [JSON strings](https://laradumps.dev/debug/usage.html#json).
 - Verify if a string [contains](https://laradumps.dev/debug/usage.html#contains) a substring.
 - View `phpinfo()` configuration.
-- List your [Laravel Routes](https://laravel.com/docs/10.x/routing).
-- Inspect [Model](https://laravel.com/docs/10.x/eloquent) attributes.
+- List your [Laravel Routes](https://laravel.com/docs/routing).
+- Inspect [Model](https://laravel.com/docs/eloquent) attributes.
 - Learn more in our [Reference Sheet](https://laradumps.dev/debug/reference-sheet.html).
 
 <br/>
@@ -76,7 +76,7 @@ See also: https://laradumps.dev/get-started/release-notes.html#php-package
 
 * Debug your code using `ds()` in the same way you would use Laravel's native functions dump() or dd().
 
-* Run your Laravel application and see the debug dump in LaraDumps App window.
+* Run your Laravel application and see the debug dump in the LaraDumps App window.
 
 ### Example
 
