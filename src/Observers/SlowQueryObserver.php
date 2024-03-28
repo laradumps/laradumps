@@ -3,7 +3,7 @@
 namespace LaraDumps\LaraDumps\Observers;
 
 use Illuminate\Database\Events\QueryExecuted;
-use Illuminate\Support\Facades\{DB, Event};
+use Illuminate\Support\Facades\{DB};
 use LaraDumps\LaraDumps\Payloads\QueriesPayload;
 use LaraDumps\LaraDumpsCore\Actions\Config;
 use LaraDumps\LaraDumpsCore\LaraDumps;
