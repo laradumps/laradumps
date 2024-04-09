@@ -15,7 +15,7 @@ class MailObserver
     public function register(): void
     {
         Event::listen(MessageSent::class, function (MessageSent $messageSent) {
-            if (!$this->isEnabled()) {
+            if (! $this->isEnabled()) {
                 return;
             }
 
@@ -28,14 +28,18 @@ class MailObserver
         });
 
         Event::listen(NotificationSent::class, function (NotificationSent $notificationSent) {
-            if (!$this->isEnabled() || is_null($notificationSent->response)) {
+            if (! $this->isEnabled()) {
+                return;
+            }
+
+            if (is_null($notificationSent->response)) {
                 return;
             }
 
             /** @var SentMessage $sentMessage */
             $sentMessage = $notificationSent->response;
 
-            if (!$sentMessage instanceof SentMessage) {
+            if (! $sentMessage instanceof SentMessage) {
                 return;
             }
 
