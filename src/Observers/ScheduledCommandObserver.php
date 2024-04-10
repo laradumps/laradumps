@@ -19,10 +19,13 @@ class ScheduledCommandObserver
         $this->enabled = $this->isEnabled();
 
         \Illuminate\Support\Facades\Event::listen(CommandStarting::class, function (CommandStarting $event) {
-            if (!$this->isEnabled() || (
+            if (!$this->isEnabled()) {
+                return;
+            }
+
+            if (
                 $event->command !== 'schedule:run' &&
-                    $event->command !== 'schedule:finish'
-            )
+                $event->command !== 'schedule:finish'
             ) {
                 return;
             }

@@ -69,7 +69,11 @@ class CacheObserver
 
     protected function sendCache(CacheEvent $event, array $data, string $headerStyle = '', string $label = ''): void
     {
-        if (!$this->isEnabled() || $this->shouldIgnore($event)) {
+        if (!$this->isEnabled()) {
+            return;
+        }
+
+        if ($this->shouldIgnore($event)) {
             return;
         }
 
