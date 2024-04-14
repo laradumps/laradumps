@@ -53,10 +53,12 @@ class SlowQueryObserver
 
     public function isEnabled(): bool
     {
-        if (app()->bound('db')) {
+        $enabled = boolval(Config::get('observers.slow_queries', false));
+
+        if ($enabled && app()->bound('db')) {
             collect(DB::getConnections())->each(fn ($connection) => $connection->enableQueryLog());
         }
 
-        return boolval(Config::get('observers.slow_queries', false));
+        return $enabled;
     }
 }

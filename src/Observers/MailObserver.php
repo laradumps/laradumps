@@ -28,7 +28,11 @@ class MailObserver
         });
 
         Event::listen(NotificationSent::class, function (NotificationSent $notificationSent) {
-            if (!$this->isEnabled() || is_null($notificationSent->response)) {
+            if (!$this->isEnabled()) {
+                return;
+            }
+
+            if (is_null($notificationSent->response)) {
                 return;
             }
 
