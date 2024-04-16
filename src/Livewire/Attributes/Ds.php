@@ -9,7 +9,7 @@ use LaraDumps\LaraDumpsCore\Payloads\Payload;
 use Livewire\Component;
 use Livewire\Mechanisms\HandleComponents\ComponentContext;
 
-#[\Attribute]
+#[\Attribute(\Attribute::TARGET_CLASS)]
 class Ds extends \Livewire\Attribute
 {
     protected static array $profiles = [];
