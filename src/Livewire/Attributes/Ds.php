@@ -3,6 +3,7 @@
 namespace LaraDumps\LaraDumps\Livewire\Attributes;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Number;
 use LaraDumps\LaraDumpsCore\Actions\Dumper;
 use LaraDumps\LaraDumpsCore\LaraDumps;
 use LaraDumps\LaraDumpsCore\Payloads\Payload;
@@ -39,6 +40,12 @@ class Ds extends \Livewire\Attribute
 
         \Livewire\on('dehydrate', function (Component $component, ComponentContext $context) {
             if ($component->getId() == $this->getComponent()->getId()) {
+                $size = Number::fileSize(
+                    strlen(
+                        (string) json_encode([$component, $context])
+                    )
+                );
+
                 $properties = $context->component->all();
                 $errors     = $context->memo['errors'] ?? [];
                 $events     = $context->effects['dispatches'] ?? [];
@@ -52,6 +59,7 @@ class Ds extends \Livewire\Attribute
                     'properties' => Dumper::dump($properties),
                     'errors'     => filled($errors) ? Dumper::dump($errors) : [],
                     'events'     => $events,
+                    'size'       => $size,
                 ];
 
                 $payload = new LivewirePayload($payload);
