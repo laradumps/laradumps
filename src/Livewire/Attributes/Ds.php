@@ -17,10 +17,6 @@ class Ds extends \Livewire\Attribute
 
     public function boot(): void
     {
-        if (app()->isProduction()) {
-            return;
-        }
-
         DB::enableQueryLog();
 
         \Livewire\on('profile', function (string $method, string $livewireId, $measurement) {
@@ -83,10 +79,10 @@ class Ds extends \Livewire\Attribute
     private function matchClass(string $method): string
     {
         return match ($method) {
-            'mount'  => 'border-l-4 border-primary',
-            'render' => 'border-l-4 border-secondary',
-            'hydrate', 'dehydrate' => 'border-l-4 border-accent',
-            default => 'border-l-4 border-info'
+            'mount'  => 'border-primary',
+            'render' => 'border-secondary',
+            'hydrate', 'dehydrate' => 'border-accent',
+            default => 'border-l-4 border-neutral'
         };
     }
 }
