@@ -13,13 +13,20 @@ use Livewire\Mechanisms\HandleComponents\ComponentContext;
 #[\Attribute(\Attribute::TARGET_CLASS)]
 class Ds extends \Livewire\Attribute
 {
-    protected static array $profiles = [];
+    public function __construct(
+        public bool $queries = true,
+    ) {
+    }
+
+    protected static array $profilesBag = [];
 
     public function boot(): void
     {
-        DB::enableQueryLog();
+        if ($this->queries) {
+            DB::enableQueryLog();
+        }
 
-        \Livewire\on('profile', function (string $method, string $livewireId, $measurement) {
+        \Livewire\on('profile', function (string $method, string $livewireId, array $measurement) {
             if ($livewireId != $this->getComponent()->getId()) {
                 return;
             }
@@ -27,7 +34,7 @@ class Ds extends \Livewire\Attribute
             $startedAt = $measurement[0];
             $endedAt   = $measurement[1];
 
-            static::$profiles[$livewireId][] = [
+            static::$profilesBag[$livewireId][] = [
                 'classes'  => $this->matchClass($method),
                 'method'   => $method,
                 'duration' => $this->duration($startedAt, $endedAt),
@@ -35,37 +42,42 @@ class Ds extends \Livewire\Attribute
         });
 
         \Livewire\on('dehydrate', function (Component $component, ComponentContext $context) {
-            if ($component->getId() == $this->getComponent()->getId()) {
-                $size = Number::fileSize(
-                    strlen(
-                        (string) json_encode([$component, $context])
-                    )
-                );
+            if ($component->getId() != $this->getComponent()->getId()) {
+                return;
+            }
 
-                $properties = $context->component->all();
-                $errors     = $context->memo['errors'] ?? [];
-                $events     = $context->effects['dispatches'] ?? [];
+            $size = Number::fileSize(
+                strlen(
+                    (string) json_encode([$component, $context])
+                )
+            );
 
-                $payload = [
-                    'queries'    => DB::getQueryLog(),
-                    'request'    => uniqid(),
-                    'id'         => $context->component->getId(),
-                    'name'       => $context->component->getName(),
-                    'profile'    => static::$profiles[$context->component->getId()],
-                    'properties' => Dumper::dump($properties),
-                    'errors'     => filled($errors) ? Dumper::dump($errors) : [],
-                    'events'     => $events,
-                    'size'       => $size,
-                ];
+            $properties = $context->component->all();
+            $errors     = $context->memo['errors'] ?? [];
+            $events     = $context->effects['dispatches'] ?? [];
 
-                $payload = new LivewirePayload($payload);
+            $payload = [
+                'request'    => uniqid(),
+                'id'         => $context->component->getId(),
+                'name'       => $context->component->getName(),
+                'profile'    => static::$profilesBag[$context->component->getId()],
+                'properties' => Dumper::dump($properties),
+                'errors'     => filled($errors) ? Dumper::dump($errors) : [],
+                'queries'    => $this->queries ? DB::getQueryLog() : [],
+                'events'     => $events,
+                'size'       => $size,
+            ];
 
-                $laradumps = app(LaraDumps::class);
-                $laradumps->send($payload);
-                $laradumps->toScreen('Livewire');
+            $laradumps = app(LaraDumps::class);
 
-                unset(static::$profiles[$context->component->getId()]);
+            $payload = new LivewirePayload($payload);
 
+            $laradumps->send($payload);
+            $laradumps->toScreen('Livewire');
+
+            unset(static::$profilesBag[$context->component->getId()]);
+
+            if ($this->queries) {
                 DB::disableQueryLog();
             }
         });
@@ -82,7 +94,7 @@ class Ds extends \Livewire\Attribute
             'mount'  => 'border-primary',
             'render' => 'border-secondary',
             'hydrate', 'dehydrate' => 'border-accent',
-            default => 'border-l-4 border-neutral'
+            default => 'border-neutral'
         };
     }
 }
