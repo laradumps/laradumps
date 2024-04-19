@@ -4,6 +4,7 @@ namespace LaraDumps\LaraDumps;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Mail\Mailable;
+use LaraDumps\LaraDumps\Livewire\Support\Debug;
 use LaraDumps\LaraDumps\Observers\{CacheObserver,
     CommandObserver,
     GateObserver,
@@ -28,13 +29,19 @@ class LaraDumps extends BaseLaraDumps
                 ];
             }
 
+            if (class_exists(\Livewire\Volt\Component::class)
+                && $args instanceof \Livewire\Volt\Component) {
+                (new Debug())->debug($args->getId());
+
+                return [[], null];
+            }
+
             return parent::beforeWrite($args)();
         };
     }
 
     /**
      * Send Routes
-     *
      */
     public function routes(mixed ...$except): self
     {
@@ -45,7 +52,6 @@ class LaraDumps extends BaseLaraDumps
 
     /**
      * Shows model attributes and relationship
-     *
      */
     public function model(Model ...$models): LaraDumps
     {
@@ -61,16 +67,14 @@ class LaraDumps extends BaseLaraDumps
 
     /**
      * Display all queries that are executed with custom label
-     *
      */
-    public function queriesOn(string $label = null): void
+    public function queriesOn(?string $label = null): void
     {
         app(QueryObserver::class)->enable($label);
     }
 
     /**
      * Stop displaying queries
-     *
      */
     public function queriesOff(): void
     {
@@ -79,7 +83,6 @@ class LaraDumps extends BaseLaraDumps
 
     /**
      * Send rendered mailable
-     *
      */
     public function mailable(Mailable $mailable): self
     {
@@ -122,7 +125,7 @@ class LaraDumps extends BaseLaraDumps
     /**
      * Dump all Jobs that are dispatched with custom label
      */
-    public function jobsOn(string $label = null): self
+    public function jobsOn(?string $label = null): self
     {
         app(JobsObserver::class)->enable($label);
 
@@ -158,7 +161,7 @@ class LaraDumps extends BaseLaraDumps
     /**
      * Dump all Commands with custom label
      */
-    public function commandsOn(string $label = null): self
+    public function commandsOn(?string $label = null): self
     {
         app(CommandObserver::class)->enable($label);
 
@@ -176,7 +179,7 @@ class LaraDumps extends BaseLaraDumps
     /**
      * Dump Scheduled Commands with custom label
      */
-    public function scheduledCommandOn(string $label = null): void
+    public function scheduledCommandOn(?string $label = null): void
     {
         app(ScheduledCommandObserver::class)->enable($label);
     }
@@ -184,7 +187,7 @@ class LaraDumps extends BaseLaraDumps
     /**
      * Dump all Gate & Policy checkes with custom label
      */
-    public function gateOn(string $label = null): void
+    public function gateOn(?string $label = null): void
     {
         app(GateObserver::class)->enable($label);
     }
