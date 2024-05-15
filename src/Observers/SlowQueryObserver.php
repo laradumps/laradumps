@@ -20,7 +20,7 @@ class SlowQueryObserver
             /** @var float $minimumTimeInMs */
             $minimumTimeInMs = Config::get('slow_queries.threshold_in_ms', 500);
 
-            if (($query->time * 1000) >= $minimumTimeInMs) {
+            if ($query->time >= $minimumTimeInMs) {
                 $sqlQuery = str_replace(['%', '?'], ['%%', '\'%s\''], $query->sql);
                 $bindings = array_map(function ($value) {
                     if ($value instanceof \DateTime) {
