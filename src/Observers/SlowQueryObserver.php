@@ -21,19 +21,14 @@ class SlowQueryObserver
             $minimumTimeInMs = Config::get('slow_queries.threshold_in_ms', 500);
 
             if ($query->time >= $minimumTimeInMs) {
-                $sqlQuery = str_replace(['%', '?'], ['%%', '\'%s\''], $query->sql);
-                $bindings = array_map(function ($value) {
-                    if ($value instanceof \DateTime) {
-                        return strval($value->format('Y-m-d H:i:s'));
-                    }
-
-                    return $value;
-                }, $query->bindings);
-
-                $sqlQuery = vsprintf($sqlQuery, $bindings);
+                $toSql = DB::getQueryGrammar()
+                    ->substituteBindingsIntoRawSql(
+                        $query->sql,
+                        $query->bindings
+                    );
 
                 $queries = [
-                    'sql'            => $sqlQuery,
+                    'sql'            => $toSql,
                     'time'           => $query->time,
                     'database'       => $query->connection->getDatabaseName(),
                     'connectionName' => $query->connectionName,

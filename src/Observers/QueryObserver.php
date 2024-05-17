@@ -21,23 +21,14 @@ class QueryObserver
                 return;
             }
 
-            $sqlQuery = str_replace(['%', '?'], ['%%', '\'%s\''], $query->sql);
-            $bindings = array_map(function ($value) {
-                if ($value instanceof \DateTime) {
-                    return strval($value->format('Y-m-d H:i:s'));
-                }
-
-                return $value;
-            }, $query->bindings);
-
-            $sqlQuery = vsprintf($sqlQuery, $bindings);
-
-            if (str_contains($sqlQuery, 'telescope')) {
-                return;
-            }
+            $toSql = DB::getQueryGrammar()
+                ->substituteBindingsIntoRawSql(
+                    $query->sql,
+                    $query->bindings
+                );
 
             $queries = [
-                'sql'            => $sqlQuery,
+                'sql'            => $toSql,
                 'time'           => $query->time,
                 'database'       => $query->connection->getDatabaseName(),
                 'connectionName' => $query->connectionName,
