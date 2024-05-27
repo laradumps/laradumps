@@ -111,7 +111,6 @@ class LaraDumpsServiceProvider extends ServiceProvider
         Builder::macro('ds', function () {
             $laradumps = app(LaraDumps::class);
 
-            /** @phpstan-ignore-next-line */
             $payload = new QueryPayload($this);
             $payload->setDumpId(uniqid());
 
