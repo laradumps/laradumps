@@ -3,6 +3,7 @@
 namespace LaraDumps\LaraDumps\Payloads;
 
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Facades\DB;
 use LaraDumps\LaraDumpsCore\Payloads\Payload;
 
 class QueryPayload extends Payload
@@ -14,8 +15,11 @@ class QueryPayload extends Payload
 
     public function content(): array
     {
-        $toSql = str_replace(['?'], ['\'%s\''], $this->query->toSql());
-        $toSql = vsprintf($toSql, $this->query->getBindings());
+        $toSql = DB::getQueryGrammar()
+            ->substituteBindingsIntoRawSql(
+                $this->query->toSql(),
+                $this->query->getBindings()
+            );
 
         return [
             'sql' => $toSql,
