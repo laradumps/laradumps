@@ -11,6 +11,7 @@ observers:
   commands: false
   scheduled_commands: false
   gate: false
+  cache: false
 logs:
   info: false
   warning: false
