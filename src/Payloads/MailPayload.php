@@ -9,7 +9,7 @@ use Symfony\Component\Mime\Part\{DataPart, File};
 
 class MailPayload extends Payload
 {
-    const MAX_ATTACH_BINARY_FILE_IN_MB = 25;
+    public const MAX_ATTACH_BINARY_FILE_IN_MB = 25;
 
     protected array $mailProperties = [];
 
