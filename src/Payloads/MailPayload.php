@@ -5,10 +5,12 @@ namespace LaraDumps\LaraDumps\Payloads;
 use Illuminate\Mail\SentMessage;
 use LaraDumps\LaraDumpsCore\Payloads\Payload;
 use ReflectionClass;
-use Symfony\Component\Mime\Part\DataPart;
+use Symfony\Component\Mime\Part\{DataPart, File};
 
 class MailPayload extends Payload
 {
+    public const MAX_ATTACH_BINARY_FILE_IN_MB = 25;
+
     protected array $mailProperties = [];
 
     public function __construct(SentMessage $sentMessage, array $details, string $messageId)
@@ -29,15 +31,26 @@ class MailPayload extends Payload
             $reflectionParent = $reflection->getParentClass();
             /** @phpstan-ignore-next-line */
             $bodyProperty = $reflectionParent->getProperty('body');
-            $bodyProperty->setAccessible(true);
 
-            /** @var \Symfony\Component\Mime\Part\File $body */
+            /** @var string|File $body */
             $body = $bodyProperty->getValue($dataPart);
-            $path = $body->getPath();
+
+            if (is_string($body)) {
+                $body = base64_encode($body);
+                $path = null;
+                $size = strlen($body);
+
+                if ($size > (self::MAX_ATTACH_BINARY_FILE_IN_MB * 1024 * 1024)) {
+                    $body = null;
+                }
+            } else {
+                $path = $body->getPath();
+            }
 
             $filename = $dataPart->getFilename();
 
             $dataPartsData[] = [
+                'body'     => is_string($body) ? $body : null,
                 'path'     => $path,
                 'filename' => $filename,
             ];
