@@ -5,6 +5,8 @@ namespace LaraDumps\LaraDumps;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\{Collection, ServiceProvider, Stringable};
+use Illuminate\Testing\TestResponse;
+use Illuminate\View\View;
 use LaraDumps\LaraDumps\Commands\InitCommand;
 use LaraDumps\LaraDumps\Observers\LogObserver;
 use LaraDumps\LaraDumps\Observers\{CacheObserver,
@@ -18,6 +20,8 @@ use LaraDumps\LaraDumps\Observers\{CacheObserver,
     ScheduledCommandObserver,
     SlowQueryObserver};
 use LaraDumps\LaraDumps\Payloads\QueryPayload;
+use LaraDumps\LaraDumpsCore\Actions\Dumper;
+use LaraDumps\LaraDumpsCore\Payloads\{DumpPayload, TableV2Payload};
 
 class LaraDumpsServiceProvider extends ServiceProvider
 {
@@ -43,7 +47,7 @@ class LaraDumpsServiceProvider extends ServiceProvider
         $file = __DIR__ . DIRECTORY_SEPARATOR . 'functions.php';
 
         if (file_exists($file)) {
-            require_once($file);
+            require_once $file;
         }
 
         $this->app->singleton(JobsObserver::class);
@@ -84,10 +88,8 @@ class LaraDumpsServiceProvider extends ServiceProvider
     private function registerMacros(): void
     {
         Collection::macro('ds', function (string $label = '') {
-            $laradumps = app(LaraDumps::class);
-
-            /** @phpstan-ignore-next-line  */
-            $laradumps->write($this->items);
+            $laradumps = new LaraDumps();
+            $laradumps->write($this->items); // @phpstan-ignore-line
 
             if ($label) {
                 $laradumps->label($label);
@@ -97,9 +99,8 @@ class LaraDumpsServiceProvider extends ServiceProvider
         });
 
         Stringable::macro('ds', function (string $label = '') {
-            $laradumps = app(LaraDumps::class);
-            /** @phpstan-ignore-next-line  */
-            $laradumps->write($this->value);
+            $laradumps = new LaraDumps();
+            $laradumps->write($this->value); // @phpstan-ignore-line
 
             if ($label) {
                 $laradumps->label($label);
@@ -109,16 +110,60 @@ class LaraDumpsServiceProvider extends ServiceProvider
         });
 
         Builder::macro('ds', function () {
-            $laradumps = app(LaraDumps::class);
-
             $payload = new QueryPayload($this);
             $payload->setDumpId(uniqid());
 
+            $laradumps = new LaraDumps();
             $laradumps->send($payload);
 
             $laradumps->label('Queries Macro');
 
             return $this;
         });
+
+        TestResponse::macro('ds', function () {
+            $data = $this->original instanceof View
+                ? $this->original->getData()
+                : $this->original;
+
+            $payload = new TableV2Payload([
+                'Status'    => $this->getStatusCode(),
+                'Headers'   => Dumper::dump($this->headers->all())[0],
+                'Data'      => Dumper::dump($data)[0],
+                'Exception' => Dumper::dump($this->exceptions->all())[0],
+            ]);
+
+            $laradumps = new LaraDumps();
+            $laradumps->send($payload);
+            $laradumps->label('Test Response');
+
+            return $this;
+        });
+
+        if (runningInTest() && function_exists('expect')) {
+            expect()->extend('ds', function () {
+                $frame = array_values(
+                    array_filter(debug_backtrace(), function (array $frame) {
+                        return $frame['function'] === '__call' && $frame['class'] === 'Pest\Expectation'; // @phpstan-ignore-line
+                    })
+                )[0];
+
+                $frame = [
+                    'file' => data_get($frame, 'file'),
+                    'line' => data_get($frame, 'line'),
+                ];
+
+                $laradumps = new LaraDumps();
+
+                [$pre, $id] = Dumper::dump($this->value); // @phpstan-ignore-line
+
+                $payload = new DumpPayload($pre, $this->value, variableType: gettype($this->value)); // @phpstan-ignore-line
+                $payload->setDumpId($id);
+
+                $payload->setFrame($frame);
+                $laradumps->send($payload, withFrame: false);
+                $laradumps->label('Pest Expectation');
+            });
+        }
     }
 }
