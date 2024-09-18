@@ -34,7 +34,7 @@ class QueryObserver
 
                 $this->executedQueries[] = $sql;
 
-                if (!$duplicated && $this->onlyDuplicates()) {
+                if (!$duplicated && $this->onlyDuplicated()) {
                     return;
                 }
 
@@ -87,8 +87,8 @@ class QueryObserver
         return boolval(Config::get('observers.queries', false));
     }
 
-    private function onlyDuplicates()
+    private function onlyDuplicated()
     {
-        return Config::get('queries.only_duplicates', false);
+        return Config::get('queries.only_duplicated', false);
     }
 }
