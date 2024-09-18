@@ -14,6 +14,8 @@ class QueryObserver
 
     private ?string $label = null;
 
+    protected array $executedQueries = [];
+
     public function register(): void
     {
         DB::listen(function (QueryExecuted $query) {
@@ -21,35 +23,46 @@ class QueryObserver
                 return;
             }
 
-            $toSql = DB::getQueryGrammar()
-                ->substituteBindingsIntoRawSql(
-                    $query->sql,
-                    $query->bindings
-                );
+            try {
+                $sql = DB::getQueryGrammar()
+                    ->substituteBindingsIntoRawSql(
+                        $query->sql,
+                        $query->bindings
+                    );
 
-            $queries = [
-                'sql'            => $toSql,
-                'time'           => $query->time,
-                'database'       => $query->connection->getDatabaseName(),
-                'connectionName' => $query->connectionName,
-                'query'          => $query,
-            ];
+                $duplicated = in_array($sql, $this->executedQueries);
 
-            $dumps = new LaraDumps();
+                $this->executedQueries[] = $sql;
 
-            $payload = new QueriesPayload($queries);
+                if (!$duplicated && $this->onlyDuplicates()) {
+                    return;
+                }
 
-            $dumps->send($payload);
+                $queries = [
+                    'sql'            => $sql,
+                    'duplicated'     => $duplicated,
+                    'time'           => $query->time,
+                    'database'       => $query->connection->getDatabaseName(),
+                    'connectionName' => $query->connectionName,
+                    'query'          => $query,
+                ];
 
-            if ($this->label) {
-                $dumps->label($this->label);
+                $dumps   = new LaraDumps();
+                $payload = new QueriesPayload($queries);
+
+                $dumps->send($payload);
+
+                if ($this->label) {
+                    $dumps->label($this->label);
+                }
+
+                $dumps->toScreen('Queries');
+            } catch (\Throwable) {
             }
-
-            $dumps->toScreen('Queries');
         });
     }
 
-    public function enable(string $label = null): void
+    public function enable(?string $label = null): void
     {
         $this->label = $label;
 
@@ -72,5 +85,10 @@ class QueryObserver
         }
 
         return boolval(Config::get('observers.queries', false));
+    }
+
+    private function onlyDuplicates()
+    {
+        return Config::get('queries.only_duplicates', false);
     }
 }
