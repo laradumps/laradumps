@@ -125,6 +125,7 @@ The Desktop App receives:
 <p align="center">
   <img src="./art/queries.png" height="500" alt="" />
 </p>
+
 ### Credits
 
 LaraDumps is a free open-source project, and it was inspired by [Spatie Ray](https://github.com/spatie/ray), check it out!
