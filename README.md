@@ -15,7 +15,7 @@
 <div align="center">
   <p align="center">
     <a href="https://packagist.org/packages/laradumps/laradumps">
-      <img alt="Latest Version" src="https://img.shields.io/static/v1?label=laravel&message=%E2%89%A59.0&color=0078BE&logo=laravel&style=flat-square">
+      <img alt="Latest Version" src="https://img.shields.io/static/v1?label=laravel&message=%E2%89%A510.0&color=0078BE&logo=laravel&style=flat-square">
     </a>
     <a href="https://packagist.org/packages/laradumps/laradumps">
       <img alt="Total Downloads" src="https://img.shields.io/packagist/dt/laradumps/laradumps">
