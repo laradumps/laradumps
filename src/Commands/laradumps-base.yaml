@@ -2,6 +2,7 @@ observers:
   dump: false
   original_dump: true
   auto_invoke_app: false
+  enabled_in_testing: false
   queries: false
   slow_queries: false
   mail: false
