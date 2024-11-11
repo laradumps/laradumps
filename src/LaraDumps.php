@@ -13,33 +13,11 @@ use LaraDumps\LaraDumps\Observers\{CacheObserver,
     QueryObserver,
     ScheduledCommandObserver};
 use LaraDumps\LaraDumps\Payloads\{MailablePayload, MarkdownPayload, ModelPayload, RoutesPayload};
+use LaraDumps\LaraDumpsCore\Actions\Dumper;
 use LaraDumps\LaraDumpsCore\LaraDumps as BaseLaraDumps;
 
 class LaraDumps extends BaseLaraDumps
 {
-    protected function beforeWrite(mixed $args): \Closure
-    {
-        return function () use ($args) {
-            if ($args instanceof Model) {
-                $payload = new ModelPayload($args);
-
-                return [
-                    $payload,
-                    uniqid(),
-                ];
-            }
-
-            if (class_exists(\Livewire\Volt\Component::class)
-                && $args instanceof \Livewire\Volt\Component) {
-                (new Debug())->debug($args->getId());
-
-                return [[], null];
-            }
-
-            return parent::beforeWrite($args)();
-        };
-    }
-
     /**
      * Send Routes
      */
@@ -206,5 +184,41 @@ class LaraDumps extends BaseLaraDumps
     public function gateOff(): void
     {
         app(GateObserver::class)->disable();
+    }
+
+    public function extraContent(): array
+    {
+        if (!class_exists(\Illuminate\Support\Facades\Context::class)) {
+            return [];
+        }
+
+        return [
+            'Context' => Dumper::dump(
+                \Illuminate\Support\Facades\Context::all()
+            ),
+        ];
+    }
+
+    protected function beforeWrite(mixed $args): \Closure
+    {
+        return function () use ($args) {
+            if ($args instanceof Model) {
+                $payload = new ModelPayload($args);
+
+                return [
+                    $payload,
+                    uniqid(),
+                ];
+            }
+
+            if (class_exists(\Livewire\Volt\Component::class)
+                && $args instanceof \Livewire\Volt\Component) {
+                (new Debug())->debug($args->getId());
+
+                return [[], null];
+            }
+
+            return parent::beforeWrite($args)();
+        };
     }
 }
