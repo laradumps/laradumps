@@ -2,9 +2,7 @@
 
 namespace LaraDumps\LaraDumps\Payloads;
 
-use LaraDumps\LaraDumpsCore\Payloads\Label;
-use LaraDumps\LaraDumpsCore\Payloads\Payload;
-use LaraDumps\LaraDumpsCore\Payloads\Screen;
+use LaraDumps\LaraDumpsCore\Payloads\{Label, Payload, Screen};
 
 class QueriesPayload extends Payload
 {

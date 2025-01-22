@@ -6,9 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Number;
 use LaraDumps\LaraDumps\LaraDumps;
 use LaraDumps\LaraDumpsCore\Actions\Dumper;
-use LaraDumps\LaraDumpsCore\Payloads\Label;
-use LaraDumps\LaraDumpsCore\Payloads\Payload;
-use LaraDumps\LaraDumpsCore\Payloads\Screen;
+use LaraDumps\LaraDumpsCore\Payloads\{Payload, Screen};
 use Livewire\Component;
 use Livewire\Mechanisms\HandleComponents\{ComponentContext, HandleComponents};
 
