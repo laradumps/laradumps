@@ -4,7 +4,7 @@ namespace LaraDumps\LaraDumps\Payloads;
 
 use Illuminate\Routing\Route;
 use Illuminate\Support\{Arr, Str};
-use LaraDumps\LaraDumpsCore\Payloads\Payload;
+use LaraDumps\LaraDumpsCore\Payloads\{Label, Payload, Screen};
 
 class RoutesPayload extends Payload
 {
@@ -59,7 +59,16 @@ class RoutesPayload extends Payload
                 'Uri',
                 'Action',
             ],
-            'label' => 'Routes',
         ];
+    }
+
+    public function screen(): array|Screen
+    {
+        return [];
+    }
+
+    public function label(): array|Label
+    {
+        return new Label('Routes');
     }
 }

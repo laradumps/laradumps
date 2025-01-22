@@ -2,7 +2,7 @@
 
 namespace LaraDumps\LaraDumps\Payloads;
 
-use LaraDumps\LaraDumpsCore\Payloads\Payload;
+use LaraDumps\LaraDumpsCore\Payloads\{Label, Payload, Screen};
 
 class BladePayload extends Payload
 {
@@ -21,5 +21,15 @@ class BladePayload extends Payload
         return [
             'dump' => $this->dump,
         ];
+    }
+
+    public function screen(): array|Screen
+    {
+        return [];
+    }
+
+    public function label(): array|Label
+    {
+        return [];
     }
 }

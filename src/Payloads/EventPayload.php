@@ -2,7 +2,7 @@
 
 namespace LaraDumps\LaraDumps\Payloads;
 
-use LaraDumps\LaraDumpsCore\Payloads\Payload;
+use LaraDumps\LaraDumpsCore\Payloads\{Label, Payload, Screen};
 
 class EventPayload extends Payload
 {
@@ -29,5 +29,15 @@ class EventPayload extends Payload
     public function type(): string
     {
         return 'events';
+    }
+
+    public function screen(): array|Screen
+    {
+        return [];
+    }
+
+    public function label(): array|Label
+    {
+        return [];
     }
 }

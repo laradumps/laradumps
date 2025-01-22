@@ -3,7 +3,7 @@
 namespace LaraDumps\LaraDumps\Payloads;
 
 use Illuminate\Mail\SentMessage;
-use LaraDumps\LaraDumpsCore\Payloads\Payload;
+use LaraDumps\LaraDumpsCore\Payloads\{Label, Payload, Screen};
 use ReflectionClass;
 use Symfony\Component\Mime\Part\{DataPart, File};
 
@@ -72,5 +72,15 @@ class MailPayload extends Payload
     public function content(): array
     {
         return $this->mailProperties;
+    }
+
+    public function screen(): array|Screen
+    {
+        return new Screen('Mail');
+    }
+
+    public function label(): array|Label
+    {
+        return [];
     }
 }

@@ -2,7 +2,9 @@
 
 namespace LaraDumps\LaraDumps\Payloads;
 
+use LaraDumps\LaraDumpsCore\Payloads\Label;
 use LaraDumps\LaraDumpsCore\Payloads\Payload;
+use LaraDumps\LaraDumpsCore\Payloads\Screen;
 
 class QueriesPayload extends Payload
 {
@@ -19,5 +21,15 @@ class QueriesPayload extends Payload
     public function content(): array
     {
         return $this->queries;
+    }
+
+    public function screen(): array|Screen
+    {
+        return new Screen('Queries');
+    }
+
+    public function label(): array|Label
+    {
+        return [];
     }
 }

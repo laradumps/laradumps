@@ -24,8 +24,6 @@ class MailObserver
             $payload = new MailPayload($messageSent->sent, Dumper::dump($messageSent->data), $messageSent->sent->getMessageId());
 
             $dumps->send($payload);
-            $dumps->label('Mail');
-            $dumps->s('Mail');
         });
 
         Event::listen(NotificationSent::class, function (NotificationSent $notificationSent) {
@@ -56,7 +54,6 @@ class MailObserver
 
             $dumps->send($payload);
             $dumps->label($notificationSent->channel);
-            $dumps->s('Mail');
         });
     }
 

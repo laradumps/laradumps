@@ -17,7 +17,7 @@
         "nunomaduro/termwind": "^1.15.1|^2.0.1",
         "illuminate/support": "^10.0|^11.0",
         "illuminate/mail": "^10.0|^11.0",
-        "laradumps/laradumps-core": "^2.4"
+        "laradumps/laradumps-core": "3.x-dev"
     },
     "require-dev": {
         "orchestra/testbench-core": "^8.0|^9.4",

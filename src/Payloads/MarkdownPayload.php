@@ -3,7 +3,7 @@
 namespace LaraDumps\LaraDumps\Payloads;
 
 use Illuminate\Mail\Markdown;
-use LaraDumps\LaraDumpsCore\Payloads\Payload;
+use LaraDumps\LaraDumpsCore\Payloads\{Label, Payload, Screen};
 
 class MarkdownPayload extends Payload
 {
@@ -22,5 +22,15 @@ class MarkdownPayload extends Payload
         return [
             'dump' => Markdown::parse($this->dump)->toHtml(),
         ];
+    }
+
+    public function screen(): array|Screen
+    {
+        return [];
+    }
+
+    public function label(): array|Label
+    {
+        return [];
     }
 }

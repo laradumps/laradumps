@@ -4,7 +4,7 @@ namespace LaraDumps\LaraDumps\Payloads;
 
 use Illuminate\Database\Eloquent\Model;
 use LaraDumps\LaraDumpsCore\Actions\Dumper;
-use LaraDumps\LaraDumpsCore\Payloads\Payload;
+use LaraDumps\LaraDumpsCore\Payloads\{Label, Payload, Screen};
 
 class ModelPayload extends Payload
 {
@@ -28,5 +28,15 @@ class ModelPayload extends Payload
             'className'  => get_class($this->model),
             'attributes' => Dumper::dump($this->model->attributesToArray()),
         ];
+    }
+
+    public function screen(): array|Screen
+    {
+        return [];
+    }
+
+    public function label(): array|Label
+    {
+        return [];
     }
 }

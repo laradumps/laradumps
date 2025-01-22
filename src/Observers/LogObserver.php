@@ -79,8 +79,6 @@ class LogObserver
             }
 
             $dumps->send($payload);
-
-            $dumps->toScreen('Logs');
         });
     }
 

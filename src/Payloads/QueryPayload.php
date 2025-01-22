@@ -4,7 +4,7 @@ namespace LaraDumps\LaraDumps\Payloads;
 
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
-use LaraDumps\LaraDumpsCore\Payloads\Payload;
+use LaraDumps\LaraDumpsCore\Payloads\{Label, Payload, Screen};
 
 class QueryPayload extends Payload
 {
@@ -29,5 +29,15 @@ class QueryPayload extends Payload
     public function type(): string
     {
         return 'query';
+    }
+
+    public function screen(): array|Screen
+    {
+        return [];
+    }
+
+    public function label(): array|Label
+    {
+        return new Label('Queries');
     }
 }

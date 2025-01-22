@@ -3,7 +3,7 @@
 namespace LaraDumps\LaraDumps\Payloads;
 
 use Illuminate\Mail\Mailable;
-use LaraDumps\LaraDumpsCore\Payloads\Payload;
+use LaraDumps\LaraDumpsCore\Payloads\{Label, Payload, Screen};
 use Throwable;
 
 class MailablePayload extends Payload
@@ -47,6 +47,16 @@ class MailablePayload extends Payload
         }
 
         return $content;
+    }
+
+    public function screen(): array|Screen
+    {
+        return [];
+    }
+
+    public function label(): array|Label
+    {
+        return [];
     }
 
     protected static function renderMailable(Mailable $mailable): string

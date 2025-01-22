@@ -6,7 +6,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Number;
 use LaraDumps\LaraDumps\LaraDumps;
 use LaraDumps\LaraDumpsCore\Actions\Dumper;
+use LaraDumps\LaraDumpsCore\Payloads\Label;
 use LaraDumps\LaraDumpsCore\Payloads\Payload;
+use LaraDumps\LaraDumpsCore\Payloads\Screen;
 use Livewire\Component;
 use Livewire\Mechanisms\HandleComponents\{ComponentContext, HandleComponents};
 
@@ -68,6 +70,16 @@ class Debug
                 public function content(): array
                 {
                     return $this->payload;
+                }
+
+                public function screen(): Screen
+                {
+                    return new Screen('Livewire');
+                }
+
+                public function label(): array
+                {
+                    return [];
                 }
             };
 

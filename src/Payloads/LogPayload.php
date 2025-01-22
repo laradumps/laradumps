@@ -2,7 +2,7 @@
 
 namespace LaraDumps\LaraDumps\Payloads;
 
-use LaraDumps\LaraDumpsCore\Payloads\Payload;
+use LaraDumps\LaraDumpsCore\Payloads\{Label, Payload, Screen};
 
 class LogPayload extends Payload
 {
@@ -19,5 +19,15 @@ class LogPayload extends Payload
     public function content(): array
     {
         return $this->value;
+    }
+
+    public function screen(): array|Screen
+    {
+        return new Screen('Logs');
+    }
+
+    public function label(): array|Label
+    {
+        return [];
     }
 }
