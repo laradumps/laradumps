@@ -82,7 +82,6 @@ class Debug
             };
 
             $laradumps->send($payload);
-            $laradumps->toScreen('Livewire');
 
             unset(static::$profilesBag[$context->component->getId()]);
             static::$components = [];

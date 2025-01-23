@@ -27,9 +27,9 @@ class JobsObserver
                 return;
             }
 
-            $payload = $this->generatePayload($event);
+            $payload = $this->generatePayload($event, get_class($event));
 
-            $this->sendPayload($payload, get_class($event));
+            $this->sendPayload($payload);
         });
     }
 
@@ -67,8 +67,10 @@ class JobsObserver
         return boolval(Config::get('observers.jobs', false));
     }
 
-    public function generatePayload(object $event): Payload
+    public function generatePayload(object $event, string $className): Payload
     {
+        $label = $this->label ?? $this->getLabelClassNameBased($className);
+
         [$pre, $id] = Dumper::dump(
             /* @phpstan-ignore-next-line */
             $event->job instanceof Job && $event?->job->payload()
@@ -76,17 +78,16 @@ class JobsObserver
                 : $event->job
         );
 
-        $payload = new DumpPayload($pre);
+        $payload = new DumpPayload($pre, screen: 'Jobs', label: $label);
         $payload->setDumpId($id);
 
         return $payload;
     }
 
-    protected function sendPayload(Payload $payload, string $className): void
+    protected function sendPayload(Payload $payload): void
     {
         $dumps = new LaraDumps();
 
         $dumps->send($payload);
-        $dumps->label($this->label ?? $this->getLabelClassNameBased($className));
     }
 }

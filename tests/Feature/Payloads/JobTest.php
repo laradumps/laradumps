@@ -63,7 +63,7 @@ it('generate job payload with JobProcessing class', function () {
     $job        = new SyncJob(app(), $payload, 'sync', 'default');
     $processing = new JobProcessing('sync', $job);
 
-    $generatePayload = app(JobsObserver::class)->generatePayload($processing);
+    $generatePayload = app(JobsObserver::class)->generatePayload($processing, '');
     $generatePayload->setNotificationId(1234);
 
     $payload = (object) $generatePayload->toArray();
@@ -88,7 +88,7 @@ it('generate job payload with JobFailed class', function () {
 
     $processing = new JobFailed('sync', $job, new Exception('Failed!'));
 
-    $generatePayload = app(JobsObserver::class)->generatePayload($processing);
+    $generatePayload = app(JobsObserver::class)->generatePayload($processing, '');
     $generatePayload->setNotificationId(1234);
 
     $payload = (object) $generatePayload->toArray();

@@ -36,15 +36,9 @@ class GateObserver
                     return $argument instanceof Model ? $this->formatModel($argument) : $argument;
                 })->toArray())[0],
                 'User' => Dumper::dump($user instanceof Authenticatable ? $user->toArray() : null)[0],
-            ]);
+            ], screen: 'Gate', label: $this->label);
 
             $dump->send($payload);
-
-            if (!empty($this->label)) {
-                $dump->label($this->label);
-            }
-
-            $dump->toScreen('Gate');
         });
     }
 

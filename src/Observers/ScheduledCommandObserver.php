@@ -68,7 +68,6 @@ class ScheduledCommandObserver
         $dumps = new LaraDumps();
 
         $dumps->send($payload);
-        $dumps->label($this->label);
     }
 
     private function generatePayload(Event $event): Payload
@@ -80,7 +79,7 @@ class ScheduledCommandObserver
             'Timezone'    => $event->timezone,
             'User'        => $event->user,
             'Output'      => $this->getEventOutput($event),
-        ]);
+        ], screen: 'Scheduled Commands', label: $this->label);
     }
 
     protected function getEventOutput(Event $event): string|null

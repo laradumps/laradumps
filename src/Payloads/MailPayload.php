@@ -13,8 +13,13 @@ class MailPayload extends Payload
 
     protected array $mailProperties = [];
 
-    public function __construct(SentMessage $sentMessage, array $details, string $messageId)
-    {
+    public function __construct(
+        SentMessage $sentMessage,
+        array $details,
+        string $messageId,
+        private string $screen = 'Mail',
+        private string $label = ''
+    ) {
         $sentMessage = $sentMessage->getOriginalMessage();
 
         $html = strval($sentMessage->getHtmlBody()); // @phpstan-ignore-line
@@ -76,11 +81,11 @@ class MailPayload extends Payload
 
     public function screen(): array|Screen
     {
-        return new Screen('Mail');
+        return new Screen($this->screen);
     }
 
     public function label(): array|Label
     {
-        return [];
+        return new Label($this->label);
     }
 }

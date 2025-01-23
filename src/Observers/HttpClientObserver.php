@@ -87,7 +87,7 @@ class HttpClientObserver
             'Data'    => $request->data(),
             'Body'    => $request->body(),
             'Type'    => $this->getRequestType($request),
-        ], 'Http', 'http-client');
+        ], screen: 'Http', label: $this->label ?? 'http request');
     }
 
     protected function handleResponse(Request $request, Response $response): Payload
@@ -106,7 +106,7 @@ class HttpClientObserver
             'Connection time' => $response->handlerStats()['connect_time'] ?? null,
             'Duration'        => $response->handlerStats()['total_time'] ?? null,
             'Request Size'    => $response->handlerStats()['request_size'] ?? null,
-        ], 'Http');
+        ], screen: 'Http', label: $this->label ?? 'http response');
     }
 
     private function sendPayload(Payload $payload, string $label): void
@@ -114,7 +114,5 @@ class HttpClientObserver
         $dumps = new LaraDumps();
 
         $dumps->send($payload);
-
-        $dumps->label($this->label ?: $label);
     }
 }

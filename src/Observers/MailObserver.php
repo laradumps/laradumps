@@ -50,10 +50,9 @@ class MailObserver
 
             $dumps = new LaraDumps();
 
-            $payload = new MailPayload($sentMessage, $details, $sentMessage->getMessageId());
+            $payload = new MailPayload($sentMessage, $details, $sentMessage->getMessageId(), label: $notificationSent->channel);
 
             $dumps->send($payload);
-            $dumps->label($notificationSent->channel);
         });
     }
 

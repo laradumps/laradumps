@@ -37,11 +37,9 @@ class SlowQueryObserver
 
                 $dumps = new LaraDumps();
 
-                $payload = new QueriesPayload($queries);
+                $payload = new QueriesPayload($queries, screen: 'Slow Queries');
 
                 $dumps->send($payload);
-
-                $dumps->toScreen('Slow Queries');
             }
         });
     }

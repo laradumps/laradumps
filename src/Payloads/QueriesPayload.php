@@ -8,6 +8,8 @@ class QueriesPayload extends Payload
 {
     public function __construct(
         private array $queries = [],
+        private string $screen = 'Queries',
+        private string $label = ''
     ) {
     }
 
@@ -23,11 +25,11 @@ class QueriesPayload extends Payload
 
     public function screen(): array|Screen
     {
-        return new Screen('Queries');
+        return new Screen($this->screen);
     }
 
     public function label(): array|Label
     {
-        return [];
+        return new Label($this->label);
     }
 }
