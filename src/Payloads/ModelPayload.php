@@ -30,12 +30,12 @@ class ModelPayload extends Payload
         ];
     }
 
-    public function screen(): array|Screen
+    public function toScreen(): array|Screen
     {
         return [];
     }
 
-    public function label(): array|Label
+    public function withLabel(): array|Label
     {
         return [];
     }

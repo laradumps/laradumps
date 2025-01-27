@@ -21,12 +21,12 @@ class LogPayload extends Payload
         return $this->value;
     }
 
-    public function screen(): array|Screen
+    public function toScreen(): array|Screen
     {
         return new Screen('Logs');
     }
 
-    public function label(): array|Label
+    public function withLabel(): array|Label
     {
         return [];
     }

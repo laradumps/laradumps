@@ -70,12 +70,12 @@ class Debug
                     return $this->payload;
                 }
 
-                public function screen(): Screen
+                public function toScreen(): Screen
                 {
                     return new Screen('Livewire');
                 }
 
-                public function label(): array
+                public function withLabel(): array
                 {
                     return [];
                 }

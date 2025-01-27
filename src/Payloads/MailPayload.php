@@ -79,12 +79,12 @@ class MailPayload extends Payload
         return $this->mailProperties;
     }
 
-    public function screen(): array|Screen
+    public function toScreen(): array|Screen
     {
         return new Screen($this->screen);
     }
 
-    public function label(): array|Label
+    public function withLabel(): array|Label
     {
         return new Label($this->label);
     }

@@ -23,12 +23,12 @@ class QueriesPayload extends Payload
         return $this->queries;
     }
 
-    public function screen(): array|Screen
+    public function toScreen(): array|Screen
     {
         return new Screen($this->screen);
     }
 
-    public function label(): array|Label
+    public function withLabel(): array|Label
     {
         return new Label($this->label);
     }
