@@ -23,7 +23,7 @@ class LogPayload extends Payload
 
     public function toScreen(): array|Screen
     {
-        return new Screen('Logs');
+        return new Screen('logs');
     }
 
     public function withLabel(): array|Label

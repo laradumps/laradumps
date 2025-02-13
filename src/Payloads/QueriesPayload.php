@@ -8,7 +8,7 @@ class QueriesPayload extends Payload
 {
     public function __construct(
         private array $queries = [],
-        private string $screen = 'Queries',
+        private string $screen = 'queries',
         private string $label = ''
     ) {
     }

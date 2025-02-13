@@ -78,7 +78,7 @@ class CacheObserver
         }
 
         $dump    = new LaraDumps();
-        $payload = new TableV2Payload($data, $headerStyle, 'Cache', $this->label ?: $label);
+        $payload = new TableV2Payload($data, $headerStyle, 'cache', $this->label ?: $label);
 
         $dump->send($payload);
     }

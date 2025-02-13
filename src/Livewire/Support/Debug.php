@@ -72,7 +72,7 @@ class Debug
 
                 public function toScreen(): Screen
                 {
-                    return new Screen('Livewire');
+                    return new Screen('livewire');
                 }
 
                 public function withLabel(): array

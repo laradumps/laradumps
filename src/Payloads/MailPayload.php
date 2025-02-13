@@ -17,7 +17,7 @@ class MailPayload extends Payload
         SentMessage $sentMessage,
         array $details,
         string $messageId,
-        private string $screen = 'Mail',
+        private string $screen = 'mail',
         private string $label = ''
     ) {
         $sentMessage = $sentMessage->getOriginalMessage();

@@ -78,7 +78,7 @@ class JobsObserver
                 : $event->job
         );
 
-        $payload = new DumpPayload($pre, screen: 'Jobs', label: $label);
+        $payload = new DumpPayload($pre, screen: 'jobs', label: $label);
         $payload->setDumpId($id);
 
         return $payload;

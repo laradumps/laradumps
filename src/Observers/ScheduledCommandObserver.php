@@ -79,7 +79,7 @@ class ScheduledCommandObserver
             'Timezone'    => $event->timezone,
             'User'        => $event->user,
             'Output'      => $this->getEventOutput($event),
-        ], screen: 'Scheduled Commands', label: $this->label);
+        ], screen: 'scheduled commands', label: $this->label);
     }
 
     protected function getEventOutput(Event $event): string|null
