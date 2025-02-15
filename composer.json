@@ -3,7 +3,7 @@
     "description": "LaraDumps is a friendly app designed to boost your Laravel PHP coding and debugging experience.",
     "homepage": "https://github.com/laradumps/laradumps",
     "license": "MIT",
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "prefer-stable": true,
     "authors": [
         {
