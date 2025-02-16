@@ -14,8 +14,6 @@ class JobsObserver
 {
     private bool $enabled = false;
 
-    private ?string $label = null;
-
     public function register(): void
     {
         Event::listen([
@@ -41,22 +39,8 @@ class JobsObserver
             JobProcessing::class => 'Processing',
             JobProcessed::class  => 'Processed',
             JobFailed::class     => 'Failed',
-            default              => 'Job'
+            default              => 'Stale'
         };
-    }
-
-    public function enable(?string $label = null): void
-    {
-        if ($label) {
-            $this->label = $label;
-        }
-
-        $this->enabled = true;
-    }
-
-    public function disable(): void
-    {
-        $this->enabled = false;
     }
 
     public function isEnabled(): bool
