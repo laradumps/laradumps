@@ -70,7 +70,7 @@ class JobsObserver
 
     public function generatePayload(object $event, string $className): Payload
     {
-        [$pre, $id] = Dumper::dump(
+        $dump = Dumper::dump(
             /* @phpstan-ignore-next-line */
             $event->job instanceof Job && $event?->job->payload()
                 ? unserialize($event->job->payload()['data']['command'], ['allowed_classes' => true]) // @phpstan-ignore-line
@@ -85,7 +85,7 @@ class JobsObserver
         }
 
         $payload = new JobPayload(
-            job: $pre,
+            job: $dump,
             status: $this->getLabelClassNameBased($className),
             jobId: $jobId,
             displayName: $displayName
