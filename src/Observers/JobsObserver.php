@@ -37,10 +37,10 @@ class JobsObserver
     public function getLabelClassNameBased(string $className): string
     {
         return match ($className) {
-            JobQueued::class     => 'Job - Queued',
-            JobProcessing::class => 'Job - Processing',
-            JobProcessed::class  => 'Job - Processed',
-            JobFailed::class     => 'Job - Failed',
+            JobQueued::class     => 'Queued',
+            JobProcessing::class => 'Processing',
+            JobProcessed::class  => 'Processed',
+            JobFailed::class     => 'Failed',
             default              => 'Job'
         };
     }
