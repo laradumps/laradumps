@@ -5,9 +5,10 @@ namespace LaraDumps\LaraDumps\Observers;
 use Illuminate\Queue\Events\{JobFailed, JobProcessed, JobProcessing, JobQueued};
 use Illuminate\Queue\Jobs\Job;
 use Illuminate\Support\Facades\Event;
+use LaraDumps\LaraDumps\Payloads\JobPayload;
 use LaraDumps\LaraDumpsCore\Actions\{Config, Dumper};
 use LaraDumps\LaraDumpsCore\LaraDumps;
-use LaraDumps\LaraDumpsCore\Payloads\{DumpPayload, Payload};
+use LaraDumps\LaraDumpsCore\Payloads\{Payload};
 
 class JobsObserver
 {
@@ -44,7 +45,7 @@ class JobsObserver
         };
     }
 
-    public function enable(string $label = null): void
+    public function enable(?string $label = null): void
     {
         if ($label) {
             $this->label = $label;
@@ -69,8 +70,6 @@ class JobsObserver
 
     public function generatePayload(object $event, string $className): Payload
     {
-        $label = $this->label ?? $this->getLabelClassNameBased($className);
-
         [$pre, $id] = Dumper::dump(
             /* @phpstan-ignore-next-line */
             $event->job instanceof Job && $event?->job->payload()
@@ -78,7 +77,20 @@ class JobsObserver
                 : $event->job
         );
 
-        $payload = new DumpPayload($pre, screen: 'jobs', label: $label);
+        $jobId       = method_exists($event, 'payload') ? $event->payload()['uuid'] : $event->job->payload()['uuid'];
+        $displayName = method_exists($event, 'payload') ? $event->payload()['displayName'] : $event->job->payload()['displayName'];
+
+        if (method_exists($event->job, 'payload')) {
+            $jobId = $event->job->payload()['uuid'];
+        }
+
+        $payload = new JobPayload(
+            job: $pre,
+            status: $this->getLabelClassNameBased($className),
+            jobId: $jobId,
+            displayName: $displayName
+        );
+
         $payload->setDumpId($id);
 
         return $payload;
