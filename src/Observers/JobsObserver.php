@@ -84,16 +84,12 @@ class JobsObserver
             $jobId = $event->job->payload()['uuid'];
         }
 
-        $payload = new JobPayload(
+        return new JobPayload(
             job: $dump,
             status: $this->getLabelClassNameBased($className),
             jobId: $jobId,
             displayName: $displayName
         );
-
-        $payload->setDumpId($id);
-
-        return $payload;
     }
 
     protected function sendPayload(Payload $payload): void
