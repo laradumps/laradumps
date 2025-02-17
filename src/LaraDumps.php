@@ -9,7 +9,6 @@ use LaraDumps\LaraDumps\Observers\{CacheObserver,
     CommandObserver,
     GateObserver,
     HttpClientObserver,
-    JobsObserver,
     QueryObserver,
     ScheduledCommandObserver};
 use LaraDumps\LaraDumps\Payloads\{MailablePayload, MarkdownPayload, ModelPayload, RoutesPayload};
@@ -120,24 +119,6 @@ class LaraDumps extends BaseLaraDumps
         $this->send($payload);
 
         return $this;
-    }
-
-    /**
-     * Dump all Jobs that are dispatched with custom label
-     */
-    public function jobsOn(?string $label = null): self
-    {
-        app(JobsObserver::class)->enable($label);
-
-        return $this;
-    }
-
-    /**
-     * Stop dumping Jobs
-     */
-    public function jobsOff(): void
-    {
-        app(JobsObserver::class)->disable();
     }
 
     /**
