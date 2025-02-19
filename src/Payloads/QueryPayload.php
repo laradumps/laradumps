@@ -33,7 +33,7 @@ class QueryPayload extends Payload
 
     public function toScreen(): array|Screen
     {
-        return [];
+        return new Screen('home');
     }
 
     public function withLabel(): array|Label
