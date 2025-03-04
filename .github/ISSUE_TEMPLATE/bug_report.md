@@ -61,6 +61,7 @@ You can run `composer show -i` and `npm list` to list installed package with the
 
 #### What is your project Environment?
 
+- [ ] Laravel Herd
 - [ ] Laravel Valet
 - [ ] Laravel Sail
 - [ ] Docker
