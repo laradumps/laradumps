@@ -42,7 +42,7 @@ class QueryObserver
                     return;
                 }
 
-                [$uri, $method] = $this->getRequest();
+                $request = $this->getRequest();
 
                 $queries = [
                     'sql'            => $sql,
@@ -51,8 +51,10 @@ class QueryObserver
                     'database'       => $query->connection->getDatabaseName(),
                     'connectionName' => $query->connectionName,
                     'query'          => $query,
-                    'uri'            => $uri,
-                    'method'         => $method,
+                    'uri'            => $request['uri'],
+                    'method'         => $request['method'],
+                    'origin'         => $request['origin'],
+                    'argv'           => $request['argv'],
                 ];
 
                 $dumps   = new LaraDumps();
@@ -76,9 +78,13 @@ class QueryObserver
             $qs = '?' . $qs;
         }
 
+        $origin = $request->server('argv') && $request->server('SERVER_NAME') === 'artisan' ? 'console' : 'http';
+
         return [
-            str($request->getPathInfo() . $qs)->ltrim('/')->toString(),
-            $request->getMethod(),
+            'origin' => $origin,
+            'argv'   => $request->server('argv'),
+            'uri'    => str($request->getPathInfo() . $qs)->ltrim('/')->toString(),
+            'method' => $request->getMethod(),
         ];
     }
 
