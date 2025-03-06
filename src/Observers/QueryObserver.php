@@ -78,7 +78,7 @@ class QueryObserver
             $qs = '?' . $qs;
         }
 
-        $origin = $request->server('argv') && $request->server('SERVER_NAME') === 'artisan' ? 'console' : 'http';
+        $origin = $request->server('argv') && $request->server('SCRIPT_NAME') === 'artisan' ? 'console' : 'http';
 
         return [
             'origin' => $origin,
