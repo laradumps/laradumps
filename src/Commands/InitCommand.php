@@ -74,6 +74,7 @@ class InitCommand extends Command
             $this->components->info('Read the docs: https://laradumps.dev/debug/usage.html');
 
             Process::run('echo "laradumps.yaml" >> .gitignore');
+
             return;
         };
     }
