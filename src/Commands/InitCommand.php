@@ -3,6 +3,7 @@
 namespace LaraDumps\LaraDumps\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Process;
 use LaraDumps\LaraDumpsCore\Actions\Config;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Yaml\Yaml;
@@ -71,6 +72,10 @@ class InitCommand extends Command
 
             $this->components->info('The laradumps.yaml file was published in <comment>' . $pwd . '</comment>');
             $this->components->info('Read the docs: https://laradumps.dev/debug/usage.html');
+
+            Process::run('echo "laradumps.yaml" >> .gitignore');
+
+            return;
         };
     }
 
