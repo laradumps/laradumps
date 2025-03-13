@@ -49,6 +49,7 @@ class QueryObserver
                     'duplicated'     => $duplicated,
                     'time'           => $query->time,
                     'database'       => $query->connection->getDatabaseName(),
+                    'driver'         => $query->connection->getDriverName(),
                     'connectionName' => $query->connectionName,
                     'query'          => $query,
                     'uri'            => $request['uri'],
