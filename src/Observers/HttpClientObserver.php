@@ -13,7 +13,7 @@ class HttpClientObserver
 {
     private bool $enabled = false;
 
-    private string $label = '';
+    private ?string $label = null;
 
     public function register(): void
     {
@@ -24,10 +24,7 @@ class HttpClientObserver
 
             $payload = $this->handleRequest($event->request);
 
-            $this->sendPayload(
-                $payload,
-                'Http Sending'
-            );
+            $this->sendPayload($payload);
         });
 
         Event::listen(ResponseReceived::class, function (ResponseReceived $event) {
@@ -37,10 +34,7 @@ class HttpClientObserver
 
             $payload = $this->handleResponse($event->request, $event->response);
 
-            $this->sendPayload(
-                $payload,
-                'Http Received'
-            );
+            $this->sendPayload($payload);
         });
     }
 
@@ -87,7 +81,7 @@ class HttpClientObserver
             'Data'    => $request->data(),
             'Body'    => $request->body(),
             'Type'    => $this->getRequestType($request),
-        ], screen: 'http', label: $this->label ?? 'http request');
+        ], screen: 'http', label: $this->label ?? 'request');
     }
 
     protected function handleResponse(Request $request, Response $response): Payload
@@ -106,13 +100,12 @@ class HttpClientObserver
             'Connection time' => $response->handlerStats()['connect_time'] ?? null,
             'Duration'        => $response->handlerStats()['total_time'] ?? null,
             'Request Size'    => $response->handlerStats()['request_size'] ?? null,
-        ], screen: 'http', label: $this->label ?? 'http response');
+        ], screen: 'http', label: $this->label ?? 'response');
     }
 
-    private function sendPayload(Payload $payload, string $label): void
+    private function sendPayload(Payload $payload): void
     {
         $dumps = new LaraDumps();
-
         $dumps->send($payload);
     }
 }
