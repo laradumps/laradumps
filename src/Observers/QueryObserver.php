@@ -62,7 +62,7 @@ class QueryObserver
                 $backtrace = Backtrace::create();
                 $frame     = app(LaraDumps::class)->parseFrame($backtrace);
 
-                $dumps   = new LaraDumps();
+                $dumps = new LaraDumps();
 
                 $payload = new QueriesPayload($queries);
                 $payload->setFrame($frame);
