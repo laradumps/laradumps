@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\{DB, Event};
 use LaraDumps\LaraDumps\Payloads\QueriesPayload;
 use LaraDumps\LaraDumpsCore\Actions\Config;
 use LaraDumps\LaraDumpsCore\LaraDumps;
+use Spatie\Backtrace\Backtrace;
 
 class QueryObserver
 {
@@ -58,10 +59,15 @@ class QueryObserver
                     'argv'           => $request['argv'],
                 ];
 
-                $dumps   = new LaraDumps();
-                $payload = new QueriesPayload($queries);
+                $backtrace = Backtrace::create();
+                $frame     = app(LaraDumps::class)->parseFrame($backtrace);
 
-                $dumps->send($payload);
+                $dumps = new LaraDumps();
+
+                $payload = new QueriesPayload($queries);
+                $payload->setFrame($frame);
+
+                $dumps->send($payload, withFrame: false);
 
                 if ($this->label) {
                     $dumps->label($this->label);
