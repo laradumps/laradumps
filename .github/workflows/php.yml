@@ -54,9 +54,9 @@ jobs:
         env:
           PHP_CS_FIXER_IGNORE_ENV: 1
 
-#      - name: Larastan ⚗️ (temporary disabled)
-#        if: matrix.os == 'ubuntu-latest' && matrix.laravel == '11.x'
-#        run: composer test:types
+      - name: Larastan ⚗️ (temporary disabled)
+        if: matrix.os == 'ubuntu-latest'
+        run: composer test:types
 
       - name: Pest Tests 👨🏻‍🔬
         run: composer test:tests
