@@ -3,12 +3,11 @@
 namespace LaraDumps\LaraDumps;
 
 use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\{Collection, ServiceProvider, Stringable};
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Testing\TestResponse;
 use Illuminate\View\View;
 use LaraDumps\LaraDumps\Commands\InitCommand;
-use LaraDumps\LaraDumps\Observers\LogObserver;
 use LaraDumps\LaraDumps\Observers\{CacheObserver,
     CommandObserver,
     DumpObserver,
@@ -19,6 +18,7 @@ use LaraDumps\LaraDumps\Observers\{CacheObserver,
     QueryObserver,
     ScheduledCommandObserver,
     SlowQueryObserver};
+use LaraDumps\LaraDumps\Observers\LogObserver;
 use LaraDumps\LaraDumps\Payloads\QueryPayload;
 use LaraDumps\LaraDumpsCore\Actions\Dumper;
 use LaraDumps\LaraDumpsCore\Payloads\{DumpPayload, TableV2Payload};

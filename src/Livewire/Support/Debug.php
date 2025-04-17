@@ -8,9 +8,10 @@ use LaraDumps\LaraDumps\LaraDumps;
 use LaraDumps\LaraDumpsCore\Actions\Dumper;
 use LaraDumps\LaraDumpsCore\Payloads\{Payload, Screen};
 use Livewire\Component;
-use Livewire\Mechanisms\HandleComponents\{ComponentContext, HandleComponents};
 
 use function Livewire\{invade, on};
+
+use Livewire\Mechanisms\HandleComponents\{ComponentContext, HandleComponents};
 
 class Debug
 {
