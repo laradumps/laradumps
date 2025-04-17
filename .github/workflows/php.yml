@@ -55,7 +55,7 @@ jobs:
           PHP_CS_FIXER_IGNORE_ENV: 1
 
       - name: Larastan ⚗️
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.php == '8.3' && matrix.os == 'ubuntu-latest'
         run: composer test:types
 
       - name: Pest Tests 👨🏻‍🔬
