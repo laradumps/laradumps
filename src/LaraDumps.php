@@ -11,7 +11,7 @@ use LaraDumps\LaraDumps\Observers\{CacheObserver,
     HttpClientObserver,
     QueryObserver,
     ScheduledCommandObserver};
-use LaraDumps\LaraDumps\Payloads\{MailablePayload, MarkdownPayload, ModelPayload, RoutesPayload};
+use LaraDumps\LaraDumps\Payloads\{ContextPayload, MailablePayload, MarkdownPayload, ModelPayload, RoutesPayload};
 use LaraDumps\LaraDumpsCore\LaraDumps as BaseLaraDumps;
 
 class LaraDumps extends BaseLaraDumps
@@ -187,5 +187,16 @@ class LaraDumps extends BaseLaraDumps
     public function gateOff(): void
     {
         app(GateObserver::class)->disable();
+    }
+
+    /**
+     * Sends context information to the dump.
+     */
+    public function withContext(string|array ...$keys): static
+    {
+        $payload = new ContextPayload($keys);
+        $this->send($payload);
+
+        return $this;
     }
 }
