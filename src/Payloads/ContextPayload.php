@@ -21,9 +21,11 @@ class ContextPayload extends Payload
     {
         $keys = isset($this->keys[0]) && is_array($this->keys[0]) ? $this->keys[0] : $this->keys;
 
-        return count($keys)
-            ? Context::only($keys)
-            : Context::all();
+        return [
+            'context' => count($keys)
+                ? Context::only($keys)
+                : Context::all()
+        ];
     }
 
     public function toScreen(): array|Screen
