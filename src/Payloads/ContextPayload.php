@@ -24,7 +24,7 @@ class ContextPayload extends Payload
         return [
             'context' => count($keys)
                 ? Context::only($keys)
-                : Context::all()
+                : Context::all(),
         ];
     }
 
