@@ -43,7 +43,7 @@ class GateObserver
         });
     }
 
-    public function enable(string $label = null): void
+    public function enable(?string $label = null): void
     {
         $this->label = $label;
 
