@@ -15,15 +15,15 @@ observers:
   cache: false
 logs:
   info: true
-  warning: false
+  warning: true
   emergency: true
   alert: false
   debug: true
   error: true
   critical: true
   notice: true
-  vendor: false
-  deprecated_message: false
+  vendor: true
+  deprecated_message: true
 slow_queries:
   threshold_in_ms: 500
 queries:
@@ -32,3 +32,5 @@ queries:
   insert: true
   update: true
   delete: true
+extra:
+  context: false
