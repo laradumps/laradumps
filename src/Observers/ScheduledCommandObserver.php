@@ -40,7 +40,7 @@ class ScheduledCommandObserver
         });
     }
 
-    public function enable(string $label = null): void
+    public function enable(?string $label = null): void
     {
         if ($label) {
             $this->label = $label;
@@ -91,6 +91,6 @@ class ScheduledCommandObserver
             return '';
         }
 
-        return trim(file_get_contents($event->output)); /** @phpstan-ignore-line */
+        return trim((string) file_get_contents($event->output));
     }
 }

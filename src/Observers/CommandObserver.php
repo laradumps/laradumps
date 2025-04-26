@@ -27,7 +27,7 @@ class CommandObserver
         });
     }
 
-    public function enable(string $label = null): void
+    public function enable(?string $label = null): void
     {
         if ($label) {
             $this->label = $label;
