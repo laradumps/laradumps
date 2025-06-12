@@ -162,28 +162,28 @@ class Debug
     public static function matchClass(string $method): string
     {
         if (str_contains($method, 'child:')) {
-            return 'border-purple-500';
+            return 'border-purple-400';
         }
 
         return match ($method) {
-            'mount'  => 'border-blue-500',
-            'render' => 'border-green-500',
-            'hydrate', 'dehydrate' => 'border-orange-500',
-            default => 'border-red-500'
+            'mount'  => 'border-blue-600',
+            'render' => 'border-green-600',
+            'hydrate', 'dehydrate' => 'border-orange-400',
+            default => 'border-red-600'
         };
     }
 
     private static function matchGraphicClass(string $method): string
     {
         if (str_contains($method, 'child:')) {
-            return 'bg-purple-500';
+            return 'bg-purple-400';
         }
 
         return match ($method) {
-            'mount'  => 'bg-blue-500',
-            'render' => 'bg-green-500',
-            'hydrate', 'dehydrate' => 'bg-orange-500',
-            default => 'bg-red-500'
+            'mount'  => 'bg-blue-600',
+            'render' => 'bg-green-600',
+            'hydrate', 'dehydrate' => 'bg-orange-400',
+            default => 'bg-red-600'
         };
     }
 }
