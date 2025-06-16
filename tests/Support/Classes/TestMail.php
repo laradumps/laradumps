@@ -21,7 +21,7 @@ class TestMail extends Mailable
 
     protected function getHTML(): string
     {
-        return <<<HTML
+        return <<<'HTML'
         Hi,<br/><br/>
         This is a <b>test mail</b>
         HTML;

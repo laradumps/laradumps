@@ -10,8 +10,7 @@ class QueriesPayload extends Payload
         private array $queries = [],
         private string $screen = 'queries',
         private string $label = ''
-    ) {
-    }
+    ) {}
 
     public function type(): string
     {

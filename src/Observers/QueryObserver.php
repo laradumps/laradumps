@@ -5,143 +5,91 @@ namespace LaraDumps\LaraDumps\Observers;
 use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Support\Facades\{DB, Event};
 use LaraDumps\LaraDumps\Payloads\QueriesPayload;
-use LaraDumps\LaraDumpsCore\Actions\Config;
 use LaraDumps\LaraDumpsCore\LaraDumps;
 use Spatie\Backtrace\Backtrace;
 
-class QueryObserver
+class QueryObserver extends BaseObserver
 {
-    private bool $enabled = false;
-
-    private ?string $label = null;
-
-    protected array $executedQueries = [];
-
     public function register(): void
     {
-        Event::listen(QueryExecuted::class, function (QueryExecuted $query) {
-            if (!$this->isEnabled()) {
-                return;
-            }
-
-            try {
-                $sql = DB::getQueryGrammar()
-                    ->substituteBindingsIntoRawSql(
-                        $query->sql,
-                        $query->bindings
-                    );
-
-                if (!$this->shouldProcessQuery($sql)) {
-                    return;
-                }
-
-                $duplicated = in_array($sql, $this->executedQueries);
-
-                $this->executedQueries[] = $sql;
-
-                if (!$duplicated && $this->onlyDuplicated()) {
-                    return;
-                }
-
-                $request = $this->getRequest();
-
-                $queries = [
-                    'sql'            => $sql,
-                    'duplicated'     => $duplicated,
-                    'time'           => $query->time,
-                    'database'       => $query->connection->getDatabaseName(),
-                    'driver'         => $query->connection->getDriverName(),
-                    'connectionName' => $query->connectionName,
-                    'query'          => $query,
-                    'uri'            => $request['uri'],
-                    'method'         => $request['method'],
-                    'origin'         => $request['origin'],
-                    'argv'           => $request['argv'],
-                ];
-
-                $backtrace = Backtrace::create();
-                $frame     = app(LaraDumps::class)->parseFrame($backtrace);
-
-                $dumps = new LaraDumps();
-
-                $payload = new QueriesPayload($queries);
-                $payload->setFrame($frame);
-
-                $dumps->send($payload, withFrame: false);
-
-                if ($this->label) {
-                    $dumps->label($this->label);
-                }
-            } catch (\Throwable) {
-            }
-        });
+        Event::listen(QueryExecuted::class, fn (QueryExecuted $query) => $this->handle($query));
     }
 
-    public function getRequest(): array
-    {
-        $request = request();
-
-        if (null !== $qs = $request->getQueryString()) {
-            $qs = '?' . $qs;
-        }
-
-        $origin = $request->server('argv') && $request->server('SCRIPT_NAME') === 'artisan' ? 'console' : 'http';
-
-        return [
-            'origin' => $origin,
-            'argv'   => $request->server('argv'),
-            'uri'    => str($request->getPathInfo() . $qs)->ltrim('/')->toString(),
-            'method' => $request->getMethod(),
-        ];
-    }
-
-    public function enable(?string $label = null): void
+    public function enable(string $label = ''): void
     {
         $this->label = $label;
-
         DB::enableQueryLog();
-
         $this->enabled = true;
     }
 
     public function disable(): void
     {
         DB::disableQueryLog();
-
         $this->enabled = false;
     }
 
-    public function isEnabled(): bool
+    private function handle(QueryExecuted $query): void
     {
-        if (!boolval(Config::get('observers.queries', false))) {
-            return $this->enabled;
+        if (! $this->isEnabled('queries')) {
+            return;
         }
 
-        return boolval(Config::get('observers.queries', false));
-    }
+        try {
+            $sql = DB::getQueryGrammar()->substituteBindingsIntoRawSql($query->sql, $query->bindings);
 
-    private function onlyDuplicated(): bool
-    {
-        return boolval(Config::get('queries.only_duplicated', false));
-    }
+            $queries = $this->buildQueryPayload($query, $sql);
+            $frame = app(LaraDumps::class)->parseFrame(Backtrace::create());
 
-    private function shouldProcessQuery(string $sql): bool
-    {
-        $sql = str($sql)->trim()->upper();
+            $payload = new QueriesPayload($queries);
+            $payload->setFrame($frame);
 
-        $queryStatement = [
-            'SELECT' => (bool) Config::get('queries.select', true),
-            'INSERT' => (bool) Config::get('queries.insert', true),
-            'UPDATE' => (bool) Config::get('queries.update', true),
-            'DELETE' => (bool) Config::get('queries.delete', true),
-        ];
+            $dumper = new LaraDumps();
+            $dumper->send($payload, withFrame: false);
 
-        foreach ($queryStatement as $type => $isEnabled) {
-            if (str($sql)->startsWith($type)) {
-                return $isEnabled;
+            if ($this->label) {
+                $dumper->label($this->label);
             }
+        } catch (\Throwable) {
         }
+    }
 
-        return true;
+    private function buildQueryPayload(QueryExecuted $query, string $sql): array
+    {
+        $request = $this->resolveRequestContext();
+
+        $query->sql = $sql;
+
+        return [
+            'time' => $query->time,
+            'database' => $query->connection->getDatabaseName(),
+            'driver' => $query->connection->getDriverName(),
+            'connectionName' => $query->connectionName,
+            'query' => $query,
+            'uri' => $request['uri'],
+            'method' => $request['method'],
+            'origin' => $request['origin'],
+            'argv' => $request['argv'],
+        ];
+    }
+
+    private function resolveRequestContext(): array
+    {
+        $request = request();
+
+        $queryString = $request->getQueryString();
+        $uri = str($request->getPathInfo().($queryString ? "?$queryString" : ''))
+            ->ltrim('/')
+            ->toString();
+
+        $origin = ($request->server('argv') && $request->server('SCRIPT_NAME') === 'artisan')
+            ? 'console'
+            : 'http';
+
+        return [
+            'origin' => $origin,
+            'argv' => $request->server('argv'),
+            'uri' => $uri,
+            'method' => $request->getMethod(),
+        ];
     }
 }

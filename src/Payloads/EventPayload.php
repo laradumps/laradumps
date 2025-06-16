@@ -19,10 +19,10 @@ class EventPayload extends Payload
     public function content(): array
     {
         return [
-            'name'              => $this->eventName,
-            'event'             => $this->event ?: null,
-            'payload'           => count($this->payload) ? $this->payload : null,
-            'class_based_event' => !is_null($this->event),
+            'name' => $this->eventName,
+            'event' => $this->event ?: null,
+            'payload' => count($this->payload) ? $this->payload : null,
+            'class_based_event' => ! is_null($this->event),
         ];
     }
 

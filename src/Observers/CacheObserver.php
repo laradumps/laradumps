@@ -5,145 +5,108 @@ namespace LaraDumps\LaraDumps\Observers;
 use Illuminate\Cache\Events\{CacheEvent, CacheHit, CacheMissed, KeyForgotten, KeyWritten};
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Str;
-use LaraDumps\LaraDumpsCore\Actions\Config;
 use LaraDumps\LaraDumpsCore\LaraDumps;
 use LaraDumps\LaraDumpsCore\Payloads\TableV2Payload;
 
-class CacheObserver
+class CacheObserver extends BaseObserver
 {
-    protected ?string $label = 'Cache';
+    protected string $label = 'Cache';
 
     protected array $hidden = [];
 
-    private bool $enabled = false;
-
     public function register(): void
     {
-        Event::listen(CacheHit::class, function (CacheHit $event) {
-            if (!$this->isEnabled()) {
-                return;
-            }
-
-            $this->sendCache($event, [
-                'Type'  => 'hit',
-                'Key'   => $event->key,
-                'Value' => $this->formatValue($event),
-            ], 'width: 120px', 'Cache Hit');
-        });
-
-        Event::listen(CacheMissed::class, function (CacheMissed $event) {
-            if (!$this->isEnabled()) {
-                return;
-            }
-
-            $this->sendCache($event, [
-                'Type' => 'missed',
-                'Key'  => $event->key,
-            ], 'width: 120px', 'Cache Missed');
-        });
-
-        Event::listen(KeyForgotten::class, function (KeyForgotten $event) {
-            if (!$this->isEnabled()) {
-                return;
-            }
-
-            $this->sendCache($event, [
-                'Type' => 'forget',
-                'Key'  => $event->key,
-            ], 'width: 120px', 'Cache Forgot');
-        });
-
-        Event::listen(KeyWritten::class, function (KeyWritten $event) {
-            if (!$this->isEnabled()) {
-                return;
-            }
-
-            $this->sendCache($event, [
-                'Type'       => 'set',
-                'Key'        => $event->key,
-                'Value'      => $this->formatValue($event),
-                'Expiration' => $this->formatExpiration($event),
-            ], 'width: 120px', 'Cache Written');
-        });
-    }
-
-    protected function sendCache(CacheEvent $event, array $data, string $headerStyle = '', string $label = ''): void
-    {
-        if (!$this->isEnabled()) {
-            return;
-        }
-
-        if ($this->shouldIgnore($event)) {
-            return;
-        }
-
-        $dump    = new LaraDumps();
-        $payload = new TableV2Payload($data, $headerStyle, 'cache', $this->label ?: $label);
-
-        $dump->send($payload);
-    }
-
-    public function enable(string $label = ''): void
-    {
-        $this->label = $label;
-
-        $this->enabled = true;
-    }
-
-    public function disable(): void
-    {
-        $this->enabled = false;
-    }
-
-    public function isEnabled(): bool
-    {
-        if (!boolval(Config::get('observers.cache', false))) {
-            return $this->enabled;
-        }
-
-        return boolval(Config::get('observers.cache', false));
+        Event::listen(CacheHit::class, fn (CacheHit $event) => $this->handleHit($event));
+        Event::listen(CacheMissed::class, fn (CacheMissed $event) => $this->handleMissed($event));
+        Event::listen(KeyForgotten::class, fn (KeyForgotten $event) => $this->handleForgotten($event));
+        Event::listen(KeyWritten::class, fn (KeyWritten $event) => $this->handleWritten($event));
     }
 
     public function hidden(array $hidden = []): array
     {
-        if (!empty($hidden)) {
+        if (! empty($hidden)) {
             $this->hidden = array_merge($hidden);
         }
 
-        return $this->hidden ?? [];
+        return $this->hidden;
     }
 
-    private function formatValue(mixed $event): mixed
+    public function handleHit(CacheHit $event): void
     {
-        return (!$this->shouldHideValue($event))
-            ? $event->value // @phpstan-ignore-line
-            : '********';
+        $this->sendCache($event, [
+            'Type' => 'hit',
+            'Key' => $event->key,
+            'Value' => $this->formatValue($event),
+        ], 'width: 120px', 'Cache Hit');
     }
 
-    private function shouldHideValue(mixed $event): bool
+    public function handleMissed(CacheMissed $event): void
     {
-        return Str::is(
-            $this->hidden(),
-            $event->key // @phpstan-ignore-line
+        $this->sendCache($event, [
+            'Type' => 'missed',
+            'Key' => $event->key,
+        ], 'width: 120px', 'Cache Missed');
+    }
+
+    public function handleForgotten(KeyForgotten $event): void
+    {
+        $this->sendCache($event, [
+            'Type' => 'forget',
+            'Key' => $event->key,
+        ], 'width: 120px', 'Cache Forgot');
+    }
+
+    public function handleWritten(KeyWritten $event): void
+    {
+        $this->sendCache($event, [
+            'Type' => 'set',
+            'Key' => $event->key,
+            'Value' => $this->formatValue($event),
+            'Expiration' => $this->formatExpiration($event),
+        ], 'width: 120px', 'Cache Written');
+    }
+
+    protected function sendCache(CacheEvent $event, array $data, string $headerStyle = '', string $label = ''): void
+    {
+        if (! $this->isEnabled('cache') || $this->shouldIgnore($event)) {
+            return;
+        }
+
+        $payload = new TableV2Payload(
+            $data,
+            $headerStyle,
+            'cache',
+            $this->label ?: $label
         );
-    }
 
-    protected function formatExpiration(KeyWritten $event): mixed
-    {
-        return property_exists($event, 'seconds') // @phpstan-ignore-line
-            ? $event->seconds
-            : $event->minutes * 60; // @phpstan-ignore-line
+        (new LaraDumps())->send($payload);
     }
 
     private function shouldIgnore(mixed $event): bool
     {
-        return Str::is(
-            [
-                'illuminate:queue:restart',
-                'framework/schedule*',
-                'telescope:*',
-            ],
-            $event->key // @phpstan-ignore-line
-        );
+        return Str::is([
+            'illuminate:queue:restart',
+            'framework/schedule*',
+            'telescope:*',
+        ], $event->key); // @phpstan-ignore-line
+    }
+
+    private function shouldHideValue(mixed $event): bool
+    {
+        return Str::is($this->hidden(), $event->key); // @phpstan-ignore-line
+    }
+
+    private function formatValue(mixed $event): mixed
+    {
+        return $this->shouldHideValue($event)
+            ? '********'
+            : $event->value; // @phpstan-ignore-line
+    }
+
+    private function formatExpiration(KeyWritten $event): int|null|float
+    {
+        return property_exists($event, 'seconds') // @phpstan-ignore-line
+            ? $event->seconds
+            : ($event->minutes ?? 0) * 60;
     }
 }

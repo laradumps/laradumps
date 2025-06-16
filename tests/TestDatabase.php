@@ -9,8 +9,6 @@ class TestDatabase
 {
     /**
      * Migrate and seed Dish
-     *
-     * @return void
      */
     public static function up(): void
     {
@@ -20,8 +18,6 @@ class TestDatabase
 
     /**
      * Drop databases
-     *
-     * @return void
      */
     public static function down(): void
     {

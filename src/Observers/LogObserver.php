@@ -10,80 +10,72 @@ use LaraDumps\LaraDumpsCore\Actions\{Config, Dumper};
 use LaraDumps\LaraDumpsCore\LaraDumps;
 use LaraDumps\LaraDumpsCore\Support\CodeSnippet;
 
-class LogObserver
+class LogObserver extends BaseObserver
 {
     public function register(): void
     {
-        Event::listen(MessageLogged::class, function (MessageLogged $message) {
-            if (!$this->isEnabled()) {
-                return;
-            }
-
-            if ($message->level == 'debug') {
-                $message->level = 'info';
-            }
-
-            $logs = (array) Config::get('logs');
-
-            $shouldReturn = [];
-
-            collect($logs)
-                ->map(function ($value, $key) use ($message, &$shouldReturn) {
-                    /** @var string $key */
-                    if ($message->level === $key & $value === true) {
-                        if ($key === 'vendor') {
-                            if (str_contains($message->message, 'vendor')) {
-                                $shouldReturn[] = $key;
-                            }
-                        } elseif ($key === 'deprecated_message') {
-                            if (str_contains($message->message, 'deprecated')) {
-                                $shouldReturn[] = $key;
-                            }
-                        } else {
-                            $shouldReturn[] = $key;
-                        }
-                    }
-                });
-
-            if (!in_array($message->level, $shouldReturn)) {
-                return;
-            }
-
-            if (Str::containsAll($message->message, ['From:', 'To:', 'Subject:'])) {
-                return;
-            }
-
-            $dumps = new LaraDumps();
-
-            $context = $message->context;
-
-            if (blank($message->context) && class_exists(\Illuminate\Support\Facades\Context::class)) {
-                $context = \Illuminate\Support\Facades\Context::all();
-            }
-
-            $log = [
-                'message' => $message->message,
-                'level'   => $message->level,
-                'context' => Dumper::dump($context),
-            ];
-
-            $payload = new LogPayload($log);
-
-            if (isset($message->context['exception'])) {
-                /** @var \Exception $exception */
-                $exception = $message->context['exception'];
-
-                $context = (new CodeSnippet())->fromException($exception);
-
-                $payload->setCodeSnippet($context);
-            }
-
-            $dumps->send($payload);
-        });
+        Event::listen(MessageLogged::class, fn (MessageLogged $event) => $this->handle($event));
     }
 
-    public function isEnabled(): bool
+    private function handle(MessageLogged $event): void
     {
-        return (bool) Config::get('observers.logs', false);
+        if (! $this->isEnabled('logs')) {
+            return;
+        }
+
+        $normalizedLevel = $event->level === 'debug' ? 'info' : $event->level;
+
+        if (! $this->shouldLogMessage($event->message, $normalizedLevel)) {
+            return;
+        }
+
+        if (Str::containsAll($event->message, ['From:', 'To:', 'Subject:'])) {
+            return;
+        }
+
+        $context = $this->resolveContext($event->context);
+
+        $log = [
+            'message' => $event->message,
+            'level' => $normalizedLevel,
+            'context' => Dumper::dump($context),
+        ];
+
+        $payload = new LogPayload($log);
+
+        if (isset($event->context['exception']) && $event->context['exception'] instanceof \Throwable) {
+            $snippet = (new CodeSnippet())->fromException($event->context['exception']);
+            $payload->setCodeSnippet($snippet);
+        }
+
+        (new LaraDumps())->send($payload);
+    }
+
+    private function shouldLogMessage(string $message, string $level): bool
+    {
+        $config = (array) Config::get('logs', []);
+
+        if (! isset($config[$level]) || $config[$level] !== true) {
+            return false;
+        }
+
+        return match ($level) {
+            'vendor' => str_contains($message, 'vendor'),
+            'deprecated_message' => str_contains($message, 'deprecated'),
+            default => true,
+        };
+    }
+
+    private function resolveContext(?array $context): array
+    {
+        if (! blank($context)) {
+            return $context;
+        }
+
+        if (class_exists(\Illuminate\Support\Facades\Context::class)) {
+            return \Illuminate\Support\Facades\Context::all();
+        }
+
+        return [];
     }
 }

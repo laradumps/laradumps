@@ -9,8 +9,7 @@ class ContextPayload extends Payload
 {
     public function __construct(
         public string|array $keys,
-    ) {
-    }
+    ) {}
 
     public function type(): string
     {

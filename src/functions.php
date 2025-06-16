@@ -8,7 +8,7 @@ use LaraDumps\LaraDumps\Payloads\{BladePayload, ModelPayload};
 use LaraDumps\LaraDumpsCore\Actions\Dumper;
 use Spatie\Backtrace\Backtrace;
 
-if (!function_exists('dsBlade')) {
+if (! function_exists('dsBlade')) {
     function dsBlade(mixed $args): void
     {
         $frame = collect(debug_backtrace())
@@ -18,13 +18,13 @@ if (!function_exists('dsBlade')) {
             })->first();
 
         /** @var BladeCompiler $blade
-        * @phpstan-ignore-next-line */
-        $blade    = $frame['object'];
+         * @phpstan-ignore-next-line */
+        $blade = $frame['object'];
         $viewPath = $blade->getPath();
 
         $backtrace = Backtrace::create();
         $backtrace = $backtrace->applicationPath(appBasePath());
-        $frame     = app(LaraDumps::class)->parseFrame($backtrace);
+        $frame = app(LaraDumps::class)->parseFrame($backtrace);
 
         $frame = [
             'file' => $viewPath,
@@ -32,7 +32,7 @@ if (!function_exists('dsBlade')) {
         ];
 
         $notificationId = Str::uuid()->toString();
-        $laradumps      = new LaraDumps(notificationId: $notificationId);
+        $laradumps = new LaraDumps(notificationId: $notificationId);
 
         if ($args instanceof Model) {
             $payload = new ModelPayload($args);

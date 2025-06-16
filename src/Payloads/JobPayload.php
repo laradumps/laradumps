@@ -11,8 +11,7 @@ class JobPayload extends Payload
         public string $status,
         public string $jobId,
         public string $displayName
-    ) {
-    }
+    ) {}
 
     public function type(): string
     {
@@ -22,9 +21,9 @@ class JobPayload extends Payload
     public function content(): array
     {
         return [
-            'job'          => $this->job,
-            'status'       => $this->status,
-            'job_id'       => $this->jobId,
+            'job' => $this->job,
+            'status' => $this->status,
+            'job_id' => $this->jobId,
             'display_name' => $this->displayName,
         ];
     }

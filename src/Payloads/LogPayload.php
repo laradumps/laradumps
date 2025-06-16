@@ -8,8 +8,7 @@ class LogPayload extends Payload
 {
     public function __construct(
         protected array $value,
-    ) {
-    }
+    ) {}
 
     public function type(): string
     {

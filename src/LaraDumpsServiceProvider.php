@@ -8,17 +8,7 @@ use Illuminate\Support\Facades\Blade;
 use Illuminate\Testing\TestResponse;
 use Illuminate\View\View;
 use LaraDumps\LaraDumps\Commands\InitCommand;
-use LaraDumps\LaraDumps\Observers\{CacheObserver,
-    CommandObserver,
-    DumpObserver,
-    GateObserver,
-    HttpClientObserver,
-    JobsObserver,
-    MailObserver,
-    QueryObserver,
-    ScheduledCommandObserver,
-    SlowQueryObserver};
-use LaraDumps\LaraDumps\Observers\LogObserver;
+use LaraDumps\LaraDumps\Observers\{CacheObserver, CommandObserver, DumpObserver, GateObserver, HttpClientObserver, JobsObserver, LogObserver, MailObserver, QueryObserver, ScheduledCommandObserver, SlowQueryObserver};
 use LaraDumps\LaraDumps\Payloads\QueryPayload;
 use LaraDumps\LaraDumpsCore\Actions\Dumper;
 use LaraDumps\LaraDumpsCore\Payloads\{DumpPayload, TableV2Payload};
@@ -27,7 +17,7 @@ class LaraDumpsServiceProvider extends ServiceProvider
 {
     public function boot(): void
     {
-        if (!defined('LARADUMPS_REQUEST_ID')) {
+        if (! defined('LARADUMPS_REQUEST_ID')) {
             define('LARADUMPS_REQUEST_ID', uniqid());
         }
 
@@ -37,14 +27,14 @@ class LaraDumpsServiceProvider extends ServiceProvider
 
         $this->commands([InitCommand::class]);
 
-        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'laradumps');
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'laradumps');
     }
 
     public function register(): void
     {
-        $file = str_replace('/', DIRECTORY_SEPARATOR, __DIR__ . '/functions.php');
+        $file = str_replace('/', DIRECTORY_SEPARATOR, __DIR__.'/functions.php');
 
-        $file = __DIR__ . DIRECTORY_SEPARATOR . 'functions.php';
+        $file = __DIR__.DIRECTORY_SEPARATOR.'functions.php';
 
         if (file_exists($file)) {
             require_once $file;
@@ -66,7 +56,7 @@ class LaraDumpsServiceProvider extends ServiceProvider
     private function createDirectives(): void
     {
         Blade::directive('ds', function ($args) {
-            return "<?php dsBlade($args); ?>"; // @phpstan-ignore-line
+            return "<?php dsBlade($args); ?>";
         });
     }
 
@@ -125,9 +115,9 @@ class LaraDumpsServiceProvider extends ServiceProvider
                 : $this->original;
 
             $payload = new TableV2Payload([
-                'Status'    => $this->getStatusCode(),
-                'Headers'   => Dumper::dump($this->headers->all())[0],
-                'Data'      => Dumper::dump($data)[0],
+                'Status' => $this->getStatusCode(),
+                'Headers' => Dumper::dump($this->headers->all())[0],
+                'Data' => Dumper::dump($data)[0],
                 'Exception' => Dumper::dump($this->exceptions->all())[0],
             ]);
 

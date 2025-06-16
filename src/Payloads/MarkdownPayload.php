@@ -9,8 +9,7 @@ class MarkdownPayload extends Payload
 {
     public function __construct(
         public string $dump
-    ) {
-    }
+    ) {}
 
     public function type(): string
     {

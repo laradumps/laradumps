@@ -5,12 +5,7 @@ namespace LaraDumps\LaraDumps;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Mail\Mailable;
 use LaraDumps\LaraDumps\Livewire\Support\Debug;
-use LaraDumps\LaraDumps\Observers\{CacheObserver,
-    CommandObserver,
-    GateObserver,
-    HttpClientObserver,
-    QueryObserver,
-    ScheduledCommandObserver};
+use LaraDumps\LaraDumps\Observers\{CacheObserver, CommandObserver, GateObserver, HttpClientObserver, QueryObserver, ScheduledCommandObserver};
 use LaraDumps\LaraDumps\Payloads\{ContextPayload, MailablePayload, MarkdownPayload, ModelPayload, RoutesPayload};
 use LaraDumps\LaraDumpsCore\LaraDumps as BaseLaraDumps;
 
@@ -67,7 +62,7 @@ class LaraDumps extends BaseLaraDumps
     /**
      * Display all queries that are executed with custom label
      */
-    public function queriesOn(?string $label = null): void
+    public function queriesOn(string $label = ''): void
     {
         app(QueryObserver::class)->enable($label);
     }

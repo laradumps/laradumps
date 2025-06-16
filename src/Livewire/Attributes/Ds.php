@@ -10,8 +10,7 @@ class Ds extends Attribute
 {
     public function __construct(
         public bool $queries = true,
-    ) {
-    }
+    ) {}
 
     public function boot(): void
     {

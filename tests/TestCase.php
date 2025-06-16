@@ -28,28 +28,25 @@ class TestCase extends BaseTestCase
     /**
      * Define environment setup.
      *
-     * @param Application $app
-     * @return void
+     * @param  Application  $app
      */
     protected function getEnvironmentSetUp($app): void
     {
         $app['config']->set('app.key', 'base64:RygUQvaR926QuH4d5G6ZDf9ToJEEeO2p8qDSCq6emPk=');
         $app['config']->set('database.default', 'testbench');
         $app['config']->set('database.connections.testbench', [
-            'driver'   => env('DB_DRIVER'),
-            'host'     => env('DB_HOST'),
-            'port'     => env('DB_PORT'),
+            'driver' => env('DB_DRIVER'),
+            'host' => env('DB_HOST'),
+            'port' => env('DB_PORT'),
             'username' => env('DB_USERNAME'),
             'password' => env('DB_PASSWORD'),
             'database' => env('DB_DATABASE'),
-            'prefix'   => '',
+            'prefix' => '',
         ]);
     }
 
     /**
      * Delete cached views
-     *
-     * @return void
      */
     protected function clearViewsCache(): void
     {
@@ -57,7 +54,7 @@ class TestCase extends BaseTestCase
             return;
         }
 
-        $viewsFolder = base_path() . '/resources/views/vendor/laradumps/';
+        $viewsFolder = base_path().'/resources/views/vendor/laradumps/';
 
         $viewsFolderPath = str_replace('/', DIRECTORY_SEPARATOR, $viewsFolder);
 

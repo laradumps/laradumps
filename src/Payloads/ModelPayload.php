@@ -10,8 +10,7 @@ class ModelPayload extends Payload
 {
     public function __construct(
         protected Model $model,
-    ) {
-    }
+    ) {}
 
     public function type(): string
     {
@@ -24,8 +23,8 @@ class ModelPayload extends Payload
         $relations = $this->model->relationsToArray();
 
         return [
-            'relations'  => $this->model->relationsToArray() ? Dumper::dump($relations) : [],
-            'className'  => get_class($this->model),
+            'relations' => $this->model->relationsToArray() ? Dumper::dump($relations) : [],
+            'className' => get_class($this->model),
             'attributes' => Dumper::dump($this->model->attributesToArray()),
         ];
     }
