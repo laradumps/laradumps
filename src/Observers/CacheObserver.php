@@ -10,7 +10,7 @@ use LaraDumps\LaraDumpsCore\Payloads\TableV2Payload;
 
 class CacheObserver extends BaseObserver
 {
-    protected string $label = 'Cache';
+    protected string $label = '';
 
     protected array $hidden = [];
 
@@ -34,36 +34,32 @@ class CacheObserver extends BaseObserver
     public function handleHit(CacheHit $event): void
     {
         $this->sendCache($event, [
-            'Type' => 'hit',
             'Key' => $event->key,
             'Value' => $this->formatValue($event),
-        ], 'width: 120px', 'Cache Hit');
+        ], 'width: 120px', 'Hit');
     }
 
     public function handleMissed(CacheMissed $event): void
     {
         $this->sendCache($event, [
-            'Type' => 'missed',
             'Key' => $event->key,
-        ], 'width: 120px', 'Cache Missed');
+        ], 'width: 120px', 'Missed');
     }
 
     public function handleForgotten(KeyForgotten $event): void
     {
         $this->sendCache($event, [
-            'Type' => 'forget',
             'Key' => $event->key,
-        ], 'width: 120px', 'Cache Forgot');
+        ], 'width: 120px', 'Forget');
     }
 
     public function handleWritten(KeyWritten $event): void
     {
         $this->sendCache($event, [
-            'Type' => 'set',
             'Key' => $event->key,
             'Value' => $this->formatValue($event),
             'Expiration' => $this->formatExpiration($event),
-        ], 'width: 120px', 'Cache Written');
+        ], 'width: 120px', 'Set');
     }
 
     protected function sendCache(CacheEvent $event, array $data, string $headerStyle = '', string $label = ''): void
@@ -79,7 +75,16 @@ class CacheObserver extends BaseObserver
             $this->label ?: $label
         );
 
-        (new LaraDumps())->send($payload);
+        $laradumps = new LaraDumps();
+
+        $laradumps->send($payload);
+
+        match ($label) {
+            'Hit' => $laradumps->blue(),
+            'Missed' => $laradumps->warning(),
+            'Forget' => $laradumps->red(),
+            'Set' => $laradumps->green(),
+        };
     }
 
     private function shouldIgnore(mixed $event): bool
