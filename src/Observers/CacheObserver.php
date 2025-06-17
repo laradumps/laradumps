@@ -83,7 +83,7 @@ class CacheObserver extends BaseObserver
             'Hit' => $laradumps->blue(),
             'Missed' => $laradumps->warning(),
             'Forget' => $laradumps->red(),
-            'Set' => $laradumps->green(),
+            default => $laradumps->green(),
         };
     }
 
