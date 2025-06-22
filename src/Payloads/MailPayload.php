@@ -34,7 +34,7 @@ class MailPayload extends Payload
             $reflection = new ReflectionClass($dataPart);
 
             $reflectionParent = $reflection->getParentClass();
-            $bodyProperty     = $reflectionParent->getProperty('body'); // @phpstan-ignore-line
+            $bodyProperty = $reflectionParent->getProperty('body'); // @phpstan-ignore-line
 
             /** @var string|File $body */
             $body = $bodyProperty->getValue($dataPart);
@@ -54,18 +54,18 @@ class MailPayload extends Payload
             $filename = $dataPart->getFilename();
 
             $dataPartsData[] = [
-                'body'     => is_string($body) ? $body : null,
-                'path'     => $path,
+                'body' => is_string($body) ? $body : null,
+                'path' => $path,
                 'filename' => $filename,
             ];
         }
 
         $this->mailProperties = [
-            'messageId'   => $messageId,
-            'html'        => $html,
-            'details'     => $details,
+            'messageId' => $messageId,
+            'html' => $html,
+            'details' => $details,
             'attachments' => $dataPartsData,
-            'headers'     => $sentMessage->getHeaders()->toArray(), // @phpstan-ignore-line
+            'headers' => $sentMessage->getHeaders()->toArray(), // @phpstan-ignore-line
         ];
     }
 

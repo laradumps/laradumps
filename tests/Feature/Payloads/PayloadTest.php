@@ -14,7 +14,7 @@ it('should return the correct payload to dump', function () {
         'name' => 'Luan',
     ];
 
-    [$args]         = Dumper::dump($args);
+    [$args] = Dumper::dump($args);
     $notificationId = Uuid::uuid4()->toString();
 
     $frame = [
@@ -23,7 +23,7 @@ it('should return the correct payload to dump', function () {
     ];
 
     $laradumps = new LaraDumps(notificationId: $notificationId);
-    $payload   = new DumpPayload($args);
+    $payload = new DumpPayload($args);
     $payload->setFrame($frame);
 
     $payload = $laradumps->send($payload, withFrame: false)->toArray();
@@ -52,7 +52,7 @@ it('should return the correct payload to model', function () {
     ];
 
     $laradumps = new LaraDumps();
-    $payload   = new ModelPayload($dish);
+    $payload = new ModelPayload($dish);
     $payload->setFrame($frame);
 
     $payload = $laradumps->send($payload, withFrame: false)->toArray();
@@ -88,7 +88,7 @@ it('should return the correct payload to mailable', function () {
     ];
 
     $laradumps = new LaraDumps();
-    $payload   = new MailablePayload($mailable);
+    $payload = new MailablePayload($mailable);
     $payload->setFrame($frame);
 
     $payload = $laradumps->send($payload, withFrame: false)->toArray();
@@ -106,7 +106,7 @@ it('should return the correct payload to mailable', function () {
 
 it('should return the correct payload to table_v2', function () {
     $data = [
-        'Name'  => 'Anand Pilania',
+        'Name' => 'Anand Pilania',
         'Email' => 'pilaniaanand@gmail.com',
         'Stack' => [
             'Laravel',
@@ -120,7 +120,7 @@ it('should return the correct payload to table_v2', function () {
     ];
 
     $laradumps = new LaraDumps();
-    $payload   = new TableV2Payload($data);
+    $payload = new TableV2Payload($data);
     $payload->setFrame($frame);
 
     $payload = $laradumps->send($payload, withFrame: false)->toArray();
@@ -144,7 +144,7 @@ it('should return the correct markdown payload to dump', function () {
     ];
 
     $laradumps = new LaraDumps();
-    $payload   = new MarkdownPayload($args);
+    $payload = new MarkdownPayload($args);
     $payload->setFrame($frame);
 
     $payload = $laradumps->send($payload, withFrame: false)->toArray();
@@ -181,7 +181,7 @@ it('should return the correct logs to bump', function () {
 
     $log = [
         'message' => $message->message,
-        'level'   => $message->level,
+        'level' => $message->level,
         'context' => [],
     ];
 
@@ -194,9 +194,9 @@ it('should return the correct logs to bump', function () {
         ->id->toBeUuid()
         ->type->toBe('log_application')
         ->log_application->toBe([
-            "message" => "A critical error occurred.",
-            "level"   => "error",
-            "context" => [],
+            'message' => 'A critical error occurred.',
+            'level' => 'error',
+            'context' => [],
         ])
         ->code_snippet->toBeArray()
         ->and($payload['ide_handle']['real_path'])

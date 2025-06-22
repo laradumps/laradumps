@@ -4,60 +4,38 @@ namespace LaraDumps\LaraDumps\Observers;
 
 use Illuminate\Console\Events\CommandFinished;
 use Illuminate\Support\Facades\Event;
-use LaraDumps\LaraDumpsCore\Actions\{Config, Dumper};
+use LaraDumps\LaraDumpsCore\Actions\Dumper;
 use LaraDumps\LaraDumpsCore\LaraDumps;
 use LaraDumps\LaraDumpsCore\Payloads\{DumpPayload, Payload};
 
-class CommandObserver
+class CommandObserver extends BaseObserver
 {
-    private bool $enabled = false;
-
-    private string $label = 'Command';
+    protected string $label = 'Command';
 
     public function register(): void
     {
-        Event::listen(CommandFinished::class, function (object $event) {
-            if (!$this->isEnabled()) {
-                return;
-            }
-
-            $payload = $this->generatePayload($event);
-
-            $this->sendPayload($payload);
-        });
+        Event::listen(CommandFinished::class, fn (object $event) => $this->handle($event));
     }
 
-    public function enable(?string $label = null): void
+    public function handle(object $event): void
     {
-        if ($label) {
-            $this->label = $label;
+        if (! $this->isEnabled('commands')) {
+            return;
         }
 
-        $this->enabled = true;
-    }
+        $payload = $this->generatePayload($event);
 
-    public function disable(): void
-    {
-        $this->enabled = false;
-    }
-
-    public function isEnabled(): bool
-    {
-        if (!(bool) boolval(Config::get('observers.commands', false))) {
-            return $this->enabled;
-        }
-
-        return boolval(Config::get('observers.commands', false));
+        $this->sendPayload($payload);
     }
 
     private function generatePayload(object $event): Payload
     {
         return new DumpPayload(Dumper::dump([
             /* @phpstan-ignore-next-line */
-            'command'   => $event->command ?? $event->input->getArguments()['command'] ?? 'default',
+            'command' => $event->command ?? $event->input->getArguments()['command'] ?? 'default',
             'exit_code' => $event->exitCode, /** @phpstan-ignore-line */
             'arguments' => $event->input->getArguments(), /** @phpstan-ignore-line */
-            'options'   => $event->input->getOptions(), /** @phpstan-ignore-line */
+            'options' => $event->input->getOptions(), /** @phpstan-ignore-line */
         ]));
     }
 

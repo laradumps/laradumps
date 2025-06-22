@@ -13,7 +13,7 @@ class MultiDumpHandler
     public function dump(mixed $value): void
     {
         foreach ($this->handlers as $handler) {
-            $handler($value); // @phpstan-ignore-line
+            $handler($value);
         }
     }
 
@@ -42,7 +42,7 @@ class DumpObserver
 
         app()->singleton(MultiDumpHandler::class, fn () => $multiDumpHandler);
 
-        if (!static::$registeredHandler) {
+        if (! static::$registeredHandler) {
             static::$registeredHandler = true;
 
             $multiDumpHandler->resetHandlers();

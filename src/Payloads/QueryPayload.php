@@ -10,8 +10,7 @@ class QueryPayload extends Payload
 {
     public function __construct(
         protected Builder $query
-    ) {
-    }
+    ) {}
 
     public function content(): array
     {

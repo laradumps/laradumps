@@ -8,60 +8,44 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\{Event};
+use Illuminate\Support\Facades\Event;
 use LaraDumps\LaraDumps\LaraDumps;
-use LaraDumps\LaraDumpsCore\Actions\{Config, Dumper};
+use LaraDumps\LaraDumpsCore\Actions\Dumper;
 use LaraDumps\LaraDumpsCore\Payloads\TableV2Payload;
 
-class GateObserver
+class GateObserver extends BaseObserver
 {
-    protected ?string $label = 'Gate';
-
-    private bool $enabled = false;
+    protected string $label = 'Gate';
 
     public function register(): void
     {
-        Event::listen(GateEvaluated::class, function (GateEvaluated $event) {
-            if (!$this->isEnabled()) {
-                return;
-            }
-
-            $dump = new LaraDumps();
-            $user = $event->user;
-
-            $payload = new TableV2Payload([
-                'Ability'   => $event->ability,
-                'Result'    => $this->gateResult($event->result),
-                'Arguments' => Dumper::dump(collect($event->arguments)->map(function ($argument) {
-                    return $argument instanceof Model ? $this->formatModel($argument) : $argument;
-                })->toArray())[0],
-                'User' => Dumper::dump($user instanceof Authenticatable ? $user->toArray() : null)[0],
-            ], screen: 'gate', label: $this->label);
-
-            $dump->toScreen('gate');
-            $dump->send($payload);
-        });
+        Event::listen(GateEvaluated::class, fn (GateEvaluated $event) => $this->handle($event));
     }
 
-    public function enable(?string $label = null): void
+    public function handle(GateEvaluated $event): void
     {
-        $this->label = $label;
-
-        $this->enabled = true;
-    }
-
-    public function disable(): void
-    {
-        $this->enabled = false;
-    }
-
-    public function isEnabled(): bool
-    {
-        if (!boolval(Config::get('observers.gate', false))) {
-            return $this->enabled;
+        if (! $this->isEnabled('gate')) {
+            return;
         }
 
-        return boolval(Config::get('observers.gate', false));
+        $user = $event->user instanceof Authenticatable
+            ? Dumper::dump($event->user->toArray())[0]
+            : null;
+
+        $arguments = collect($event->arguments)
+            ->map(fn ($argument) => $argument instanceof Model ? $this->formatModel($argument) : $argument)
+            ->toArray();
+
+        $payload = new TableV2Payload([
+            'Ability' => $event->ability,
+            'Result' => $this->gateResult($event->result),
+            'Arguments' => Dumper::dump($arguments)[0],
+            'User' => $user,
+        ], screen: 'gate', label: $this->label);
+
+        $dumps = new LaraDumps();
+        $dumps->toScreen('gate');
+        $dumps->send($payload);
     }
 
     private function gateResult(null|bool|Response $result): string
@@ -75,19 +59,24 @@ class GateObserver
 
     private function formatModel(Model $model): string
     {
-        $keys = $model instanceof Pivot && !$model->incrementing
+        $keys = $model instanceof Pivot && ! $model->incrementing
             ? [
                 $model->getAttribute($model->getForeignKey()),
                 $model->getAttribute($model->getRelatedKey()),
             ]
             : $model->getKey();
 
-        return get_class($model) . ':' . implode('_', array_map(function ($value) {
-            if (PHP_VERSION_ID > 80100) {
-                return $value instanceof \BackedEnum ? $value->value : $value;
-            }
+        $encodedKeys = array_map(fn ($value) => $this->normalizeKey($value), Arr::wrap($keys));
 
-            return $value;
-        }, Arr::wrap($keys)));
+        return get_class($model).':'.implode('_', $encodedKeys);
+    }
+
+    private function normalizeKey(mixed $value): mixed
+    {
+        if (PHP_VERSION_ID > 80100 && $value instanceof \BackedEnum) {
+            return $value->value;
+        }
+
+        return $value;
     }
 }

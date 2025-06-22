@@ -3,13 +3,11 @@ includes:
 parameters:
     paths:
         - src
-    level: max
+    level: 9
     ignoreErrors:
         - identifier: missingType.iterableValue
         - identifier: missingType.generics
         - identifier: instanceof.alwaysTrue
         - identifier: argument.type
         - identifier: method.nonObject
-        - identifier: offsetAccess.nonOffsetAccessible
-        - identifier: property.nonObject
         - identifier: binaryOp.invalid

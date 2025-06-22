@@ -26,11 +26,5 @@ logs:
   deprecated_message: true
 slow_queries:
   threshold_in_ms: 500
-queries:
-  only_duplicated: false
-  select: true
-  insert: true
-  update: true
-  delete: true
 extra:
   context: false

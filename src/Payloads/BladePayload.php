@@ -8,8 +8,7 @@ class BladePayload extends Payload
 {
     public function __construct(
         public mixed $dump,
-    ) {
-    }
+    ) {}
 
     public function type(): string
     {

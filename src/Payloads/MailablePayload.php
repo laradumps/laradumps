@@ -16,7 +16,7 @@ class MailablePayload extends Payload
 
     public function __construct(Mailable $mailable)
     {
-        $this->html     = self::renderMailable($mailable);
+        $this->html = self::renderMailable($mailable);
         $this->mailable = $mailable;
     }
 
@@ -30,19 +30,19 @@ class MailablePayload extends Payload
         $content = [
             'html' => $this->html,
             'from' => [],
-            'to'   => [],
-            'cc'   => [],
-            'bcc'  => [],
+            'to' => [],
+            'cc' => [],
+            'bcc' => [],
         ];
 
         if ($this->mailable) {
             $content = array_merge($content, [
                 'mailable_class' => get_class($this->mailable),
-                'from'           => $this->convertToPersons($this->mailable->from),
-                'subject'        => $this->mailable->subject,
-                'to'             => $this->convertToPersons($this->mailable->to),
-                'cc'             => $this->convertToPersons($this->mailable->cc),
-                'bcc'            => $this->convertToPersons($this->mailable->bcc),
+                'from' => $this->convertToPersons($this->mailable->from),
+                'subject' => $this->mailable->subject,
+                'to' => $this->convertToPersons($this->mailable->to),
+                'cc' => $this->convertToPersons($this->mailable->cc),
+                'bcc' => $this->convertToPersons($this->mailable->bcc),
             ]);
         }
 
@@ -72,9 +72,9 @@ class MailablePayload extends Payload
     {
         return collect($persons)
             ->map(function (array $person) {
-                return  [
+                return [
                     'email' => $person['address'],
-                    'name'  => $person['name'] ?? '',
+                    'name' => $person['name'] ?? '',
                 ];
             })->toArray();
     }

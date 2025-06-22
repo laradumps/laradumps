@@ -10,8 +10,7 @@ class RoutesPayload extends Payload
 {
     public function __construct(
         private mixed $except
-    ) {
-    }
+    ) {}
 
     public function type(): string
     {
@@ -35,15 +34,15 @@ class RoutesPayload extends Payload
                 }
             }
 
-            if (!$ignore) {
+            if (! $ignore) {
                 $routes[] = [
                     'method' => implode('|', $route->methods),
-                    'name'   => $route->getName() ?? '',
-                    'uri'    => $route->uri,
+                    'name' => $route->getName() ?? '',
+                    'uri' => $route->uri,
                     'action' => $route->getActionName(),
                 ];
             }
-        };
+        }
 
         return [
             'fields' => [

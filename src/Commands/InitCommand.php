@@ -24,7 +24,7 @@ class InitCommand extends Command
         /** @var string $pwd */
         $pwd = $this->argument('pwd');
 
-        if ($pwd == "0" && isset($_ENV['IGNITION_LOCAL_SITES_PATH'])) {
+        if ($pwd == '0' && isset($_ENV['IGNITION_LOCAL_SITES_PATH'])) {
             $pwd = $_ENV['IGNITION_LOCAL_SITES_PATH'];
         }
 
@@ -36,18 +36,18 @@ class InitCommand extends Command
             return;
         }
 
-        $defaultYaml = appBasePath() . 'vendor/laradumps/laradumps-core/src/Commands/laradumps-base.yaml';
+        $defaultYaml = appBasePath().'vendor/laradumps/laradumps-core/src/Commands/laradumps-base.yaml';
 
         $publish = Config::publish(
-            pwd: $pwd . DIRECTORY_SEPARATOR,
+            pwd: $pwd.DIRECTORY_SEPARATOR,
             filepath: $defaultYaml
         );
 
-        $newYaml = appBasePath() . 'laradumps.yaml';
+        $newYaml = appBasePath().'laradumps.yaml';
 
         if ($publish) {
             /** @var array $yamlFile */
-            $yamlFile = Yaml::parseFile(__DIR__ . '/laradumps-base.yaml');
+            $yamlFile = Yaml::parseFile(__DIR__.'/laradumps-base.yaml');
             /** @var array $default */
             $default = Yaml::parseFile($defaultYaml);
 
@@ -61,7 +61,7 @@ class InitCommand extends Command
                 }
             }
 
-            $yamlFile['app']['project_path'] = $pwd . DIRECTORY_SEPARATOR;
+            $yamlFile['app']['project_path'] = $pwd.DIRECTORY_SEPARATOR;
 
             $mergedYaml = array_replace_recursive($default, $yamlFile);
 
@@ -70,13 +70,13 @@ class InitCommand extends Command
 
             $this->sendMessageToApp();
 
-            $this->components->info('The laradumps.yaml file was published in <comment>' . $pwd . '</comment>');
+            $this->components->info('The laradumps.yaml file was published in <comment>'.$pwd.'</comment>');
             $this->components->info('Read the docs: https://laradumps.dev/debug/usage.html');
 
             Process::run('echo "laradumps.yaml" >> .gitignore');
 
             return;
-        };
+        }
     }
 
     private function sendMessageToApp(): void
