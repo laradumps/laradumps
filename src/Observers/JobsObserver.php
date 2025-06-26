@@ -9,6 +9,7 @@ use LaraDumps\LaraDumps\Payloads\JobPayload;
 use LaraDumps\LaraDumpsCore\Actions\Dumper;
 use LaraDumps\LaraDumpsCore\LaraDumps;
 use LaraDumps\LaraDumpsCore\Payloads\Payload;
+use LaraDumps\LaraDumpsCore\Support\CodeSnippet;
 
 class JobsObserver extends BaseObserver
 {
@@ -29,6 +30,12 @@ class JobsObserver extends BaseObserver
         }
 
         $payload = $this->generatePayload($event);
+
+        if ($event instanceof JobFailed) {
+            $exception = $event->exception;
+            $snippet = (new CodeSnippet())->fromDebugBacktrace($exception->getTrace());
+            $payload->setCodeSnippet($snippet);
+        }
 
         $this->sendPayload($payload);
     }
