@@ -50,8 +50,7 @@
         "verify": [
             "@test:pint",
             "@test:types",
-            "@test:tests",
-            "@test:types"
+            "@test:tests"
         ]
     },
     "extra": {
