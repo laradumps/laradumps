@@ -28,3 +28,5 @@ slow_queries:
   threshold_in_ms: 500
 extra:
   context: false
+queries:
+  explain: false
