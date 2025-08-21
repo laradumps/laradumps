@@ -31,6 +31,10 @@ class LaraDumpsServiceProvider extends ServiceProvider
             define('LARADUMPS_REQUEST_ID', uniqid());
         }
 
+        $this->publishes([
+            __DIR__.'/../resources/config/laradumps.php' => config_path('laradumps.php'),
+        ], 'laradumps-config');
+
         $this->createDirectives();
 
         $this->bootObservers();
@@ -42,6 +46,11 @@ class LaraDumpsServiceProvider extends ServiceProvider
 
     public function register(): void
     {
+        $this->mergeConfigFrom(
+            __DIR__.'/../resources/config/laradumps.php',
+            'laradumps'
+        );
+
         $file = str_replace('/', DIRECTORY_SEPARATOR, __DIR__.'/functions.php');
 
         $file = __DIR__.DIRECTORY_SEPARATOR.'functions.php';
