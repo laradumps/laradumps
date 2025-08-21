@@ -1,0 +1,49 @@
+<?php
+
+use Symfony\Component\Yaml\Exception\ParseException;
+use Symfony\Component\Yaml\Yaml;
+
+it('parses the config yaml base file', function () {
+    expect(Yaml::parseFile('src/Commands/laradumps-base.yaml'))
+        ->not->toThrow(ParseException::class)
+        ->toBe(
+            [
+                'observers' => [
+                    'dump' => false,
+                    'original_dump' => true,
+                    'auto_invoke_app' => false,
+                    'enabled_in_testing' => false,
+                    'queries' => false,
+                    'slow_queries' => false,
+                    'mail' => false,
+                    'logs' => true,
+                    'http' => false,
+                    'jobs' => false,
+                    'commands' => false,
+                    'scheduled_commands' => false,
+                    'gate' => false,
+                    'cache' => false,
+                ],
+                'logs' => [
+                    'info' => true,
+                    'warning' => true,
+                    'emergency' => true,
+                    'alert' => false,
+                    'debug' => true,
+                    'error' => true,
+                    'critical' => true,
+                    'notice' => true,
+                    'vendor' => true,
+                    'deprecated_message' => true,
+                ],
+                'slow_queries' => [
+                    'threshold_in_ms' => 500,
+                ],
+                'extra' => [
+                    'context' => false,
+                ],
+                'queries' => [
+                    'explain' => false,
+                ]]
+        );
+});
