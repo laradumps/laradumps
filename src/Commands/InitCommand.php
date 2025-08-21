@@ -10,14 +10,12 @@ use Symfony\Component\Yaml\Yaml;
 
 #[AsCommand(
     name: 'ds:init',
-    description: 'Init',
+    description: 'Generate the "laradumps.yaml" file in the base path of the application',
     hidden: false
 )]
 class InitCommand extends Command
 {
     protected $signature = 'ds:init {pwd=0}';
-
-    protected $description = 'Laradumps Init';
 
     public function handle(): void
     {
@@ -43,44 +41,41 @@ class InitCommand extends Command
             filepath: $defaultYaml
         );
 
-        $newYaml = appBasePath().'laradumps.yaml';
-
-        if ($publish) {
-            /** @var array $yamlFile */
-            $yamlFile = Yaml::parseFile(__DIR__.'/laradumps-base.yaml');
-            /** @var array $default */
-            $default = Yaml::parseFile($defaultYaml);
-
-            foreach ($default as $key => $values) {
-                /**
-                 * @var string $key1
-                 * @var array $values
-                 */
-                foreach ($values as $key1 => $value) {
-                    $default[$key][$key1] = $value;
-                }
-            }
-
-            $yamlFile['app']['project_path'] = $pwd.DIRECTORY_SEPARATOR;
-
-            $mergedYaml = array_replace_recursive($default, $yamlFile);
-
-            $yaml = Yaml::dump($mergedYaml);
-            file_put_contents($newYaml, $yaml);
-
-            $this->sendMessageToApp();
-
-            $this->components->info('The laradumps.yaml file was published in <comment>'.$pwd.'</comment>');
-            $this->components->info('Read the docs: https://laradumps.dev/debug/usage.html');
-
-            Process::run('echo "laradumps.yaml" >> .gitignore');
+        if (! $publish) {
+            $this->components->error('Failed to publish the laradumps.yaml file. Please check your permissions or the provided path.');
 
             return;
         }
-    }
 
-    private function sendMessageToApp(): void
-    {
+        $newYaml = appBasePath().'laradumps.yaml';
+
+        /** @var array $yamlFile */
+        $yamlFile = Yaml::parseFile(__DIR__.'/laradumps-base.yaml');
+        /** @var array $default */
+        $default = Yaml::parseFile($defaultYaml);
+
+        foreach ($default as $key => $values) {
+            /**
+             * @var string $key1
+             * @var array $values
+             */
+            foreach ($values as $key1 => $value) {
+                $default[$key][$key1] = $value;
+            }
+        }
+
+        $yamlFile['app']['project_path'] = $pwd.DIRECTORY_SEPARATOR;
+
+        $mergedYaml = array_replace_recursive($default, $yamlFile);
+
+        $yaml = Yaml::dump($mergedYaml);
+        file_put_contents($newYaml, $yaml);
+
         ds('Welcome to the LaraDumps!');
+
+        $this->components->info('The laradumps.yaml file was published in <comment>'.$pwd.'</comment>');
+        $this->components->info('Read the docs: https://laradumps.dev/debug/usage.html');
+
+        Process::run('echo "laradumps.yaml" >> .gitignore');
     }
 }
