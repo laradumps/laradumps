@@ -1,4 +1,3 @@
-
 <?php
 
 it('properly cuts dump string')
@@ -15,11 +14,14 @@ END;
 
     return base64_decode($html);
 }
+
 function htmlDump(): string
 {
+
     $html = <<< 'END'
     PHByZSBjbGFzcz1zZi1kdW1wIGlkPXNmLWR1bXAtMTAzNDkyODg3MiBkYXRhLWluZGVudC1wYWQ9IiAgIj4iPHNwYW4gY2xhc3M9c2YtZHVtcC1zdHIgdGl0bGU9IjQwIGNoYXJhY3RlcnMiPkl0IHdvcmtzISBUaGFuayB5b3UgZm9yIHVzaW5nIExhcmFEdW1wcyE8L3NwYW4+Ig0KPC9wcmU+
     END;
 
     return base64_decode($html);
+
 }
