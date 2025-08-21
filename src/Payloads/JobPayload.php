@@ -10,7 +10,8 @@ class JobPayload extends Payload
         public array $job,
         public string $status,
         public string $jobId,
-        public string $displayName
+        public string $displayName,
+        public string $exceptionMessage = '',
     ) {}
 
     public function type(): string
@@ -25,6 +26,7 @@ class JobPayload extends Payload
             'status' => $this->status,
             'job_id' => $this->jobId,
             'display_name' => $this->displayName,
+            'exception_message' => $this->exceptionMessage,
         ];
     }
 

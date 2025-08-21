@@ -52,7 +52,8 @@ class JobsObserver extends BaseObserver
             job: Dumper::dump($job),
             status: $this->getLabelClassNameBased($className),
             jobId: $jobId,
-            displayName: $displayName
+            displayName: $displayName,
+            exceptionMessage: $event instanceof JobFailed ? $event->exception->getMessage() : ''
         );
     }
 
