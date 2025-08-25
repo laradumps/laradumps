@@ -36,29 +36,34 @@
 
 <br/>
 
-LaraDumps is a friendly app that boosts your [Laravel](https://larvel.com/) PHP coding and debugging experience.
+LaraDumps is a modern, feature-rich debugging tool that makes PHP development a breeze.
 
-When using LaraDumps, you can see the result of your debug displayed in a standalone Desktop application.
+When using LaraDumps, the outcome of your debug dump is presented in a separate desktop application rather than in your browser or command-line interface, ensuring that your application flow remains uninterrupted.
 
-These are some debug tools available for you:
+### Key Features
 
-- [Dump](https://laradumps.dev/debug/usage.html#dump) single or multiple variables at once.
-- Send `dump`, `dd` to LaraDumps app.
-- Watch [Laravel Mail](https://laravel.com/docs/mail).
-- See your dumped values in a [Table](https://laradumps.dev/debug/usage.html#table), with a built-in search feature.
-- Improve your debugging experience using different [screens](https://laradumps.dev/debug/usage.html#screens).
-- Watch [SQL Queries](hhttps://laradumps.dev/debug/usage.html#sql-queries).
-- Watch Slow Queries [SQL Queries](hhttps://laradumps.dev/debug/usage.html#sql-queries).
-- Monitor [Laravel Logs](https://laravel.com/docs/logging).
-- Monitor [Livewire component](https://livewire.laravel.com).
-- Validate [JSON strings](https://laradumps.dev/debug/usage.html#json).
-- Verify if a string [contains](https://laradumps.dev/debug/usage.html#contains) a substring.
-- View `phpinfo()` configuration.
-- List your [Laravel Routes](https://laravel.com/docs/routing).
-- Inspect [Model](https://laravel.com/docs/eloquent) attributes.
-- Learn more in our [Reference Sheet](https://laradumps.dev/debug/reference-sheet.html).
-- Multiple Themes (light, dark, dracula, dim, retro ...)
-- Shortcuts (clear, always on top)
+LaraDumps goes beyond dumping variables. In addition to functions similar to `dump()` and `dd()`, LaraDumps provides tools for validating JSON, searching for substrings, clocking execution time, and a convenient way to view `phpinfo()` output.
+
+Among other functionalities, you can debug Livewire/Volt components and inspect Eloquent Models, Collections, and Stringable classes. LaraDumps also integrates with Pest PHP, assisting you while writing tests.
+
+The desktop application can monitor and display SQL queries and slow queries, logs, exceptions, mail, executed jobs, authorization gates, Artisan commands, scheduled commands, cache, and [much more...](https://laradumps.dev/debug/reference-sheet.html)
+
+#### Example
+
+Here's an example of LaraDumps `ds()` debug function in the project's home page route.
+
+```php
+Route::get('/', function () {
+    ds('Home page accessed!');
+    return view('home');
+});
+```
+
+By opening this page in your browser, the desktop App will display the dump, and the page will be loaded without any interference.
+
+<p align="center">
+  <img src="./art/dark.png" height="500" alt="" />
+</p>
 
 <br/>
 
@@ -66,70 +71,22 @@ These are some debug tools available for you:
 
 #### Requirements
 
- PHP 8.1+ and Laravel 10.0+
+PHP 8.1+ and Laravel 10.0+.
 
-#### Using Laravel
-```shell
- composer require laradumps/laradumps --dev
- ```
+For PHP projects that are not built on Laravel, please refer to the [laradumps/laradumps-core](https://github.com/laradumps/laradumps-core) repository.
 
-#### PHP Project
-```shell
- composer require laradumps/laradumps-core --dev
- ```
+#### Installation
 
-See also: https://laradumps.dev/get-started/release-notes.html#php-package
+Please take a moment to check our [installation page](https://laradumps.dev/get-started/installation.html) at our documentation website.
 
-* Debug your code using `ds()` in the same way you would use Laravel's native functions dump() or dd().
-
-* Run your Laravel application and see the debug dump in the LaraDumps App window.
-
-### Example
-
-Here's an example:
-
-```php
-// File: routes/web.php
-
-<?php 
-
-Route::get('/', function () {
-    ds('Home page accessed!');
-    return view('home');
-});
-```
-
-The Desktop App receives:
-
-<p align="center">
-  <img src="./art/light.png" height="500" alt="" />
-  <img src="./art/dark.png" height="500" alt="" />
-  <img src="./art/dracula.png" height="500" alt="" />
-</p>
-
-```php
-// File: routes/web.php
-
-<?php 
-
-Route::get('/', function () {
-    \App\Models\User::all(); // duplicate query example
-    \App\Models\User::all(); // duplicate query example
-    \App\Models\Dish::all();
-    return '';
-});
-```
-
-The Desktop App receives:
-
-<p align="center">
-  <img src="./art/queries.png" height="500" alt="" />
-</p>
+<br/>
 
 ### Credits
 
-LaraDumps is a free open-source project, and it was inspired by [Spatie Ray](https://github.com/spatie/ray), check it out!
+LaraDumps is a free open-source project, and it was inspired by [Spatie Ray](https://github.com/spatie/ray).
 
 - Author: [Luan Freitas](https://github.com/luanfreitasdev)
 
 - Logo by [Vitor S. Rodrigues](https://github.com/vs0uz4)
+
+- Thanks to all [contributors](http://github.com/laradumps/laradumps/contributors)
