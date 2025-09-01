@@ -148,7 +148,7 @@ class LogObserver extends BaseObserver
         ], $this->queries);
     }
 
-    private function interpolateBindings(string $sql, array $bindings): string
+    private function interpolateBindings(string $sql, array $bindings): ?string
     {
         foreach ($bindings as $binding) {
             $replacement = match (gettype($binding)) {
