@@ -3,6 +3,7 @@
 namespace LaraDumps\LaraDumps\Commands;
 
 use Illuminate\Console\Command;
+use LaraDumps\LaraDumps\Actions\AppendLaradumpsYamlToGitignore;
 use LaraDumps\LaraDumpsCore\Actions\Config;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Yaml\Yaml;
@@ -72,23 +73,13 @@ class InitCommand extends Command
 
         ds('Welcome to the LaraDumps!');
 
-        $this->components->info('The laradumps.yaml file was published in <comment>'.$pwd.'</comment>');
-        $this->components->info('Read the docs: https://laradumps.dev/debug/usage.html');
+        $this->components->info('The <comment>laradumps.yaml</comment> configuration file was published at <comment>'.$pwd.'</comment>');
 
-        $gitignorePath = '.gitignore';
-        $lineToAdd = 'laradumps.yaml';
-
-        $gitignoreContent = file_exists($gitignorePath) ? file_get_contents($gitignorePath) : '';
-
-        $lines = array_filter(array_map('trim', explode("\n", $gitignoreContent)));
-
-        if (! in_array($lineToAdd, $lines)) {
-            $lines[] = $lineToAdd;
-
-            file_put_contents($gitignorePath, implode("\n", $lines)."\n");
-            $this->components->info("'laradumps.yaml' file was added to .gitignore");
-        } else {
-            $this->components->info("'laradumps.yaml' has already been added to .gitignore");
+        if (AppendLaradumpsYamlToGitignore::handle()) {
+            $this->components->info('<comment>laradumps.yaml</comment> was added to <comment>.gitignore</comment>');
         }
+
+        $this->components->info('Check out our documentation at <comment>https://laradumps.dev/</comment>');
+
     }
 }
