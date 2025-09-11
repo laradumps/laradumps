@@ -3,7 +3,7 @@
 namespace LaraDumps\LaraDumps\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Process;
+use LaraDumps\LaraDumps\Actions\AppendLaradumpsYamlToGitignore;
 use LaraDumps\LaraDumpsCore\Actions\Config;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Yaml\Yaml;
@@ -73,9 +73,13 @@ class InitCommand extends Command
 
         ds('Welcome to the LaraDumps!');
 
-        $this->components->info('The laradumps.yaml file was published in <comment>'.$pwd.'</comment>');
-        $this->components->info('Read the docs: https://laradumps.dev/debug/usage.html');
+        $this->components->info('The <comment>laradumps.yaml</comment> configuration file was published at <comment>'.$pwd.'</comment>');
 
-        Process::run('echo "laradumps.yaml" >> .gitignore');
+        if (AppendLaradumpsYamlToGitignore::handle()) {
+            $this->components->info('<comment>laradumps.yaml</comment> was added to <comment>.gitignore</comment>');
+        }
+
+        $this->components->info('Check out our documentation at <comment>https://laradumps.dev/</comment>');
+
     }
 }
