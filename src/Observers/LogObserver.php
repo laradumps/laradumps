@@ -64,6 +64,11 @@ class LogObserver extends BaseObserver
                 'body' => $this->requestBody(),
                 'routeContext' => $this->applicationRouteContext(),
             ],
+            'app' => [
+                'php_version' => phpversion(),
+                'laravel_version' => app()->version(),
+                'environment' => app()->environment(),
+            ],
         ]);
 
         if (! empty($event->context['exception']) && $event->context['exception'] instanceof \Throwable) {
