@@ -6,7 +6,7 @@ use LaraDumps\LaraDumpsCore\Actions\Config;
 
 class BaseObserver
 {
-    protected string $label = '';
+    protected ?string $label = '';
 
     protected bool $enabled = false;
 
@@ -19,7 +19,7 @@ class BaseObserver
         return boolval(Config::get('observers.'.$key, false));
     }
 
-    public function enable(string $label = ''): void
+    public function enable(?string $label = ''): void
     {
         $this->label = $label;
         $this->enabled = true;

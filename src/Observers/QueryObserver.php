@@ -19,7 +19,7 @@ class QueryObserver extends BaseObserver
         Event::listen(QueryExecuted::class, fn (QueryExecuted $query) => $this->handle($query));
     }
 
-    public function enable(string $label = ''): void
+    public function enable(?string $label = ''): void
     {
         $this->label = $label;
         DB::enableQueryLog();
