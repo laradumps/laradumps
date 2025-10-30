@@ -10,7 +10,7 @@ use LaraDumps\LaraDumpsCore\Payloads\TableV2Payload;
 
 class CacheObserver extends BaseObserver
 {
-    protected string $label = '';
+    protected ?string $label = '';
 
     protected array $hidden = [];
 

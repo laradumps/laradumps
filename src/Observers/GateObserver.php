@@ -15,7 +15,7 @@ use LaraDumps\LaraDumpsCore\Payloads\TableV2Payload;
 
 class GateObserver extends BaseObserver
 {
-    protected string $label = 'Gate';
+    protected ?string $label = 'Gate';
 
     public function register(): void
     {

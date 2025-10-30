@@ -9,7 +9,7 @@ use LaraDumps\LaraDumpsCore\Payloads\{Payload, TableV2Payload};
 
 class ScheduledCommandObserver extends BaseObserver
 {
-    protected string $label = 'Schedule';
+    protected ?string $label = 'Schedule';
 
     public function register(): void
     {

@@ -10,7 +10,7 @@ use LaraDumps\LaraDumpsCore\Payloads\{DumpPayload, Payload};
 
 class CommandObserver extends BaseObserver
 {
-    protected string $label = 'Command';
+    protected ?string $label = 'Command';
 
     public function register(): void
     {
