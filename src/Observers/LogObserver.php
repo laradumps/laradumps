@@ -157,7 +157,7 @@ class LogObserver extends BaseObserver
     private function interpolateBindings(string $sql, array $bindings): ?string
     {
         foreach ($bindings as $binding) {
-            if($binding instanceof DateTime) {
+            if ($binding instanceof DateTime) {
                 $binding = $binding->format('Y-m-d H:i:s');
             }
 
