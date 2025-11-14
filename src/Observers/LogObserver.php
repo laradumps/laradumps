@@ -3,6 +3,7 @@
 namespace LaraDumps\LaraDumps\Observers;
 
 use Closure;
+use DateTime;
 use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Http\Request;
 use Illuminate\Log\Events\MessageLogged;
@@ -156,6 +157,10 @@ class LogObserver extends BaseObserver
     private function interpolateBindings(string $sql, array $bindings): ?string
     {
         foreach ($bindings as $binding) {
+            if ($binding instanceof DateTime) {
+                $binding = $binding->format('Y-m-d H:i:s');
+            }
+
             $replacement = match (gettype($binding)) {
                 'integer', 'double' => $binding,
                 'NULL' => 'NULL',
