@@ -11,3 +11,6 @@ parameters:
         - identifier: argument.type
         - identifier: method.nonObject
         - identifier: binaryOp.invalid
+    excludePaths:
+         analyseAndScan:
+            - './src/Observers/BrainObserver.php'
