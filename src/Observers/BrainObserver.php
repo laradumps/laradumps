@@ -9,7 +9,7 @@ use LaraDumps\LaraDumps\Payloads\{BrainPayload};
 use LaraDumps\LaraDumpsCore\Actions\Dumper;
 use LaraDumps\LaraDumpsCore\LaraDumps;
 use LaraDumps\LaraDumpsCore\Payloads\Payload;
-use Spatie\Backtrace\Backtrace;
+use Spatie\Backtrace\{Backtrace, Frame};
 
 class BrainObserver extends BaseObserver
 {
@@ -37,16 +37,37 @@ class BrainObserver extends BaseObserver
             return;
         }
 
-        $payload = $this->generatePayload($event);
-
         $backtrace = Backtrace::create();
 
+        /** @var Frame $frame */
         $frame = collect($backtrace->frames())
             ->filter(fn ($frame) => $frame->applicationFrame)
-            ->filter(fn ($frame) => ! str_contains($frame->class, 'Brain\Process'))
-            ->filter(fn ($frame) => ! str_contains($frame->class, 'Brain\Task'))
-            ->filter(fn ($frame) => ! str_contains($frame->class, 'BrainObserver'))
-            ->flatten()
+            ->filter(function ($frame) {
+                if (! $frame->applicationFrame) {
+                    return false;
+                }
+
+                $class = $frame->class ?? '';
+                $file = $frame->file ?? '';
+
+                if (str_contains($class, 'Brain\\Process')) {
+                    return false;
+                }
+
+                if (str_contains($class, 'Brain\\Task')) {
+                    return false;
+                }
+
+                if (str_contains($class, 'BrainObserver')) {
+                    return false;
+                }
+
+                if (str_contains($file, 'vendor')) {
+                    return false;
+                }
+
+                return true;
+            })
             ->first();
 
         $frame = [
@@ -54,6 +75,7 @@ class BrainObserver extends BaseObserver
             'line' => $frame->lineNumber,
         ];
 
+        $payload = $this->generatePayload($event);
         $payload->setFrame($frame);
         $this->sendPayload($payload);
     }
