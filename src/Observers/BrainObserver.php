@@ -9,6 +9,7 @@ use LaraDumps\LaraDumps\Payloads\{BrainPayload};
 use LaraDumps\LaraDumpsCore\Actions\Dumper;
 use LaraDumps\LaraDumpsCore\LaraDumps;
 use LaraDumps\LaraDumpsCore\Payloads\Payload;
+use Spatie\Backtrace\Backtrace;
 
 class BrainObserver extends BaseObserver
 {
@@ -38,6 +39,22 @@ class BrainObserver extends BaseObserver
 
         $payload = $this->generatePayload($event);
 
+        $backtrace = Backtrace::create();
+
+        $frame = collect($backtrace->frames())
+            ->filter(fn ($frame) => $frame->applicationFrame)
+            ->filter(fn ($frame) => ! str_contains($frame->class, 'Brain\Process'))
+            ->filter(fn ($frame) => ! str_contains($frame->class, 'Brain\Task'))
+            ->filter(fn ($frame) => ! str_contains($frame->class, 'BrainObserver'))
+            ->flatten()
+            ->first();
+
+        $frame = [
+            'file' => $frame->file,
+            'line' => $frame->lineNumber,
+        ];
+
+        $payload->setFrame($frame);
         $this->sendPayload($payload);
     }
 
@@ -57,8 +74,8 @@ class BrainObserver extends BaseObserver
                 runProcessId: (string) $runProcessId,
                 payload: Dumper::dump($payload),
                 meta: $meta,
-                type: 'process',
-                status: $this->getLabelClassNameBased($className)
+                status: $this->getLabelClassNameBased($className),
+                type: 'process'
             );
         }
 
@@ -66,11 +83,11 @@ class BrainObserver extends BaseObserver
 
         return new BrainPayload(
             className: $task,
-            type: 'task',
-            payload: Dumper::dump($payload),
             runProcessId: $runProcessId,
+            payload: Dumper::dump($payload),
             meta: $meta,
-            status: $this->getLabelClassNameBased($className)
+            status: $this->getLabelClassNameBased($className),
+            type: 'task'
         );
     }
 
@@ -88,6 +105,6 @@ class BrainObserver extends BaseObserver
 
     private function sendPayload(Payload $payload): void
     {
-        (new LaraDumps())->send($payload);
+        (new LaraDumps())->send($payload, withFrame: false);
     }
 }
