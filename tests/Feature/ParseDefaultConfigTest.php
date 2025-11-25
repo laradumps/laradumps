@@ -23,6 +23,7 @@ it('parses the config yaml base file', function () {
                     'scheduled_commands' => false,
                     'gate' => false,
                     'cache' => false,
+                    'brain' => false,
                 ],
                 'logs' => [
                     'info' => true,

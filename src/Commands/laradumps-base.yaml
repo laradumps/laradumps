@@ -13,6 +13,7 @@ observers:
   scheduled_commands: false
   gate: false
   cache: false
+  brain: false
 logs:
   info: true
   warning: true
@@ -30,3 +31,4 @@ extra:
   context: false
 queries:
   explain: false
+

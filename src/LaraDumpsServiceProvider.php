@@ -8,7 +8,8 @@ use Illuminate\Support\Facades\Blade;
 use Illuminate\Testing\TestResponse;
 use Illuminate\View\View;
 use LaraDumps\LaraDumps\Commands\InitCommand;
-use LaraDumps\LaraDumps\Observers\{CacheObserver,
+use LaraDumps\LaraDumps\Observers\{BrainObserver,
+    CacheObserver,
     CommandObserver,
     DumpObserver,
     GateObserver,
@@ -68,6 +69,7 @@ class LaraDumpsServiceProvider extends ServiceProvider
         $this->app->singleton(HttpClientObserver::class);
         $this->app->singleton(DumpObserver::class);
         $this->app->singleton(SlowQueryObserver::class);
+        $this->app->singleton(BrainObserver::class);
 
         $this->registerMacros();
     }
@@ -92,6 +94,7 @@ class LaraDumpsServiceProvider extends ServiceProvider
         app(MailObserver::class)->register();
         app(DumpObserver::class)->register();
         app(SlowQueryObserver::class)->register();
+        app(BrainObserver::class)->register();
     }
 
     private function registerMacros(): void
