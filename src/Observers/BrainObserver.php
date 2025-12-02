@@ -5,7 +5,7 @@ namespace LaraDumps\LaraDumps\Observers;
 use Brain\Processes\Events\{Error as ProcessError, Processed as ProcessProcessed, Processing as ProcessProcessing};
 use Brain\Tasks\Events\{Cancelled as TaskCancelled, Error as TaskError, Processed as TaskProcessed, Processing as TaskProcessing, Skipped as TaskSkipped};
 use Illuminate\Support\Facades\Event;
-use LaraDumps\LaraDumps\Payloads\{BrainPayload};
+use LaraDumps\LaraDumps\Payloads\BrainPayload;
 use LaraDumps\LaraDumpsCore\Actions\Dumper;
 use LaraDumps\LaraDumpsCore\LaraDumps;
 use LaraDumps\LaraDumpsCore\Payloads\Payload;
