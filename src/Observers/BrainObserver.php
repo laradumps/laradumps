@@ -70,13 +70,16 @@ class BrainObserver extends BaseObserver
             })
             ->first();
 
-        $frame = [
+        $payload = $this->generatePayload($event);
+
+        $payload->setFrame(filled($frame) ? [
             'file' => $frame->file,
             'line' => $frame->lineNumber,
-        ];
+        ] : [
+            'file' => 'unknown',
+            'line' => 0,
+        ]);
 
-        $payload = $this->generatePayload($event);
-        $payload->setFrame($frame);
         $this->sendPayload($payload);
     }
 
