@@ -37,6 +37,10 @@ class BrainObserver extends BaseObserver
             return;
         }
 
+        if (blank($event->runProcessId)) {
+            return;
+        }
+
         $backtrace = Backtrace::create();
 
         /** @var Frame $frame */
