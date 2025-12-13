@@ -47,16 +47,16 @@ git checkout -b feature/my-new-feature
 
 Write your code and, when you are done, run the following checks:
 
-Run the CS Fix:
+Run the Pint fix:
 
 ```Shell
-composer fix
+composer pint:fix
 ```
 
 Run tests and static analysis:
 
 ```Shell
-composer verify
+composer test:types
 ```
 
 <br/>
