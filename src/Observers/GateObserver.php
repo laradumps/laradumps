@@ -73,7 +73,7 @@ class GateObserver extends BaseObserver
 
     private function normalizeKey(mixed $value): mixed
     {
-        if (PHP_VERSION_ID > 80100 && $value instanceof \BackedEnum) {
+        if ($value instanceof \BackedEnum) {
             return $value->value;
         }
 
