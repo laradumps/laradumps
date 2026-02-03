@@ -165,9 +165,9 @@ class LaraDumpsServiceProvider extends ServiceProvider
 
                 $laradumps = new LaraDumps();
 
-                [$pre, $id] = Dumper::dump($this->value); // @phpstan-ignore-line
+                [$pre, $id] = Dumper::dump($this->value);
 
-                $payload = new DumpPayload($pre, $this->value, variableType: gettype($this->value)); // @phpstan-ignore-line
+                $payload = new DumpPayload($pre, $this->value, variableType: gettype($this->value));
                 $payload->setDumpId($id);
 
                 $payload->setFrame($frame);
