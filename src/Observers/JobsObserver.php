@@ -6,7 +6,6 @@ use Illuminate\Queue\Events\{JobFailed, JobProcessed, JobProcessing, JobQueued};
 use Illuminate\Queue\Jobs\Job;
 use Illuminate\Support\Facades\Event;
 use LaraDumps\LaraDumps\Payloads\JobPayload;
-use LaraDumps\LaraDumpsCore\Actions\Dumper;
 use LaraDumps\LaraDumpsCore\LaraDumps;
 use LaraDumps\LaraDumpsCore\Payloads\Payload;
 use LaraDumps\LaraDumpsCore\Support\CodeSnippet;
@@ -49,7 +48,7 @@ class JobsObserver extends BaseObserver
         $displayName = $this->extractJobPayloadAttribute($event, 'displayName');
 
         return new JobPayload(
-            job: Dumper::dump($job),
+            job: $job,
             status: $this->getLabelClassNameBased($className),
             jobId: $jobId,
             displayName: $displayName,

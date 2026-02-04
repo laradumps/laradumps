@@ -197,6 +197,7 @@ it('should return the correct logs to bump', function () {
             'message' => 'A critical error occurred.',
             'level' => 'error',
             'context' => [],
+            'original_content' => '',
         ])
         ->code_snippet->toBeArray()
         ->and($payload['ide_handle']['real_path'])

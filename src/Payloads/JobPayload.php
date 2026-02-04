@@ -2,6 +2,7 @@
 
 namespace LaraDumps\LaraDumps\Payloads;
 
+use LaraDumps\LaraDumpsCore\Actions\Dumper;
 use LaraDumps\LaraDumpsCore\Payloads\{Label, Payload, Screen};
 
 class JobPayload extends Payload
@@ -12,7 +13,9 @@ class JobPayload extends Payload
         public string $jobId,
         public string $displayName,
         public string $exceptionMessage = '',
-    ) {}
+    ) {
+        $this->setOriginalContent(get_defined_vars());
+    }
 
     public function type(): string
     {
@@ -22,7 +25,7 @@ class JobPayload extends Payload
     public function content(): array
     {
         return [
-            'job' => $this->job,
+            'job' => Dumper::dump($this->job),
             'status' => $this->status,
             'job_id' => $this->jobId,
             'display_name' => $this->displayName,

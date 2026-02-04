@@ -59,6 +59,7 @@ class LogObserver extends BaseObserver
             'message' => $event->message,
             'level' => $level,
             'context' => Dumper::dump($this->resolveContext($event->context)),
+            'original_content' => $event->context,
             'queries' => $this->formattedQueries(),
             'request' => [
                 'headers' => $this->requestHeaders(),
