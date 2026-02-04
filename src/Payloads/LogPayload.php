@@ -8,7 +8,9 @@ class LogPayload extends Payload
 {
     public function __construct(
         protected array $value,
-    ) {}
+    ) {
+        $this->setOriginalContent($this->value['original_content'] ?? '');
+    }
 
     public function type(): string
     {

@@ -5,7 +5,6 @@ use Illuminate\Support\Str;
 use Illuminate\View\Compilers\BladeCompiler;
 use LaraDumps\LaraDumps\LaraDumps;
 use LaraDumps\LaraDumps\Payloads\{BladePayload, ModelPayload};
-use LaraDumps\LaraDumpsCore\Actions\Dumper;
 use Spatie\Backtrace\Backtrace;
 
 if (! function_exists('dsBlade')) {
@@ -38,10 +37,8 @@ if (! function_exists('dsBlade')) {
             $payload = new ModelPayload($args);
             $payload->setDumpId(uniqid());
         } else {
-            [$pre, $id] = Dumper::dump($args);
-
-            $payload = new BladePayload($pre);
-            $payload->setDumpId($id);
+            $payload = new BladePayload($args);
+            // $payload->setDumpId($id);
         }
 
         $payload->setFrame($frame);
