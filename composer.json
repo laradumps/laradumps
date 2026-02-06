@@ -16,7 +16,7 @@
         "php": "^8.2",
         "illuminate/support": "^11.0|^12.0",
         "illuminate/mail": "^11.0|^12.0",
-        "laradumps/laradumps-core": "^4.0.2"
+        "laradumps/laradumps-core": "^4.0.3"
     },
     "require-dev": {
         "orchestra/testbench-core": "^9.4|^10.0",
