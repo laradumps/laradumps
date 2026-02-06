@@ -9,7 +9,7 @@ use LaraDumps\LaraDumpsCore\Payloads\{Label, Payload, Screen};
 class RoutesPayload extends Payload
 {
     public function __construct(
-        private mixed $except
+        private string|array $except = []
     ) {}
 
     public function type(): string
