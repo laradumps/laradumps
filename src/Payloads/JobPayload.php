@@ -8,7 +8,7 @@ use LaraDumps\LaraDumpsCore\Payloads\{Label, Payload, Screen};
 class JobPayload extends Payload
 {
     public function __construct(
-        public array $job,
+        public mixed $job,
         public string $status,
         public string $jobId,
         public string $displayName,
