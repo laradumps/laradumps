@@ -36,6 +36,7 @@ it('parses the config yaml base file', function () {
                     'notice' => true,
                     'vendor' => true,
                     'deprecated_message' => true,
+                    'boost_info' => false,
                 ],
                 'slow_queries' => [
                     'threshold_in_ms' => 500,
