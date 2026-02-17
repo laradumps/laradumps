@@ -89,11 +89,19 @@ class HttpClientObserver extends BaseObserver
 
     private function getResponseBody(Response $response): mixed
     {
-        return rescue(
+        $stream = $response->toPsrResponse()->getBody();
+        if (! $stream->isSeekable()) {
+            return 'Stream Response';
+        }
+        $body = rescue(
             fn () => $response->json(),
             Dumper::dump($response->body())[0],
             report: false
         );
+
+        $stream->rewind();
+
+        return $body;
     }
 
     private function sendPayload(Payload $payload): void
