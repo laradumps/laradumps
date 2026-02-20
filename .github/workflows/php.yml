@@ -14,7 +14,6 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
         php: [ 8.5, 8.4, 8.3, 8.2 ]
         laravel: [ 13.*, 12.*, 11.* ]
         dependency-version: [ prefer-stable ]
@@ -54,13 +53,13 @@ jobs:
           composer install
 
       - name: Pint 👨‍🏭
-        if: matrix.php == '8.3' && matrix.os == 'ubuntu-latest'
+        if: matrix.php == '8.3'
         run: composer test:pint
         env:
           PHP_CS_FIXER_IGNORE_ENV: 1
 
       - name: Larastan ⚗️
-        if: matrix.php == '8.4' && matrix.os == 'ubuntu-latest' && matrix.laravel == '12.*'
+        if: matrix.php == '8.4' && matrix.laravel == '12.*'
         run: composer test:types
 
       - name: Pest Tests 👨🏻‍🔬
