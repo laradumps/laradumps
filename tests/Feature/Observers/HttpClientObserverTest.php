@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Http\Client\{Response};
+use Illuminate\Http\Client\Response;
 use LaraDumps\LaraDumps\Observers\HttpClientObserver;
 
 it('handles non-seekable stream responses without errors', function () {
