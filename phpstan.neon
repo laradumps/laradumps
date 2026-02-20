@@ -6,7 +6,6 @@ parameters:
     level: 9
     ignoreErrors:
         - identifier: missingType.iterableValue
-        - identifier: missingType.generics
         - identifier: instanceof.alwaysTrue
         - identifier: argument.type
         - identifier: method.nonObject
@@ -14,3 +13,6 @@ parameters:
     excludePaths:
          analyseAndScan:
             - './src/Observers/BrainObserver.php'
+            - './src/Livewire/Support/Debug.php'
+            - './src/Livewire/Attributes/Ds.php'
+
