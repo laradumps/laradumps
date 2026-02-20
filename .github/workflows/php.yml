@@ -49,9 +49,6 @@ jobs:
 
       - name: Install Composer dependencies
         run: |
-          if [[ "${{ matrix.laravel }}" == "13."* ]]; then
-            composer remove livewire/livewire --no-interaction --no-update
-          fi
           composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench-core:${{ matrix.testbench }}" --no-interaction --no-update --with-all-dependencies
           composer install
 
