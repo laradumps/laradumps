@@ -88,6 +88,13 @@ class LogObserver extends BaseObserver
             return false;
         }
 
+        if ($level === 'info' && ! data_get($config, 'boost_info')) {
+            $routeName = $this->request->route()?->getName();
+            if ($routeName === 'boost.browser-logs') {
+                return false;
+            }
+        }
+
         return match ($level) {
             'vendor' => str_contains($message, 'vendor'),
             'deprecated_message' => str_contains($message, 'deprecated'),
