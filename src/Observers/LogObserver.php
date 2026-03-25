@@ -8,7 +8,7 @@ use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Http\Request;
 use Illuminate\Log\Events\MessageLogged;
 use Illuminate\Queue\Events\{JobProcessed, JobProcessing};
-use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\{Context, Event};
 use Illuminate\Support\Str;
 use LaraDumps\LaraDumps\Payloads\LogPayload;
 use LaraDumps\LaraDumpsCore\Actions\{Config, Dumper};
@@ -113,8 +113,8 @@ class LogObserver extends BaseObserver
             return $context;
         }
 
-        if (class_exists(\Illuminate\Support\Facades\Context::class)) {
-            return \Illuminate\Support\Facades\Context::all();
+        if (class_exists(Context::class)) {
+            return Context::all();
         }
 
         return [];

@@ -8,6 +8,7 @@ use LaraDumps\LaraDumps\Livewire\Support\Debug;
 use LaraDumps\LaraDumps\Observers\{CacheObserver, CommandObserver, GateObserver, HttpClientObserver, QueryObserver, ScheduledCommandObserver};
 use LaraDumps\LaraDumps\Payloads\{ContextPayload, MailablePayload, MarkdownPayload, ModelPayload, RoutesPayload};
 use LaraDumps\LaraDumpsCore\LaraDumps as BaseLaraDumps;
+use Livewire\Volt\Component;
 
 class LaraDumps extends BaseLaraDumps
 {
@@ -23,8 +24,8 @@ class LaraDumps extends BaseLaraDumps
                 ];
             }
 
-            if (class_exists(\Livewire\Volt\Component::class)
-                && $args instanceof \Livewire\Volt\Component) {
+            if (class_exists(Component::class)
+                && $args instanceof Component) {
                 (new Debug())->debug($args->getId());
 
                 return [[], null];

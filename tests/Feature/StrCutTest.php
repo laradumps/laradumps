@@ -1,7 +1,9 @@
 <?php
 
+use LaraDumps\LaraDumpsCore\Actions\Support;
+
 it('properly cuts dump string')
-    ->expect(fn () => \LaraDumps\LaraDumpsCore\Actions\Support::cut(htmlDumper(), '<pre ', '</pre>'))
+    ->expect(fn () => Support::cut(htmlDumper(), '<pre ', '</pre>'))
     ->toBe(htmlDump());
 
 // Helpers

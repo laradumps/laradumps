@@ -164,7 +164,7 @@ it('should return the correct markdown payload to dump', function () {
 });
 
 it('should return the correct logs to bump', function () {
-    $exception = new \Exception('This is a test exception.');
+    $exception = new Exception('This is a test exception.');
 
     $message = new MessageLogged(
         'error',

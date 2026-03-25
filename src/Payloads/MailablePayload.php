@@ -11,7 +11,7 @@ class MailablePayload extends Payload
     /** @var string */
     protected $html = '';
 
-    /** @var \Illuminate\Mail\Mailable|null */
+    /** @var Mailable|null */
     protected $mailable = null;
 
     public function __construct(Mailable $mailable)
