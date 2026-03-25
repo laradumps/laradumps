@@ -2,13 +2,12 @@
 
 namespace LaraDumps\LaraDumps\Observers;
 
-use Brain\Processes\Events\{Error as ProcessError, Processed as ProcessProcessed, Processing as ProcessProcessing};
-use Brain\Tasks\Events\{Cancelled as TaskCancelled, Error as TaskError, Processed as TaskProcessed, Processing as TaskProcessing, Skipped as TaskSkipped};
 use Illuminate\Support\Facades\Event;
 use LaraDumps\LaraDumps\Payloads\BrainPayload;
 use LaraDumps\LaraDumpsCore\Actions\Dumper;
 use LaraDumps\LaraDumpsCore\LaraDumps;
 use LaraDumps\LaraDumpsCore\Payloads\Payload;
+use ReflectionClass;
 use Spatie\Backtrace\{Backtrace, Frame};
 
 class BrainObserver extends BaseObserver
@@ -16,28 +15,20 @@ class BrainObserver extends BaseObserver
     public function register(): void
     {
         Event::listen([
-            ProcessProcessing::class,
-            ProcessProcessed::class,
-            ProcessError::class,
-            TaskProcessing::class,
-            TaskProcessed::class,
-            TaskCancelled::class,
-            TaskSkipped::class,
-            TaskError::class,
-        ], fn (object $event) => $this->handle($event));
+            'Brain\\Workflows\\Events\\*',
+            'Brain\\Actions\\Events\\*',
+        ], fn (string $eventName, array $data) => $this->handle($data[0]));
     }
 
     private function handle(object $event): void
     {
-        if (! class_exists(ProcessProcessing::class) && ! class_exists(TaskProcessing::class)) {
-            return;
-        }
-
         if (! $this->isEnabled('brain')) {
             return;
         }
 
-        if (blank($event->runProcessId)) {
+        $runWorkflowId = $event->runWorkflowId ?? null;
+
+        if (blank($runWorkflowId)) {
             return;
         }
 
@@ -54,11 +45,11 @@ class BrainObserver extends BaseObserver
                 $class = $frame->class ?? '';
                 $file = $frame->file ?? '';
 
-                if (str_contains($class, 'Brain\\Process')) {
+                if (str_contains($class, 'Brain\\Workflow')) {
                     return false;
                 }
 
-                if (str_contains($class, 'Brain\\Task')) {
+                if (str_contains($class, 'Brain\\Action')) {
                     return false;
                 }
 
@@ -74,7 +65,7 @@ class BrainObserver extends BaseObserver
             })
             ->first();
 
-        $payload = $this->generatePayload($event);
+        $payload = $this->generatePayload($event, (string) $runWorkflowId);
 
         $payload->setFrame(filled($frame) ? [
             'file' => $frame->file,
@@ -87,49 +78,29 @@ class BrainObserver extends BaseObserver
         $this->sendPayload($payload);
     }
 
-    private function generatePayload(object $event): Payload
+    private function generatePayload(object $event, string $runWorkflowId): Payload
     {
         $className = get_class($event);
 
-        $runProcessId = $event->runProcessId;
         $payload = $event->payload;
         $meta = $event->meta;
 
-        if (str_contains($className, 'Brain\\Processes\\Events')) {
-            $process = $event->process;
+        $type = 'action';
 
-            return new BrainPayload(
-                className: $process,
-                runProcessId: (string) $runProcessId,
-                payload: Dumper::dump($payload),
-                meta: $meta,
-                status: $this->getLabelClassNameBased($className),
-                type: 'process'
-            );
-        }
-
-        $task = $event->task;
+        $brainClassName = match (true) {
+            str_contains($className, 'Actions') => $event->action,
+            str_contains($className, 'Workflows') => $event->workflow,
+            default => 'Unknown',
+        };
 
         return new BrainPayload(
-            className: $task,
-            runProcessId: $runProcessId,
+            className: $brainClassName,
+            runWorkflowId: $runWorkflowId,
             payload: Dumper::dump($payload),
             meta: $meta,
-            status: $this->getLabelClassNameBased($className),
-            type: 'task'
+            status: (new ReflectionClass($event))->getShortName(),
+            type: $type
         );
-    }
-
-    private function getLabelClassNameBased(string $className): string
-    {
-        return match (true) {
-            $className === ProcessProcessing::class, $className === TaskProcessing::class => 'Processing',
-            $className === ProcessProcessed::class, $className === TaskProcessed::class => 'Processed',
-            $className === ProcessError::class, $className === TaskError::class => 'Error',
-            $className === TaskCancelled::class => 'Cancelled',
-            $className === TaskSkipped::class => 'Skipped',
-            default => 'Stale',
-        };
     }
 
     private function sendPayload(Payload $payload): void

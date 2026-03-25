@@ -8,11 +8,11 @@ class BrainPayload extends Payload
 {
     public function __construct(
         public mixed $className = '',
-        public string $runProcessId = '',
+        public string $runWorkflowId = '',
         public mixed $payload = null,
         public array $meta = [],
         public string $status = '',
-        public string $type = 'process'
+        public string $type = 'workflow'
     ) {}
 
     public function type(): string
@@ -34,7 +34,7 @@ class BrainPayload extends Payload
     {
         return [
             'className' => $this->className,
-            'run_process_id' => $this->runProcessId,
+            'run_workflow_id' => $this->runWorkflowId,
             'payload' => $this->payload,
             'meta' => $this->meta,
             'status' => $this->status,
