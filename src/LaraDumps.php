@@ -2,17 +2,19 @@
 
 namespace LaraDumps\LaraDumps;
 
+use Closure;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Mail\Mailable;
 use LaraDumps\LaraDumps\Livewire\Support\Debug;
-use LaraDumps\LaraDumps\Observers\{CacheObserver, CommandObserver, GateObserver, HttpClientObserver, QueryObserver, ScheduledCommandObserver};
-use LaraDumps\LaraDumps\Payloads\{ContextPayload, MailablePayload, MarkdownPayload, ModelPayload, RoutesPayload};
+use LaraDumps\LaraDumps\Observers\{CacheObserver, CommandObserver, GateObserver, HttpClientObserver, ProfileObserver, QueryObserver, ScheduledCommandObserver};
+use LaraDumps\LaraDumps\Payloads\{ContextPayload, MailablePayload, MarkdownPayload, ModelPayload, ProfilePayload, RoutesPayload};
+use LaraDumps\LaraDumps\Profile\ProfileManager;
 use LaraDumps\LaraDumpsCore\LaraDumps as BaseLaraDumps;
 use Livewire\Volt\Component;
 
 class LaraDumps extends BaseLaraDumps
 {
-    protected function beforeWrite(mixed $args): \Closure
+    protected function beforeWrite(mixed $args): Closure
     {
         return function () use ($args) {
             if ($args instanceof Model) {
@@ -194,5 +196,42 @@ class LaraDumps extends BaseLaraDumps
         $this->send($payload);
 
         return $this;
+    }
+
+    public function startProfile(?string $label = null): self
+    {
+        app(ProfileObserver::class)->start($label);
+
+        return $this;
+    }
+
+    public function stopProfile(): self
+    {
+        $profileData = app(ProfileObserver::class)->stop();
+
+        if (! empty($profileData)) {
+            $payload = ProfilePayload::fromProfileData($profileData);
+            $this->send($payload);
+        }
+
+        return $this;
+    }
+
+    public function profile(Closure $callback, ?string $label = null): mixed
+    {
+        $this->startProfile($label);
+
+        try {
+            $result = $callback();
+        } finally {
+            $this->stopProfile();
+        }
+
+        return $result;
+    }
+
+    public function measure(string $name, callable $callback, string $type = 'app', array $metadata = []): mixed
+    {
+        return app(ProfileManager::class)->measure($name, $callback, $type, $metadata);
     }
 }
