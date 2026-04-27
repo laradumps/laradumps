@@ -24,18 +24,6 @@ class XHProfCollector
             return;
         }
 
-        // Xdebug with an active mode (anything other than 'off') conflicts with
-        // XHProf and causes a segfault (exit status 139).
-        if (extension_loaded('xdebug')) {
-            $mode = ini_get('xdebug.mode') ?: 'off';
-
-            if ($mode !== 'off' && $mode !== '') {
-                $this->isAvailable = false;
-
-                return;
-            }
-        }
-
         $this->isAvailable = true;
     }
 
