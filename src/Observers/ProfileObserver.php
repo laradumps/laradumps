@@ -101,7 +101,7 @@ class ProfileObserver extends BaseObserver
                 $collector = new $collectorClass($this->manager);
                 $collector->register();
 
-                if ($type === 'controller') {
+                if ($type === 'controller' && $collector instanceof ControllerCollector) {
                     $this->controllerCollector = $collector;
                 }
             }

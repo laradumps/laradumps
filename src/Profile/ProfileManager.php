@@ -246,7 +246,7 @@ class ProfileManager
 
             return [
                 'class' => $frame['class'] ?? null,
-                'method' => $frame['function'] ?? null,
+                'method' => $frame['function'],
                 'file' => $file,
                 'line' => $frame['line'] ?? null,
             ];

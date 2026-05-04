@@ -32,6 +32,7 @@ class ControllerCollector
         }
 
         $route = $event->route;
+        /** @var array $action */
         $action = $route->getAction();
 
         $controllerAction = $action['controller'] ?? null;

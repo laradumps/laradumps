@@ -3,6 +3,7 @@
 namespace LaraDumps\LaraDumps\Profile\Collectors;
 
 use Illuminate\Http\Client\Events\{RequestSending, ResponseReceived};
+use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Event;
 use LaraDumps\LaraDumps\Profile\{ProfileEntry, ProfileManager};
 
@@ -83,7 +84,7 @@ class HttpCollector
         }
     }
 
-    private function getRequestKey($request): string
+    private function getRequestKey(Request $request): string
     {
         return md5($request->method().$request->url().spl_object_id($request));
     }

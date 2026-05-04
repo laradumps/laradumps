@@ -2,7 +2,6 @@
 
 namespace LaraDumps\LaraDumps\Profile\Collectors;
 
-use Illuminate\Foundation\Events\Bootstrapped;
 use Illuminate\Support\Facades\Event;
 use LaraDumps\LaraDumps\Profile\{ProfileEntry, ProfileManager};
 
@@ -14,12 +13,13 @@ class AppCollector
 
     public function register(): void
     {
-        Event::listen(Bootstrapped::class, function (Bootstrapped $event) {
-            $this->handleBootstrapped($event);
+        Event::listen('bootstrapped: *', function (string $eventName) {
+            $bootstrapperClass = substr($eventName, strlen('bootstrapped: '));
+            $this->handleBootstrapped($bootstrapperClass);
         });
     }
 
-    private function handleBootstrapped(Bootstrapped $event): void
+    private function handleBootstrapped(string $bootstrapperClass): void
     {
         if (! $this->manager->isActive()) {
             return;
@@ -29,7 +29,6 @@ class AppCollector
             return;
         }
 
-        $bootstrapperClass = get_class($event->bootstrapper);
         $shortName = class_basename($bootstrapperClass);
 
         $entry = new ProfileEntry(

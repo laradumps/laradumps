@@ -4,6 +4,7 @@ namespace LaraDumps\LaraDumps\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use LaraDumps\LaraDumps\LaraDumps;
 use LaraDumps\LaraDumpsCore\Actions\Config;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -17,11 +18,11 @@ class ProfileMiddleware
 
         $label = $this->buildLabel($request);
 
-        ds()->startProfile($label);
+        app(LaraDumps::class)->startProfile($label);
 
         $response = $next($request);
 
-        ds()->stopProfile();
+        app(LaraDumps::class)->stopProfile();
 
         return $response;
     }

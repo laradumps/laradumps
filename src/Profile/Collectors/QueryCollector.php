@@ -66,7 +66,7 @@ class QueryCollector
     private function buildName(string $sql): string
     {
         $sql = trim($sql);
-        $type = strtoupper(explode(' ', $sql)[0] ?? 'SQL');
+        $type = strtoupper(explode(' ', $sql)[0]);
 
         if (preg_match('/^(SELECT|INSERT|UPDATE|DELETE)\s+.*?\s+(FROM|INTO)\s+[`"\[]?(\w+)/i', $sql, $matches)) {
             $table = $matches[3];

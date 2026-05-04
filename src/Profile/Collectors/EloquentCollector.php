@@ -7,8 +7,6 @@ use LaraDumps\LaraDumps\Profile\{ProfileEntry, ProfileManager};
 
 class EloquentCollector
 {
-    private array $activeModels = [];
-
     public function __construct(
         private readonly ProfileManager $manager
     ) {}

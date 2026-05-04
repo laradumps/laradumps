@@ -185,7 +185,7 @@ class XHProfCollector
 
     private function isAppClass(string $fn, string $appNamespace): bool
     {
-        $sep = strpos($fn, '::') ?? false;
+        $sep = strpos($fn, '::');
 
         if ($sep === false) {
             $sep = strpos($fn, '->');

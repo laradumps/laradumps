@@ -43,7 +43,7 @@ class JobCollector
             metadata: [
                 'job' => $jobName,
                 'status' => 'queued',
-                'connection' => $event->connectionName ?? null,
+                'connection' => $event->connectionName,
                 'queue' => $event->job->queue ?? null,
             ],
             origin: $this->manager->captureBacktrace()
@@ -118,14 +118,14 @@ class JobCollector
 
     private function getJobName(JobQueued $event): string
     {
-        if (isset($event->job) && is_object($event->job)) {
+        if (is_object($event->job)) {
             return class_basename(get_class($event->job));
         }
 
         return 'Unknown';
     }
 
-    private function getJobNameFromJob($job): string
+    private function getJobNameFromJob(mixed $job): string
     {
         if (method_exists($job, 'displayName')) {
             return class_basename($job->displayName());
