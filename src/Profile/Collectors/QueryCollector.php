@@ -68,10 +68,19 @@ class QueryCollector
         $sql = trim($sql);
         $type = strtoupper(explode(' ', $sql)[0]);
 
-        if (preg_match('/^(SELECT|INSERT|UPDATE|DELETE)\s+.*?\s+(FROM|INTO)\s+[`"\[]?(\w+)/i', $sql, $matches)) {
-            $table = $matches[3];
+        // SELECT ... FROM table / INSERT INTO table
+        if (preg_match('/^(?:SELECT|INSERT)\s+.*?\s+(?:FROM|INTO)\s+[`"\[]?(\w+)/i', $sql, $matches)) {
+            return "sql({$type} {$matches[1]})";
+        }
 
-            return "sql({$type} {$table})";
+        // UPDATE table SET ... / DELETE FROM table
+        if (preg_match('/^(?:UPDATE|DELETE\s+FROM)\s+[`"\[]?(\w+)/i', $sql, $matches)) {
+            return "sql({$type} {$matches[1]})";
+        }
+
+        // DELETE FROM table (alternative)
+        if (preg_match('/^DELETE\s+.*?\s+FROM\s+[`"\[]?(\w+)/i', $sql, $matches)) {
+            return "sql({$type} {$matches[1]})";
         }
 
         return "sql({$type})";

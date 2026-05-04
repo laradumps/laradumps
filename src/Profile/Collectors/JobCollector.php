@@ -44,7 +44,7 @@ class JobCollector
                 'job' => $jobName,
                 'status' => 'queued',
                 'connection' => $event->connectionName,
-                'queue' => $event->job->queue ?? null,
+                'queue' => $event->queue ?? null,
             ],
             origin: $this->manager->captureBacktrace()
         );

@@ -124,19 +124,18 @@ class XHProfCollector
             return;
         }
 
-        if (isset($visited[$parent])) {
+        // Prevent infinite loops: track visited parent nodes only (not child occurrences)
+        $visitKey = $parent.'@'.$parentEntryId;
+
+        if (isset($visited[$visitKey])) {
             return;
         }
 
-        $visited[$parent] = true;
+        $visited[$visitKey] = true;
 
         $offsetMs = 0.0;
 
         foreach ($children[$parent] as $child => $stats) {
-            if (isset($visited[$child])) {
-                continue;
-            }
-
             $wt = $stats['wt'] ?? 0;
             $durationMs = round($wt / 1000, 3);
             $startMs = round($parentStartMs + $offsetMs, 3);
@@ -165,7 +164,6 @@ class XHProfCollector
 
                 $this->manager->addEntry($entry);
                 $entryId = $entry->id;
-                $entryIdMap[$child] = $entryId;
             }
 
             $this->walkChildren(

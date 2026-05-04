@@ -7,6 +7,7 @@ use LaraDumps\LaraDumps\Profile\{ProfileEntry, ProfileManager};
 
 class ViewCollector
 {
+    /** @var array<string, ProfileEntry[]> */
     private array $viewStack = [];
 
     public function __construct(
@@ -59,7 +60,7 @@ class ViewCollector
             origin: $this->manager->captureBacktrace()
         );
 
-        $this->viewStack[$viewName] = $entry;
+        $this->viewStack[$viewName][] = $entry;
         $this->manager->addEntry($entry);
         $this->manager->pushContext($entry->id);
     }
@@ -77,11 +78,14 @@ class ViewCollector
 
         $viewName = $view->getName();
 
-        if (isset($this->viewStack[$viewName])) {
-            $entry = $this->viewStack[$viewName];
+        if (! empty($this->viewStack[$viewName])) {
+            $entry = array_pop($this->viewStack[$viewName]);
             $entry->stop($this->manager->getElapsedMs());
             $this->manager->popContext();
-            unset($this->viewStack[$viewName]);
+
+            if (empty($this->viewStack[$viewName])) {
+                unset($this->viewStack[$viewName]);
+            }
         }
     }
 

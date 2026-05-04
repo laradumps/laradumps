@@ -13,7 +13,7 @@ class AppCollector
 
     public function register(): void
     {
-        Event::listen('bootstrapped: *', function (string $eventName) {
+        Event::listen('bootstrapped: *', function (string $eventName, array $payload) {
             $bootstrapperClass = substr($eventName, strlen('bootstrapped: '));
             $this->handleBootstrapped($bootstrapperClass);
         });

@@ -14,7 +14,11 @@ class EventCollector
         'Illuminate\Http\Client\Events\*',
         'Illuminate\Queue\Events\*',
         'Illuminate\View\Events\*',
+        'Illuminate\Routing\Events\*',
         'eloquent.*',
+        'bootstrapped: *',
+        'composing: *',
+        'creating: *',
     ];
 
     public function __construct(
@@ -48,7 +52,7 @@ class EventCollector
             type: 'event',
             name: $name,
             startMs: $this->manager->getElapsedMs(),
-            durationMs: 0.1,
+            durationMs: 0,
             parentId: $this->manager->getCurrentParentId(),
             metadata: [
                 'event' => $eventName,
