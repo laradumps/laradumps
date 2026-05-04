@@ -24,6 +24,7 @@ it('parses the config yaml base file', function () {
                     'gate' => false,
                     'cache' => false,
                     'brain' => false,
+                    'profile' => false,
                 ],
                 'logs' => [
                     'info' => true,
@@ -46,6 +47,22 @@ it('parses the config yaml base file', function () {
                 ],
                 'queries' => [
                     'explain' => false,
-                ]]
+                ],
+                'profile' => [
+                    'auto_middleware' => false,
+                    'max_entries' => 300,
+                    'capture' => [
+                        'app' => true,
+                        'events' => true,
+                        'queries' => true,
+                        'eloquent' => true,
+                        'views' => true,
+                        'controller' => true,
+                        'http' => true,
+                        'cache' => true,
+                        'jobs' => true,
+                    ],
+                ],
+            ],
         );
 });
