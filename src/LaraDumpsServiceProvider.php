@@ -2,12 +2,14 @@
 
 namespace LaraDumps\LaraDumps;
 
+use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\{Collection, ServiceProvider, Stringable};
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Testing\TestResponse;
 use Illuminate\View\View;
 use LaraDumps\LaraDumps\Commands\InitCommand;
+use LaraDumps\LaraDumps\Middleware\ProfileMiddleware;
 use LaraDumps\LaraDumps\Observers\{BrainObserver,
     CacheObserver,
     CommandObserver,
@@ -17,11 +19,13 @@ use LaraDumps\LaraDumps\Observers\{BrainObserver,
     JobsObserver,
     LogObserver,
     MailObserver,
+    ProfileObserver,
     QueryObserver,
     ScheduledCommandObserver,
     SlowQueryObserver};
 use LaraDumps\LaraDumps\Payloads\QueryPayload;
-use LaraDumps\LaraDumpsCore\Actions\Dumper;
+use LaraDumps\LaraDumps\Profile\ProfileManager;
+use LaraDumps\LaraDumpsCore\Actions\{Config, Dumper};
 use LaraDumps\LaraDumpsCore\Payloads\{DumpPayload, TableV2Payload};
 
 class LaraDumpsServiceProvider extends ServiceProvider
@@ -70,6 +74,10 @@ class LaraDumpsServiceProvider extends ServiceProvider
         $this->app->singleton(DumpObserver::class);
         $this->app->singleton(SlowQueryObserver::class);
         $this->app->singleton(BrainObserver::class);
+        $this->app->singleton(ProfileObserver::class);
+        $this->app->singleton(ProfileManager::class, function () {
+            return app(ProfileObserver::class)->getManager();
+        });
 
         $this->registerMacros();
     }
@@ -95,6 +103,27 @@ class LaraDumpsServiceProvider extends ServiceProvider
         app(DumpObserver::class)->register();
         app(SlowQueryObserver::class)->register();
         app(BrainObserver::class)->register();
+        app(ProfileObserver::class)->register();
+
+        $this->registerProfileMiddleware();
+    }
+
+    private function registerProfileMiddleware(): void
+    {
+        if (! boolval(Config::get('observers.profile', false))) {
+            return;
+        }
+
+        if (! boolval(Config::get('profile.auto_middleware', false))) {
+            return;
+        }
+
+        if ($this->app->runningInConsole()) {
+            return;
+        }
+
+        $kernel = $this->app->make(Kernel::class);
+        $kernel->pushMiddleware(ProfileMiddleware::class);
     }
 
     private function registerMacros(): void
