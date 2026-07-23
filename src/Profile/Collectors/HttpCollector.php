@@ -5,10 +5,12 @@ namespace LaraDumps\LaraDumps\Profile\Collectors;
 use Illuminate\Http\Client\Events\{RequestSending, ResponseReceived};
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Event;
-use LaraDumps\LaraDumps\Profile\{ProfileEntry, ProfileManager};
+use LaraDumps\LaraDumps\Profile\ProfileManager;
+use OpenTelemetry\API\Trace\SpanInterface;
 
 class HttpCollector
 {
+    /** @var array<string, array{span: SpanInterface, metadata: array}> */
     private array $pendingRequests = [];
 
     public function __construct(
@@ -45,24 +47,20 @@ class HttpCollector
 
         $name = "http({$method} {$host})";
 
-        $entry = new ProfileEntry(
-            type: 'http',
-            name: $name,
-            startMs: $this->manager->getElapsedMs(),
-            durationMs: null,
-            parentId: $this->manager->getCurrentParentId(),
-            metadata: [
-                'method' => $method,
-                'url' => $url,
-                'host' => $host,
-            ],
-            origin: $this->manager->captureBacktrace()
-        );
+        $metadata = [
+            'method' => $method,
+            'url' => $url,
+            'host' => $host,
+        ];
 
+        $origin = $this->manager->captureBacktrace();
         $requestKey = $this->getRequestKey($request);
-        $this->pendingRequests[$requestKey] = $entry;
 
-        $this->manager->addEntry($entry);
+        $span = $this->manager->tracer()?->beginSpan('http', $name, $metadata, $origin);
+
+        if ($span !== null) {
+            $this->pendingRequests[$requestKey] = ['span' => $span, 'metadata' => $metadata];
+        }
     }
 
     private function handleResponseReceived(ResponseReceived $event): void
@@ -75,13 +73,18 @@ class HttpCollector
         $response = $event->response;
         $requestKey = $this->getRequestKey($request);
 
-        if (isset($this->pendingRequests[$requestKey])) {
-            $entry = $this->pendingRequests[$requestKey];
-            $entry->stop($this->manager->getElapsedMs());
-            $entry->metadata['status'] = $response->status();
-            $entry->metadata['success'] = $response->successful();
-            unset($this->pendingRequests[$requestKey]);
+        if (! isset($this->pendingRequests[$requestKey])) {
+            return;
         }
+
+        $pending = $this->pendingRequests[$requestKey];
+        unset($this->pendingRequests[$requestKey]);
+
+        $metadata = $pending['metadata'];
+        $metadata['status'] = $response->status();
+        $metadata['success'] = $response->successful();
+
+        $this->manager->tracer()?->endSpan($pending['span'], $metadata);
     }
 
     private function getRequestKey(Request $request): string

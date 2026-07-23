@@ -4,7 +4,7 @@ namespace LaraDumps\LaraDumps\Profile\Collectors;
 
 use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Support\Facades\{DB, Event};
-use LaraDumps\LaraDumps\Profile\{ProfileEntry, ProfileManager};
+use LaraDumps\LaraDumps\Profile\ProfileManager;
 
 class QueryCollector
 {
@@ -36,22 +36,16 @@ class QueryCollector
         $sql = $this->formatSql($query);
         $name = $this->buildName($sql);
 
-        $entry = new ProfileEntry(
-            type: 'sql',
-            name: $name,
-            startMs: $this->manager->getElapsedMs() - $query->time,
-            durationMs: $query->time,
-            parentId: $this->manager->getCurrentParentId(),
-            metadata: [
-                'sql' => $sql,
-                'bindings' => $query->bindings,
-                'connection' => $query->connectionName,
-                'database' => $query->connection->getDatabaseName(),
-            ],
-            origin: $this->manager->captureBacktrace()
-        );
+        $metadata = [
+            'sql' => $sql,
+            'bindings' => $query->bindings,
+            'connection' => $query->connectionName,
+            'database' => $query->connection->getDatabaseName(),
+        ];
 
-        $this->manager->addEntry($entry);
+        $origin = $this->manager->captureBacktrace();
+
+        $this->manager->tracer()?->instantSpan('sql', $name, $query->time, $metadata, $origin);
     }
 
     private function formatSql(QueryExecuted $query): string

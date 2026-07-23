@@ -4,11 +4,12 @@ namespace LaraDumps\LaraDumps\Profile\Collectors;
 
 use Illuminate\Routing\Events\RouteMatched;
 use Illuminate\Support\Facades\Event;
-use LaraDumps\LaraDumps\Profile\{ProfileEntry, ProfileManager};
+use LaraDumps\LaraDumps\Profile\OpenTelemetry\ScopedSpan;
+use LaraDumps\LaraDumps\Profile\ProfileManager;
 
 class ControllerCollector
 {
-    private ?ProfileEntry $currentControllerEntry = null;
+    private ?ScopedSpan $currentControllerSpan = null;
 
     public function __construct(
         private readonly ProfileManager $manager
@@ -47,32 +48,22 @@ class ControllerCollector
             $name = $this->formatControllerAction($controllerAction);
         }
 
-        $entry = new ProfileEntry(
-            type: 'controller',
-            name: $name,
-            startMs: $this->manager->getElapsedMs(),
-            durationMs: null,
-            parentId: $this->manager->getCurrentParentId(),
-            metadata: [
-                'controller' => $controllerAction,
-                'uri' => $route->uri(),
-                'methods' => $route->methods(),
-                'name' => $route->getName(),
-            ],
-            origin: null
-        );
+        $metadata = [
+            'controller' => $controllerAction,
+            'uri' => $route->uri(),
+            'methods' => $route->methods(),
+            'name' => $route->getName(),
+        ];
 
-        $this->currentControllerEntry = $entry;
-        $this->manager->addEntry($entry);
-        $this->manager->pushContext($entry->id);
+        $this->currentControllerSpan = $this->manager->tracer()
+            ?->beginScopedSpan('controller', $name, $metadata);
     }
 
     public function stopController(): void
     {
-        if ($this->currentControllerEntry) {
-            $this->currentControllerEntry->stop($this->manager->getElapsedMs());
-            $this->manager->popContext();
-            $this->currentControllerEntry = null;
+        if ($this->currentControllerSpan) {
+            $this->currentControllerSpan->end();
+            $this->currentControllerSpan = null;
         }
     }
 

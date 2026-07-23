@@ -2,6 +2,7 @@
 
 namespace LaraDumps\LaraDumps\Observers;
 
+use Illuminate\Support\Facades\Log;
 use LaraDumps\LaraDumps\Profile\Collectors\{
     AppCollector,
     CacheCollector,
@@ -14,6 +15,7 @@ use LaraDumps\LaraDumps\Profile\Collectors\{
     ViewCollector,
     XHProfCollector
 };
+use LaraDumps\LaraDumps\Profile\OpenTelemetry\ProfileTracer;
 use LaraDumps\LaraDumps\Profile\ProfileManager;
 use LaraDumps\LaraDumpsCore\Actions\Config;
 
@@ -26,6 +28,8 @@ class ProfileObserver extends BaseObserver
     private ?ControllerCollector $controllerCollector = null;
 
     private ?XHProfCollector $xhprofCollector = null;
+
+    private static bool $missingOtelWarned = false;
 
     public function __construct()
     {
@@ -50,9 +54,30 @@ class ProfileObserver extends BaseObserver
 
         $this->manager->start($label);
 
+        if (ProfileTracer::isAvailable()) {
+            $this->manager->setTracer(new ProfileTracer($this->manager));
+        } else {
+            $this->warnMissingOpenTelemetry();
+        }
+
         if ($this->xhprofCollector) {
             $this->xhprofCollector->start();
         }
+    }
+
+    private function warnMissingOpenTelemetry(): void
+    {
+        if (self::$missingOtelWarned) {
+            return;
+        }
+
+        self::$missingOtelWarned = true;
+
+        Log::error(
+            'LaraDumps: profiling was requested but the OpenTelemetry packages are not installed. '
+            .'The profiler is disabled. Install them with: '
+            .'composer require open-telemetry/sdk open-telemetry/api'
+        );
     }
 
     public function stop(): array
@@ -64,6 +89,9 @@ class ProfileObserver extends BaseObserver
         $this->xhprofCollector?->stop();
 
         $this->controllerCollector?->stopController();
+
+        $this->manager->tracer()?->shutdown();
+        $this->manager->setTracer(null);
 
         return $this->manager->stop();
     }

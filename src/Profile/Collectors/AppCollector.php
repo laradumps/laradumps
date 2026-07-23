@@ -3,7 +3,7 @@
 namespace LaraDumps\LaraDumps\Profile\Collectors;
 
 use Illuminate\Support\Facades\Event;
-use LaraDumps\LaraDumps\Profile\{ProfileEntry, ProfileManager};
+use LaraDumps\LaraDumps\Profile\ProfileManager;
 
 class AppCollector
 {
@@ -31,18 +31,8 @@ class AppCollector
 
         $shortName = class_basename($bootstrapperClass);
 
-        $entry = new ProfileEntry(
-            type: 'app',
-            name: "bootstrap({$shortName})",
-            startMs: $this->manager->getElapsedMs(),
-            durationMs: null,
-            parentId: $this->manager->getCurrentParentId(),
-            metadata: [
-                'bootstrapper' => $bootstrapperClass,
-            ],
-            origin: null
-        );
+        $metadata = ['bootstrapper' => $bootstrapperClass];
 
-        $this->manager->addEntry($entry);
+        $this->manager->tracer()?->instantSpan('app', "bootstrap({$shortName})", 0, $metadata);
     }
 }

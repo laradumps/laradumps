@@ -2,6 +2,7 @@
 
 namespace LaraDumps\LaraDumps\Profile;
 
+use LaraDumps\LaraDumps\Profile\OpenTelemetry\ProfileTracer;
 use LaraDumps\LaraDumpsCore\Actions\Config;
 
 class ProfileManager
@@ -24,11 +25,33 @@ class ProfileManager
 
     private ?string $rootEntryId = null;
 
+    private ?ProfileTracer $tracer = null;
+
     public function __construct()
     {
         $this->stack = new ProfileStack();
         $this->maxEntries = intval(Config::get('profile.max_entries', 1000));
         $this->loadCaptureConfig();
+    }
+
+    public function setTracer(?ProfileTracer $tracer): void
+    {
+        $this->tracer = $tracer;
+    }
+
+    public function tracer(): ?ProfileTracer
+    {
+        return $this->tracer;
+    }
+
+    public function getStartTime(): float
+    {
+        return $this->startTime;
+    }
+
+    public function getRootEntryId(): ?string
+    {
+        return $this->rootEntryId;
     }
 
     private function loadCaptureConfig(): void
@@ -80,7 +103,7 @@ class ProfileManager
         }
 
         // Only capture wall-clock end time if it hasn't already been overridden
-        // (e.g. by XdebugCollector::overrideTotalDuration to avoid inflated times).
+        // (e.g. by XHProfCollector via overrideTotalDuration to avoid inflated times).
         if ($this->endTime === null) {
             $this->endTime = microtime(true) * 1000;
         }
@@ -122,16 +145,6 @@ class ProfileManager
         }
 
         $this->entries[] = $entry;
-    }
-
-    public function pushContext(string $entryId): void
-    {
-        $this->stack->push($entryId);
-    }
-
-    public function popContext(): ?string
-    {
-        return $this->stack->pop();
     }
 
     public function getCurrentParentId(): ?string
@@ -273,31 +286,16 @@ class ProfileManager
 
     public function measure(string $name, callable $callback, string $type = 'app', array $metadata = []): mixed
     {
-        if (! $this->isActive) {
+        if (! $this->isActive || $this->tracer === null) {
             return $callback();
         }
 
-        $startMs = $this->getElapsedMs();
-
-        $entry = new ProfileEntry(
-            type: $type,
-            name: $name,
-            startMs: $startMs,
-            parentId: $this->getCurrentParentId(),
-            metadata: $metadata,
-            origin: $this->captureBacktrace()
-        );
-
-        $this->addEntry($entry);
-        $this->pushContext($entry->id);
+        $span = $this->tracer->beginScopedSpan($type, $name, $metadata, $this->captureBacktrace());
 
         try {
-            $result = $callback();
+            return $callback();
         } finally {
-            $entry->stop($this->getElapsedMs());
-            $this->popContext();
+            $span->end();
         }
-
-        return $result;
     }
 }
