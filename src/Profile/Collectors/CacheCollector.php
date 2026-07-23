@@ -4,7 +4,7 @@ namespace LaraDumps\LaraDumps\Profile\Collectors;
 
 use Illuminate\Cache\Events\{CacheHit, CacheMissed, KeyForgotten, KeyWritten};
 use Illuminate\Support\Facades\Event;
-use LaraDumps\LaraDumps\Profile\{ProfileEntry, ProfileManager};
+use LaraDumps\LaraDumps\Profile\ProfileManager;
 
 readonly class CacheCollector
 {
@@ -35,20 +35,14 @@ readonly class CacheCollector
 
         $name = "cache({$action}: {$shortKey})";
 
-        $entry = new ProfileEntry(
-            type: 'cache',
-            name: $name,
-            startMs: $this->manager->getElapsedMs(),
-            durationMs: 0,
-            parentId: $this->manager->getCurrentParentId(),
-            metadata: [
-                'action' => $action,
-                'key' => $key,
-                'tags' => $event->tags ?? [],
-            ],
-            origin: $this->manager->captureBacktrace()
-        );
+        $metadata = [
+            'action' => $action,
+            'key' => $key,
+            'tags' => $event->tags ?? [],
+        ];
 
-        $this->manager->addEntry($entry);
+        $origin = $this->manager->captureBacktrace();
+
+        $this->manager->tracer()?->instantSpan('cache', $name, 0, $metadata, $origin);
     }
 }

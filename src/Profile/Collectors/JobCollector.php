@@ -4,10 +4,12 @@ namespace LaraDumps\LaraDumps\Profile\Collectors;
 
 use Illuminate\Queue\Events\{JobFailed, JobProcessed, JobProcessing, JobQueued};
 use Illuminate\Support\Facades\Event;
-use LaraDumps\LaraDumps\Profile\{ProfileEntry, ProfileManager};
+use LaraDumps\LaraDumps\Profile\ProfileManager;
+use OpenTelemetry\API\Trace\SpanInterface;
 
 class JobCollector
 {
+    /** @var array<string, array{span: SpanInterface, metadata: array}> */
     private array $processingJobs = [];
 
     public function __construct(
@@ -34,22 +36,16 @@ class JobCollector
 
         $jobName = $this->getJobName($event);
 
-        $entry = new ProfileEntry(
-            type: 'job',
-            name: "job(queued: {$jobName})",
-            startMs: $this->manager->getElapsedMs(),
-            durationMs: null,
-            parentId: $this->manager->getCurrentParentId(),
-            metadata: [
-                'job' => $jobName,
-                'status' => 'queued',
-                'connection' => $event->connectionName,
-                'queue' => $event->queue ?? null,
-            ],
-            origin: $this->manager->captureBacktrace()
-        );
+        $metadata = [
+            'job' => $jobName,
+            'status' => 'queued',
+            'connection' => $event->connectionName,
+            'queue' => $event->queue ?? null,
+        ];
 
-        $this->manager->addEntry($entry);
+        $origin = $this->manager->captureBacktrace();
+
+        $this->manager->tracer()?->instantSpan('job', "job(queued: {$jobName})", 0, $metadata, $origin);
     }
 
     private function handleProcessing(JobProcessing $event): void
@@ -65,22 +61,19 @@ class JobCollector
         $jobName = $this->getJobNameFromJob($event->job);
         $jobId = $event->job->getJobId();
 
-        $entry = new ProfileEntry(
-            type: 'job',
-            name: "job(processing: {$jobName})",
-            startMs: $this->manager->getElapsedMs(),
-            durationMs: null,
-            parentId: $this->manager->getCurrentParentId(),
-            metadata: [
-                'job' => $jobName,
-                'status' => 'processing',
-                'job_id' => $jobId,
-            ],
-            origin: $this->manager->captureBacktrace()
-        );
+        $metadata = [
+            'job' => $jobName,
+            'status' => 'processing',
+            'job_id' => $jobId,
+        ];
 
-        $this->processingJobs[$jobId] = $entry;
-        $this->manager->addEntry($entry);
+        $origin = $this->manager->captureBacktrace();
+
+        $span = $this->manager->tracer()?->beginSpan('job', "job(processing: {$jobName})", $metadata, $origin);
+
+        if ($span !== null) {
+            $this->processingJobs[$jobId] = ['span' => $span, 'metadata' => $metadata];
+        }
     }
 
     private function handleProcessed(JobProcessed $event): void
@@ -89,14 +82,7 @@ class JobCollector
             return;
         }
 
-        $jobId = $event->job->getJobId();
-
-        if (isset($this->processingJobs[$jobId])) {
-            $entry = $this->processingJobs[$jobId];
-            $entry->stop($this->manager->getElapsedMs());
-            $entry->metadata['status'] = 'processed';
-            unset($this->processingJobs[$jobId]);
-        }
+        $this->finishJob($event->job->getJobId(), ['status' => 'processed']);
     }
 
     private function handleFailed(JobFailed $event): void
@@ -105,15 +91,22 @@ class JobCollector
             return;
         }
 
-        $jobId = $event->job->getJobId();
+        $this->finishJob($event->job->getJobId(), [
+            'status' => 'failed',
+            'exception' => $event->exception->getMessage(),
+        ]);
+    }
 
-        if (isset($this->processingJobs[$jobId])) {
-            $entry = $this->processingJobs[$jobId];
-            $entry->stop($this->manager->getElapsedMs());
-            $entry->metadata['status'] = 'failed';
-            $entry->metadata['exception'] = $event->exception->getMessage();
-            unset($this->processingJobs[$jobId]);
+    private function finishJob(string $jobId, array $extraMetadata): void
+    {
+        if (! isset($this->processingJobs[$jobId])) {
+            return;
         }
+
+        $pending = $this->processingJobs[$jobId];
+        unset($this->processingJobs[$jobId]);
+
+        $this->manager->tracer()?->endSpan($pending['span'], array_merge($pending['metadata'], $extraMetadata));
     }
 
     private function getJobName(JobQueued $event): string

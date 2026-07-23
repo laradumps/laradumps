@@ -3,11 +3,12 @@
 namespace LaraDumps\LaraDumps\Profile\Collectors;
 
 use Illuminate\Support\Facades\Event;
-use LaraDumps\LaraDumps\Profile\{ProfileEntry, ProfileManager};
+use LaraDumps\LaraDumps\Profile\ProfileManager;
+use OpenTelemetry\API\Trace\SpanInterface;
 
 class ViewCollector
 {
-    /** @var array<string, ProfileEntry[]> */
+    /** @var array<string, SpanInterface[]> */
     private array $viewStack = [];
 
     public function __construct(
@@ -46,23 +47,19 @@ class ViewCollector
         $shortPath = $this->getShortPath($viewPath);
         $name = $shortPath ?: $viewName;
 
-        $entry = new ProfileEntry(
-            type: 'view',
-            name: $name,
-            startMs: $this->manager->getElapsedMs(),
-            durationMs: null,
-            parentId: $this->manager->getCurrentParentId(),
-            metadata: [
-                'view' => $viewName,
-                'path' => $viewPath,
-                'data_keys' => array_keys($view->getData()),
-            ],
-            origin: $this->manager->captureBacktrace()
-        );
+        $metadata = [
+            'view' => $viewName,
+            'path' => $viewPath,
+            'data_keys' => array_keys($view->getData()),
+        ];
 
-        $this->viewStack[$viewName][] = $entry;
-        $this->manager->addEntry($entry);
-        $this->manager->pushContext($entry->id);
+        $origin = $this->manager->captureBacktrace();
+
+        $span = $this->manager->tracer()?->beginSpan('view', $name, $metadata, $origin);
+
+        if ($span !== null) {
+            $this->viewStack[$viewName][] = $span;
+        }
     }
 
     private function handleCreating(string $eventName, array $payload): void
@@ -79,9 +76,8 @@ class ViewCollector
         $viewName = $view->getName();
 
         if (! empty($this->viewStack[$viewName])) {
-            $entry = array_pop($this->viewStack[$viewName]);
-            $entry->stop($this->manager->getElapsedMs());
-            $this->manager->popContext();
+            $span = array_pop($this->viewStack[$viewName]);
+            $this->manager->tracer()?->endSpan($span);
 
             if (empty($this->viewStack[$viewName])) {
                 unset($this->viewStack[$viewName]);

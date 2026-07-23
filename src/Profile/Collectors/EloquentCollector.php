@@ -3,7 +3,7 @@
 namespace LaraDumps\LaraDumps\Profile\Collectors;
 
 use Illuminate\Support\Facades\Event;
-use LaraDumps\LaraDumps\Profile\{ProfileEntry, ProfileManager};
+use LaraDumps\LaraDumps\Profile\ProfileManager;
 
 class EloquentCollector
 {
@@ -55,20 +55,14 @@ class EloquentCollector
 
         $name = "eloquent({$shortName})";
 
-        $entry = new ProfileEntry(
-            type: 'eloquent',
-            name: $name,
-            startMs: $this->manager->getElapsedMs(),
-            durationMs: 0,
-            parentId: $this->manager->getCurrentParentId(),
-            metadata: [
-                'model' => $modelClass,
-                'action' => $action,
-                'key' => $model->getKey(),
-            ],
-            origin: $this->manager->captureBacktrace()
-        );
+        $metadata = [
+            'model' => $modelClass,
+            'action' => $action,
+            'key' => $model->getKey(),
+        ];
 
-        $this->manager->addEntry($entry);
+        $origin = $this->manager->captureBacktrace();
+
+        $this->manager->tracer()?->instantSpan('eloquent', $name, 0, $metadata, $origin);
     }
 }

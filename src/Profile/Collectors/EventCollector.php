@@ -3,7 +3,7 @@
 namespace LaraDumps\LaraDumps\Profile\Collectors;
 
 use Illuminate\Support\Facades\Event;
-use LaraDumps\LaraDumps\Profile\{ProfileEntry, ProfileManager};
+use LaraDumps\LaraDumps\Profile\ProfileManager;
 
 class EventCollector
 {
@@ -48,20 +48,14 @@ class EventCollector
 
         $name = $this->buildName($eventName);
 
-        $entry = new ProfileEntry(
-            type: 'event',
-            name: $name,
-            startMs: $this->manager->getElapsedMs(),
-            durationMs: 0,
-            parentId: $this->manager->getCurrentParentId(),
-            metadata: [
-                'event' => $eventName,
-                'payload_type' => isset($payload[0]) ? get_class($payload[0]) : null,
-            ],
-            origin: $this->manager->captureBacktrace()
-        );
+        $metadata = [
+            'event' => $eventName,
+            'payload_type' => isset($payload[0]) ? get_class($payload[0]) : null,
+        ];
 
-        $this->manager->addEntry($entry);
+        $origin = $this->manager->captureBacktrace();
+
+        $this->manager->tracer()?->instantSpan('event', $name, 0, $metadata, $origin);
     }
 
     private function buildName(string $eventName): string
