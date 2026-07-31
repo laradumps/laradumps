@@ -8,6 +8,7 @@ use Illuminate\Support\{Collection, ServiceProvider, Stringable};
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Testing\TestResponse;
 use Illuminate\View\View;
+use LaraDumps\LaraDumps\Actions\DefaultConfig;
 use LaraDumps\LaraDumps\Commands\InitCommand;
 use LaraDumps\LaraDumps\Middleware\ProfileMiddleware;
 use LaraDumps\LaraDumps\Observers\{BrainObserver,
@@ -36,6 +37,8 @@ class LaraDumpsServiceProvider extends ServiceProvider
             define('LARADUMPS_REQUEST_ID', uniqid());
         }
 
+        $this->reconcileConfig();
+
         $this->publishes([
             __DIR__.'/../resources/config/laradumps.php' => config_path('laradumps.php'),
         ], 'laradumps-config');
@@ -47,6 +50,27 @@ class LaraDumpsServiceProvider extends ServiceProvider
         $this->commands([InitCommand::class]);
 
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'laradumps');
+    }
+
+    private function reconcileConfig(): void
+    {
+        static $done = false;
+
+        if ($done) {
+            return;
+        }
+
+        $done = true;
+
+        try {
+            if (! Config::exists() || $this->app->environment('production') || runningInTest()) {
+                return;
+            }
+
+            Config::sync(DefaultConfig::toArray());
+        } catch (\Throwable) {
+            // A dev tool must never break the host application.
+        }
     }
 
     public function register(): void
