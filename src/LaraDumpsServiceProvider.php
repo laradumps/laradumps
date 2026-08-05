@@ -37,8 +37,6 @@ class LaraDumpsServiceProvider extends ServiceProvider
             define('LARADUMPS_REQUEST_ID', uniqid());
         }
 
-        $this->reconcileConfig();
-
         $this->publishes([
             __DIR__.'/../resources/config/laradumps.php' => config_path('laradumps.php'),
         ], 'laradumps-config');
@@ -52,33 +50,14 @@ class LaraDumpsServiceProvider extends ServiceProvider
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'laradumps');
     }
 
-    private function reconcileConfig(): void
-    {
-        static $done = false;
-
-        if ($done) {
-            return;
-        }
-
-        $done = true;
-
-        try {
-            if (! Config::exists() || $this->app->environment('production') || runningInTest()) {
-                return;
-            }
-
-            Config::sync(DefaultConfig::toArray());
-        } catch (\Throwable) {
-            // A dev tool must never break the host application.
-        }
-    }
-
     public function register(): void
     {
         $this->mergeConfigFrom(
             __DIR__.'/../resources/config/laradumps.php',
             'laradumps'
         );
+
+        Config::registerDefaults(DefaultConfig::packageDefaults());
 
         $file = str_replace('/', DIRECTORY_SEPARATOR, __DIR__.'/functions.php');
 

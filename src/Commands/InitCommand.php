@@ -36,7 +36,7 @@ class InitCommand extends Command
 
         $publish = Config::publish(
             pwd: $pwd.DIRECTORY_SEPARATOR,
-            filepath: DefaultConfig::coreBasePath()
+            filepath: Config::baseConfigPath()
         );
 
         if (! $publish) {
