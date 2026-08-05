@@ -6,6 +6,7 @@ use Illuminate\Queue\Events\{JobFailed, JobProcessed, JobProcessing, JobQueued};
 use Illuminate\Queue\Jobs\Job;
 use Illuminate\Support\Facades\Event;
 use LaraDumps\LaraDumps\Payloads\JobPayload;
+use LaraDumps\LaraDumps\Support\JobContext;
 use LaraDumps\LaraDumpsCore\LaraDumps;
 use LaraDumps\LaraDumpsCore\Payloads\Payload;
 use LaraDumps\LaraDumpsCore\Support\CodeSnippet;
@@ -28,6 +29,13 @@ class JobsObserver extends BaseObserver
             return;
         }
 
+        if ($event instanceof JobProcessing) {
+            JobContext::push(
+                $this->extractJobPayloadAttribute($event, 'uuid'),
+                $this->extractJobPayloadAttribute($event, 'displayName')
+            );
+        }
+
         $payload = $this->generatePayload($event);
 
         if ($event instanceof JobFailed) {
@@ -37,6 +45,10 @@ class JobsObserver extends BaseObserver
         }
 
         $this->sendPayload($payload);
+
+        if ($event instanceof JobProcessed || $event instanceof JobFailed) {
+            JobContext::pop();
+        }
     }
 
     private function generatePayload(object $event): Payload

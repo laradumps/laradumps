@@ -9,7 +9,10 @@ use LaraDumps\LaraDumps\Livewire\Support\Debug;
 use LaraDumps\LaraDumps\Observers\{CacheObserver, CommandObserver, GateObserver, HttpClientObserver, ProfileObserver, QueryObserver, ScheduledCommandObserver};
 use LaraDumps\LaraDumps\Payloads\{ContextPayload, MailablePayload, MarkdownPayload, ModelPayload, ProfilePayload, RoutesPayload};
 use LaraDumps\LaraDumps\Profile\ProfileManager;
+use LaraDumps\LaraDumps\Support\JobContext;
+use LaraDumps\LaraDumpsCore\Dispatcher\Dispatcher;
 use LaraDumps\LaraDumpsCore\LaraDumps as BaseLaraDumps;
+use LaraDumps\LaraDumpsCore\Payloads\Payload;
 use Livewire\Volt\Component;
 
 class LaraDumps extends BaseLaraDumps
@@ -233,5 +236,14 @@ class LaraDumps extends BaseLaraDumps
     public function measure(string $name, callable $callback, string $type = 'app', array $metadata = []): mixed
     {
         return app(ProfileManager::class)->measure($name, $callback, $type, $metadata);
+    }
+
+    protected function dispatchPayload(Payload $payload): void
+    {
+        $data = $payload->toArray();
+
+        $data['related_job'] = $payload->type() === 'jobs' ? null : JobContext::current();
+
+        (new Dispatcher())->handle($data);
     }
 }
