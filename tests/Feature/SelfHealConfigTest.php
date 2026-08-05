@@ -48,12 +48,12 @@ it('backfills missing keys into a stale config using the real schema', function 
 
         $written = Yaml::parseFile($file);
 
-        expect($written)->toHaveKeys(['logs', 'profile', 'queries', 'code_snippet', 'xdebug', 'slow_queries']);
-        expect($written['config'])->toHaveKey('color_in_screen');
-        expect($written['profile']['capture'])->toHaveKey('eloquent');
+        expect($written)->toHaveKeys(['logs', 'profiler', 'queries', 'code_snippet', 'xdebug', 'slow_queries'])
+            ->and($written['config'])->toHaveKey('color_in_screen')
+            ->and($written['profiler']['capture'])->toHaveKey('eloquent')
+            ->and($written['app']['project_path'])->toBe('/my/project/')
+            ->and($written['observers']['dump'])->toBeTrue();
 
-        expect($written['app']['project_path'])->toBe('/my/project/');
-        expect($written['observers']['dump'])->toBeTrue();
     });
 });
 
@@ -69,9 +69,9 @@ it('prunes keys that are no longer part of the schema', function () {
 
         $written = Yaml::parseFile($file);
 
-        expect($written['observers'])->not->toHaveKey('obsolete_observer');
-        expect($written)->not->toHaveKey('removed_section');
-        expect($written['app']['project_path'])->toBe('/my/project/');
+        expect($written['observers'])->not->toHaveKey('obsolete_observer')
+            ->and($written)->not->toHaveKey('removed_section')
+            ->and($written['app']['project_path'])->toBe('/my/project/');
     });
 });
 

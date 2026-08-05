@@ -36,7 +36,7 @@ class ProfilePayload extends Payload
 
     public function type(): string
     {
-        return 'profile';
+        return 'profiler';
     }
 
     public function content(): array
@@ -54,7 +54,7 @@ class ProfilePayload extends Payload
 
     public function toScreen(): array|Screen
     {
-        return new Screen('profile');
+        return new Screen('profiler');
     }
 
     public function withLabel(): array|Label

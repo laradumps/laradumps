@@ -24,7 +24,7 @@ it('parses the config yaml base file', function () {
                     'gate' => false,
                     'cache' => false,
                     'brain' => false,
-                    'profile' => false,
+                    'profiler' => false,
                 ],
                 'logs' => [
                     'info' => true,
@@ -48,7 +48,7 @@ it('parses the config yaml base file', function () {
                 'queries' => [
                     'explain' => false,
                 ],
-                'profile' => [
+                'profiler' => [
                     'auto_middleware' => false,
                     'max_entries' => 300,
                     'capture' => [

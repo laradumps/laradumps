@@ -29,11 +29,11 @@ class ProfileMiddleware
 
     private function shouldProfile(): bool
     {
-        if (! boolval(Config::get('observers.profile', false))) {
+        if (! boolval(Config::get('observers.profiler', false))) {
             return false;
         }
 
-        if (! boolval(Config::get('profile.auto_middleware', false))) {
+        if (! boolval(Config::get('profiler.auto_middleware', false))) {
             return false;
         }
 

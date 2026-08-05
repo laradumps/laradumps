@@ -30,7 +30,7 @@ class ProfileManager
     public function __construct()
     {
         $this->stack = new ProfileStack();
-        $this->maxEntries = intval(Config::get('profile.max_entries', 1000));
+        $this->maxEntries = intval(Config::get('profiler.max_entries', 1000));
         $this->loadCaptureConfig();
     }
 
@@ -57,16 +57,16 @@ class ProfileManager
     private function loadCaptureConfig(): void
     {
         $this->captureConfig = [
-            'app' => boolval(Config::get('profile.capture.app', true)),
-            'events' => boolval(Config::get('profile.capture.events', true)),
-            'queries' => boolval(Config::get('profile.capture.queries', true)),
-            'eloquent' => boolval(Config::get('profile.capture.eloquent', true)),
-            'views' => boolval(Config::get('profile.capture.views', true)),
-            'controller' => boolval(Config::get('profile.capture.controller', true)),
-            'http' => boolval(Config::get('profile.capture.http', true)),
-            'cache' => boolval(Config::get('profile.capture.cache', true)),
-            'jobs' => boolval(Config::get('profile.capture.jobs', true)),
-            'method' => boolval(Config::get('profile.capture.method', true)),
+            'app' => boolval(Config::get('profiler.capture.app', true)),
+            'events' => boolval(Config::get('profiler.capture.events', true)),
+            'queries' => boolval(Config::get('profiler.capture.queries', true)),
+            'eloquent' => boolval(Config::get('profiler.capture.eloquent', true)),
+            'views' => boolval(Config::get('profiler.capture.views', true)),
+            'controller' => boolval(Config::get('profiler.capture.controller', true)),
+            'http' => boolval(Config::get('profiler.capture.http', true)),
+            'cache' => boolval(Config::get('profiler.capture.cache', true)),
+            'jobs' => boolval(Config::get('profiler.capture.jobs', true)),
+            'method' => boolval(Config::get('profiler.capture.method', true)),
         ];
     }
 
