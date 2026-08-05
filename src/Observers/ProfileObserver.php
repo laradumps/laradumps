@@ -145,7 +145,7 @@ class ProfileObserver extends BaseObserver
 
     private function shouldRegisterCollector(string $type): bool
     {
-        return boolval(Config::get("profile.capture.{$type}", true));
+        return boolval(Config::get("profiler.capture.{$type}", true));
     }
 
     private function shouldEnableXHProf(): bool

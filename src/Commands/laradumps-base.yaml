@@ -14,7 +14,7 @@ observers:
   gate: false
   cache: false
   brain: false
-  profile: false
+  profiler: false
 logs:
   info: true
   warning: true
@@ -33,7 +33,7 @@ extra:
   context: false
 queries:
   explain: false
-profile:
+profiler:
   auto_middleware: false
   max_entries: 300
   capture:
