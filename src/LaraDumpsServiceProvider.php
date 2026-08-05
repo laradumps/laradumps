@@ -8,6 +8,7 @@ use Illuminate\Support\{Collection, ServiceProvider, Stringable};
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Testing\TestResponse;
 use Illuminate\View\View;
+use LaraDumps\LaraDumps\Actions\DefaultConfig;
 use LaraDumps\LaraDumps\Commands\InitCommand;
 use LaraDumps\LaraDumps\Middleware\ProfileMiddleware;
 use LaraDumps\LaraDumps\Observers\{BrainObserver,
@@ -55,6 +56,8 @@ class LaraDumpsServiceProvider extends ServiceProvider
             __DIR__.'/../resources/config/laradumps.php',
             'laradumps'
         );
+
+        Config::registerDefaults(DefaultConfig::packageDefaults());
 
         $file = str_replace('/', DIRECTORY_SEPARATOR, __DIR__.'/functions.php');
 
@@ -130,7 +133,7 @@ class LaraDumpsServiceProvider extends ServiceProvider
     {
         Collection::macro('ds', function (string $label = '') {
             $laradumps = new LaraDumps();
-            $laradumps->write($this->items); // @phpstan-ignore-line
+            $laradumps->write($this->all());
 
             if ($label) {
                 $laradumps->label($label);
@@ -141,7 +144,7 @@ class LaraDumpsServiceProvider extends ServiceProvider
 
         Stringable::macro('ds', function (string $label = '') {
             $laradumps = new LaraDumps();
-            $laradumps->write($this->value); // @phpstan-ignore-line
+            $laradumps->write((string) $this);
 
             if ($label) {
                 $laradumps->label($label);

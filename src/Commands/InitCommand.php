@@ -3,7 +3,7 @@
 namespace LaraDumps\LaraDumps\Commands;
 
 use Illuminate\Console\Command;
-use LaraDumps\LaraDumps\Actions\AppendLaradumpsYamlToGitignore;
+use LaraDumps\LaraDumps\Actions\{AppendLaradumpsYamlToGitignore, DefaultConfig};
 use LaraDumps\LaraDumpsCore\Actions\Config;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Yaml\Yaml;
@@ -34,11 +34,9 @@ class InitCommand extends Command
             return;
         }
 
-        $defaultYaml = appBasePath().'vendor/laradumps/laradumps-core/src/Commands/laradumps-base.yaml';
-
         $publish = Config::publish(
             pwd: $pwd.DIRECTORY_SEPARATOR,
-            filepath: $defaultYaml
+            filepath: Config::baseConfigPath()
         );
 
         if (! $publish) {
@@ -49,26 +47,13 @@ class InitCommand extends Command
 
         $newYaml = appBasePath().'laradumps.yaml';
 
-        /** @var array $yamlFile */
-        $yamlFile = Yaml::parseFile(__DIR__.'/laradumps-base.yaml');
-        /** @var array $default */
-        $default = Yaml::parseFile($defaultYaml);
+        $mergedYaml = DefaultConfig::toArray();
 
-        foreach ($default as $key => $values) {
-            /**
-             * @var string $key1
-             * @var array $values
-             */
-            foreach ($values as $key1 => $value) {
-                $default[$key][$key1] = $value;
-            }
+        if (isset($mergedYaml['app']) && is_array($mergedYaml['app'])) {
+            $mergedYaml['app']['project_path'] = $pwd.DIRECTORY_SEPARATOR;
         }
 
-        $yamlFile['app']['project_path'] = $pwd.DIRECTORY_SEPARATOR;
-
-        $mergedYaml = array_replace_recursive($default, $yamlFile);
-
-        $yaml = Yaml::dump($mergedYaml);
+        $yaml = Yaml::dump($mergedYaml, 4, 2);
         file_put_contents($newYaml, $yaml);
 
         ds('Welcome to the LaraDumps!');
