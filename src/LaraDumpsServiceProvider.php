@@ -133,7 +133,7 @@ class LaraDumpsServiceProvider extends ServiceProvider
     {
         Collection::macro('ds', function (string $label = '') {
             $laradumps = new LaraDumps();
-            $laradumps->write($this->items); // @phpstan-ignore-line
+            $laradumps->write($this->all());
 
             if ($label) {
                 $laradumps->label($label);
@@ -144,7 +144,7 @@ class LaraDumpsServiceProvider extends ServiceProvider
 
         Stringable::macro('ds', function (string $label = '') {
             $laradumps = new LaraDumps();
-            $laradumps->write($this->value); // @phpstan-ignore-line
+            $laradumps->write((string) $this);
 
             if ($label) {
                 $laradumps->label($label);
