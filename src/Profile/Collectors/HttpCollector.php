@@ -52,10 +52,9 @@ class HttpCollector
             'host' => $host,
         ];
 
-        $origin = $this->manager->captureBacktrace();
         $requestKey = $this->getRequestKey($request);
 
-        $span = $this->manager->tracer()?->beginSpan('http', $name, $metadata, $origin);
+        $span = $this->manager->tracer()?->beginSpan('http', $name, $metadata);
 
         if ($span !== null) {
             $this->pendingRequests[$requestKey] = ['span' => $span, 'metadata' => $metadata];

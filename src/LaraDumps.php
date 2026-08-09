@@ -222,21 +222,17 @@ class LaraDumps extends BaseLaraDumps
 
     public function captureProfileForTermination(): self
     {
-        $profileData = app(ProfileObserver::class)->stop();
-
-        if (! empty($profileData)) {
-            app(ProfileObserver::class)->holdPending(ProfilePayload::fromProfileData($profileData));
-        }
+        app(ProfileObserver::class)->finalize();
 
         return $this;
     }
 
     public function flushProfile(): self
     {
-        $payload = app(ProfileObserver::class)->takePending();
+        $profileData = app(ProfileObserver::class)->buildData();
 
-        if ($payload !== null) {
-            $this->send($payload);
+        if (! empty($profileData)) {
+            $this->send(ProfilePayload::fromProfileData($profileData));
         }
 
         return $this;

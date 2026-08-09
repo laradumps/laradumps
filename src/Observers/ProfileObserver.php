@@ -17,7 +17,6 @@ use LaraDumps\LaraDumps\Profile\Collectors\{
 use LaraDumps\LaraDumps\Profile\ProfileManager;
 use LaraDumps\LaraDumps\Profile\Tracing\ProfileTracer;
 use LaraDumps\LaraDumpsCore\Actions\Config;
-use LaraDumps\LaraDumpsCore\Payloads\Payload;
 
 class ProfileObserver extends BaseObserver
 {
@@ -29,7 +28,7 @@ class ProfileObserver extends BaseObserver
 
     private ?XHProfCollector $xhprofCollector = null;
 
-    private ?Payload $pendingPayload = null;
+    private bool $finalized = false;
 
     public function __construct()
     {
@@ -77,6 +76,40 @@ class ProfileObserver extends BaseObserver
         return $this->manager->stop();
     }
 
+    /**
+     * Close collectors + measurement in-request, but defer building the payload
+     * (getProfileData) to buildData(), which the terminable phase calls after
+     * the response is sent.
+     */
+    public function finalize(): void
+    {
+        if (! $this->manager->isActive()) {
+            return;
+        }
+
+        $this->xhprofCollector?->stop();
+
+        $this->controllerCollector?->stopController();
+
+        $this->manager->tracer()?->shutdown();
+        $this->manager->setTracer(null);
+
+        $this->manager->finalize();
+
+        $this->finalized = true;
+    }
+
+    public function buildData(): array
+    {
+        if (! $this->finalized) {
+            return [];
+        }
+
+        $this->finalized = false;
+
+        return $this->manager->getProfileData();
+    }
+
     public function isEnabled(string $key): bool
     {
         return boolval(Config::get('observers.'.$key, false)) || $this->enabled;
@@ -85,19 +118,6 @@ class ProfileObserver extends BaseObserver
     public function isActive(): bool
     {
         return $this->manager->isActive();
-    }
-
-    public function holdPending(Payload $payload): void
-    {
-        $this->pendingPayload = $payload;
-    }
-
-    public function takePending(): ?Payload
-    {
-        $payload = $this->pendingPayload;
-        $this->pendingPayload = null;
-
-        return $payload;
     }
 
     private function registerCollectors(): void

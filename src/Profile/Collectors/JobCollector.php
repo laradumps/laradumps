@@ -42,9 +42,7 @@ class JobCollector
             'queue' => $event->queue ?? null,
         ];
 
-        $origin = $this->manager->captureBacktrace();
-
-        $this->manager->tracer()?->instantSpan('job', "job(queued: {$jobName})", 0, $metadata, $origin);
+        $this->manager->tracer()?->instantSpan('job', "job(queued: {$jobName})", 0, $metadata);
     }
 
     private function handleProcessing(JobProcessing $event): void
@@ -66,9 +64,7 @@ class JobCollector
             'job_id' => $jobId,
         ];
 
-        $origin = $this->manager->captureBacktrace();
-
-        $span = $this->manager->tracer()?->beginSpan('job', "job(processing: {$jobName})", $metadata, $origin);
+        $span = $this->manager->tracer()?->beginSpan('job', "job(processing: {$jobName})", $metadata);
 
         if ($span !== null) {
             $this->processingJobs[$jobId] = ['span' => $span, 'metadata' => $metadata];

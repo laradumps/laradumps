@@ -41,8 +41,6 @@ readonly class CacheCollector
             'tags' => $event->tags ?? [],
         ];
 
-        $origin = $this->manager->captureBacktrace();
-
-        $this->manager->tracer()?->instantSpan('cache', $name, 0, $metadata, $origin);
+        $this->manager->tracer()?->instantSpan('cache', $name, 0, $metadata);
     }
 }

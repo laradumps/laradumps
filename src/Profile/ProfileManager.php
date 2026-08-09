@@ -118,6 +118,22 @@ class ProfileManager
             return [];
         }
 
+        $this->finalize();
+
+        return $this->getProfileData();
+    }
+
+    /**
+     * Close the measurement window (timing only) without building the payload.
+     * The expensive serialization (getProfileData) is left for the caller to run
+     * later — e.g. in the terminable phase — so it never rides the request.
+     */
+    public function finalize(): void
+    {
+        if (! $this->isActive) {
+            return;
+        }
+
         if ($this->endTime === null) {
             $this->endTime = microtime(true) * 1000;
         }
@@ -130,8 +146,6 @@ class ProfileManager
 
         $this->isActive = false;
         $this->stack->clear();
-
-        return $this->getProfileData();
     }
 
     public function isActive(): bool
@@ -296,38 +310,6 @@ class ProfileManager
         return $summary;
     }
 
-    public function captureBacktrace(int $limit = 10): ?array
-    {
-        $start = microtime(true);
-
-        try {
-            $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, $limit + 5);
-
-            foreach ($trace as $frame) {
-                $file = $frame['file'] ?? '';
-
-                if (str_contains($file, 'laradumps')) {
-                    continue;
-                }
-
-                if (str_contains($file, 'vendor/')) {
-                    continue;
-                }
-
-                return [
-                    'class' => $frame['class'] ?? null,
-                    'method' => $frame['function'],
-                    'file' => $file,
-                    'line' => $frame['line'] ?? null,
-                ];
-            }
-
-            return null;
-        } finally {
-            $this->overheadMs += (microtime(true) - $start) * 1000;
-        }
-    }
-
     public function getLabel(): ?string
     {
         return $this->label;
@@ -352,7 +334,7 @@ class ProfileManager
             return $callback();
         }
 
-        $span = $this->tracer->beginScopedSpan($type, $name, $metadata, $this->captureBacktrace());
+        $span = $this->tracer->beginScopedSpan($type, $name, $metadata);
 
         try {
             return $callback();

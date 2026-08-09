@@ -61,8 +61,6 @@ class EloquentCollector
             'key' => $model->getKey(),
         ];
 
-        $origin = $this->manager->captureBacktrace();
-
-        $this->manager->tracer()?->instantSpan('eloquent', $name, 0, $metadata, $origin);
+        $this->manager->tracer()?->instantSpan('eloquent', $name, 0, $metadata);
     }
 }

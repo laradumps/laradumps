@@ -52,9 +52,7 @@ class ViewCollector
             'data_keys' => array_keys($view->getData()),
         ];
 
-        $origin = $this->manager->captureBacktrace();
-
-        $span = $this->manager->tracer()?->beginSpan('view', $name, $metadata, $origin);
+        $span = $this->manager->tracer()?->beginSpan('view', $name, $metadata);
 
         if ($span !== null) {
             $this->viewStack[$viewName][] = $span;
