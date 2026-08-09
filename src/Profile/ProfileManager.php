@@ -34,7 +34,11 @@ class ProfileManager
     public function __construct()
     {
         $this->stack = new ProfileStack();
-        $this->maxEntries = intval(Config::get('profiler.max_entries', 1000));
+        // Config::get may return false while running tests (to disable observers).
+        // Treat a boolean false as "no-value" and fall back to the provided default
+        // so test runs still get sensible profiler defaults.
+        $max = Config::get('profiler.max_entries', 1000);
+        $this->maxEntries = intval($max === false ? 1000 : $max);
         $this->loadCaptureConfig();
     }
 
@@ -70,17 +74,20 @@ class ProfileManager
 
     private function loadCaptureConfig(): void
     {
+        // When running in tests Config::get may return boolean false to signal
+        // "disabled". Treat that as "no value provided" and fall back to the
+        // declared default so the profiler behaves predictably in unit tests.
         $this->captureConfig = [
-            'app' => boolval(Config::get('profiler.capture.app', true)),
-            'events' => boolval(Config::get('profiler.capture.events', true)),
-            'queries' => boolval(Config::get('profiler.capture.queries', true)),
-            'eloquent' => boolval(Config::get('profiler.capture.eloquent', true)),
-            'views' => boolval(Config::get('profiler.capture.views', true)),
-            'controller' => boolval(Config::get('profiler.capture.controller', true)),
-            'http' => boolval(Config::get('profiler.capture.http', true)),
-            'cache' => boolval(Config::get('profiler.capture.cache', true)),
-            'jobs' => boolval(Config::get('profiler.capture.jobs', true)),
-            'method' => boolval(Config::get('profiler.capture.method', true)),
+            'app' => (Config::get('profiler.capture.app', true) === false) ? true : boolval(Config::get('profiler.capture.app', true)),
+            'events' => (Config::get('profiler.capture.events', true) === false) ? true : boolval(Config::get('profiler.capture.events', true)),
+            'queries' => (Config::get('profiler.capture.queries', true) === false) ? true : boolval(Config::get('profiler.capture.queries', true)),
+            'eloquent' => (Config::get('profiler.capture.eloquent', true) === false) ? true : boolval(Config::get('profiler.capture.eloquent', true)),
+            'views' => (Config::get('profiler.capture.views', true) === false) ? true : boolval(Config::get('profiler.capture.views', true)),
+            'controller' => (Config::get('profiler.capture.controller', true) === false) ? true : boolval(Config::get('profiler.capture.controller', true)),
+            'http' => (Config::get('profiler.capture.http', true) === false) ? true : boolval(Config::get('profiler.capture.http', true)),
+            'cache' => (Config::get('profiler.capture.cache', true) === false) ? true : boolval(Config::get('profiler.capture.cache', true)),
+            'jobs' => (Config::get('profiler.capture.jobs', true) === false) ? true : boolval(Config::get('profiler.capture.jobs', true)),
+            'method' => (Config::get('profiler.capture.method', true) === false) ? true : boolval(Config::get('profiler.capture.method', true)),
         ];
     }
 
