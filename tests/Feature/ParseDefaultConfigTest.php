@@ -51,6 +51,7 @@ it('parses the config yaml base file', function () {
                 'profiler' => [
                     'auto_middleware' => false,
                     'max_entries' => 300,
+                    'xhprof' => true,
                     'capture' => [
                         'app' => true,
                         'events' => true,
@@ -61,6 +62,7 @@ it('parses the config yaml base file', function () {
                         'http' => true,
                         'cache' => true,
                         'jobs' => true,
+                        'method' => true,
                     ],
                 ],
             ],

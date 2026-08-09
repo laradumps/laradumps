@@ -220,6 +220,28 @@ class LaraDumps extends BaseLaraDumps
         return $this;
     }
 
+    public function captureProfileForTermination(): self
+    {
+        $profileData = app(ProfileObserver::class)->stop();
+
+        if (! empty($profileData)) {
+            app(ProfileObserver::class)->holdPending(ProfilePayload::fromProfileData($profileData));
+        }
+
+        return $this;
+    }
+
+    public function flushProfile(): self
+    {
+        $payload = app(ProfileObserver::class)->takePending();
+
+        if ($payload !== null) {
+            $this->send($payload);
+        }
+
+        return $this;
+    }
+
     public function profile(Closure $callback, ?string $label = null): mixed
     {
         $this->startProfile($label);

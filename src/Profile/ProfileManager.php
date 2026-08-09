@@ -2,7 +2,7 @@
 
 namespace LaraDumps\LaraDumps\Profile;
 
-use LaraDumps\LaraDumps\Profile\OpenTelemetry\ProfileTracer;
+use LaraDumps\LaraDumps\Profile\Tracing\ProfileTracer;
 use LaraDumps\LaraDumpsCore\Actions\Config;
 
 class ProfileManager
@@ -24,6 +24,10 @@ class ProfileManager
     private array $captureConfig = [];
 
     private ?string $rootEntryId = null;
+
+    private ?string $contextEntryId = null;
+
+    private float $overheadMs = 0.0;
 
     private ?ProfileTracer $tracer = null;
 
@@ -54,6 +58,16 @@ class ProfileManager
         return $this->rootEntryId;
     }
 
+    public function setContextEntryId(?string $contextEntryId): void
+    {
+        $this->contextEntryId = $contextEntryId;
+    }
+
+    public function getContextEntryId(): ?string
+    {
+        return $this->contextEntryId;
+    }
+
     private function loadCaptureConfig(): void
     {
         $this->captureConfig = [
@@ -79,6 +93,8 @@ class ProfileManager
         $this->entries = [];
         $this->stack->clear();
         $this->rootEntryId = null;
+        $this->contextEntryId = null;
+        $this->overheadMs = 0.0;
 
         $rootEntry = new ProfileEntry(
             type: 'app',
@@ -102,15 +118,13 @@ class ProfileManager
             return [];
         }
 
-        // Only capture wall-clock end time if it hasn't already been overridden
-        // (e.g. by XHProfCollector via overrideTotalDuration to avoid inflated times).
         if ($this->endTime === null) {
             $this->endTime = microtime(true) * 1000;
         }
 
         foreach ($this->entries as $entry) {
             if ($entry->id === $this->rootEntryId && $entry->durationMs === null) {
-                $entry->stop($this->endTime - $this->startTime);
+                $entry->stop($this->adjustedTotalMs());
             }
         }
 
@@ -168,9 +182,17 @@ class ProfileManager
 
     public function getProfileData(): array
     {
-        $totalDuration = $this->endTime !== null
+        $wallDuration = $this->endTime !== null
             ? $this->endTime - $this->startTime
             : $this->getElapsedMs();
+
+        $totalDuration = $this->adjustedTotalMs();
+
+        $selfTimes = $this->computeSelfTimes();
+
+        foreach ($this->entries as $entry) {
+            $entry->selfDurationMs = $selfTimes[$entry->id] ?? null;
+        }
 
         return [
             'profile_id' => uniqid('profile_', true),
@@ -178,26 +200,77 @@ class ProfileManager
             'start_time' => $this->startTime,
             'end_time' => $this->endTime,
             'total_duration_ms' => round($totalDuration, 3),
+            'wall_duration_ms' => round($wallDuration, 3),
+            'overhead_ms' => round($this->overheadMs, 3),
             'entries' => array_map(fn (ProfileEntry $e) => $e->toArray(), $this->entries),
-            'summary' => $this->buildSummary(),
+            'summary' => $this->buildSummary($selfTimes),
         ];
     }
 
-    private function buildSummary(): array
+    private function adjustedTotalMs(): float
+    {
+        $wall = $this->endTime !== null
+            ? $this->endTime - $this->startTime
+            : $this->getElapsedMs();
+
+        return max(0.0, $wall - $this->overheadMs);
+    }
+
+    public function addOverheadMs(float $ms): void
+    {
+        if ($ms > 0) {
+            $this->overheadMs += $ms;
+        }
+    }
+
+    public function getOverheadMs(): float
+    {
+        return $this->overheadMs;
+    }
+
+    private function computeSelfTimes(): array
+    {
+        $entriesById = [];
+
+        foreach ($this->entries as $entry) {
+            $entriesById[$entry->id] = $entry;
+        }
+
+        $childrenSum = [];
+
+        foreach ($this->entries as $entry) {
+            if ($entry->durationMs === null || $entry->parentId === null) {
+                continue;
+            }
+
+            if (! isset($entriesById[$entry->parentId])) {
+                continue;
+            }
+
+            $childrenSum[$entry->parentId] = ($childrenSum[$entry->parentId] ?? 0.0) + $entry->durationMs;
+        }
+
+        $selfTimes = [];
+
+        foreach ($this->entries as $entry) {
+            if ($entry->durationMs === null) {
+                $selfTimes[$entry->id] = null;
+
+                continue;
+            }
+
+            $selfTimes[$entry->id] = max(0.0, $entry->durationMs - ($childrenSum[$entry->id] ?? 0.0));
+        }
+
+        return $selfTimes;
+    }
+
+    private function buildSummary(array $selfTimes): array
     {
         $summary = [
             'total_entries' => count($this->entries),
             'by_type' => [],
         ];
-
-        // Build a set of entry IDs per type to detect parent-child nesting within the same type.
-        // For types where entries can nest (e.g. 'method'), we only count top-level entries
-        // in the duration total to avoid double-counting parent + child durations.
-        $idsByType = [];
-
-        foreach ($this->entries as $entry) {
-            $idsByType[$entry->type][$entry->id] = true;
-        }
 
         foreach ($this->entries as $entry) {
             if (! isset($summary['by_type'][$entry->type])) {
@@ -209,13 +282,10 @@ class ProfileManager
 
             $summary['by_type'][$entry->type]['count']++;
 
-            if ($entry->durationMs !== null) {
-                $parentIsSameType = $entry->parentId !== null
-                    && isset($idsByType[$entry->type][$entry->parentId]);
+            $selfMs = $selfTimes[$entry->id] ?? null;
 
-                if (! $parentIsSameType) {
-                    $summary['by_type'][$entry->type]['total_duration_ms'] += $entry->durationMs;
-                }
+            if ($selfMs !== null) {
+                $summary['by_type'][$entry->type]['total_duration_ms'] += $selfMs;
             }
         }
 
@@ -226,46 +296,36 @@ class ProfileManager
         return $summary;
     }
 
-    public function overrideTotalDuration(float $durationMs): void
-    {
-        if ($this->rootEntryId === null) {
-            return;
-        }
-
-        foreach ($this->entries as $entry) {
-            if ($entry->id === $this->rootEntryId) {
-                $entry->durationMs = round($durationMs, 3);
-                break;
-            }
-        }
-
-        $this->endTime = $this->startTime + $durationMs;
-    }
-
     public function captureBacktrace(int $limit = 10): ?array
     {
-        $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, $limit + 5);
+        $start = microtime(true);
 
-        foreach ($trace as $frame) {
-            $file = $frame['file'] ?? '';
+        try {
+            $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, $limit + 5);
 
-            if (str_contains($file, 'laradumps')) {
-                continue;
+            foreach ($trace as $frame) {
+                $file = $frame['file'] ?? '';
+
+                if (str_contains($file, 'laradumps')) {
+                    continue;
+                }
+
+                if (str_contains($file, 'vendor/')) {
+                    continue;
+                }
+
+                return [
+                    'class' => $frame['class'] ?? null,
+                    'method' => $frame['function'],
+                    'file' => $file,
+                    'line' => $frame['line'] ?? null,
+                ];
             }
 
-            if (str_contains($file, 'vendor/')) {
-                continue;
-            }
-
-            return [
-                'class' => $frame['class'] ?? null,
-                'method' => $frame['function'],
-                'file' => $file,
-                'line' => $frame['line'] ?? null,
-            ];
+            return null;
+        } finally {
+            $this->overheadMs += (microtime(true) - $start) * 1000;
         }
-
-        return null;
     }
 
     public function getLabel(): ?string
@@ -282,6 +342,8 @@ class ProfileManager
         $this->entries = [];
         $this->stack->clear();
         $this->rootEntryId = null;
+        $this->contextEntryId = null;
+        $this->overheadMs = 0.0;
     }
 
     public function measure(string $name, callable $callback, string $type = 'app', array $metadata = []): mixed

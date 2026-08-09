@@ -5,12 +5,11 @@ namespace LaraDumps\LaraDumps\Profile\Collectors;
 use Illuminate\Http\Client\Events\{RequestSending, ResponseReceived};
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Event;
-use LaraDumps\LaraDumps\Profile\ProfileManager;
-use OpenTelemetry\API\Trace\SpanInterface;
+use LaraDumps\LaraDumps\Profile\{ProfileManager, Tracing\ProfileSpan};
 
 class HttpCollector
 {
-    /** @var array<string, array{span: SpanInterface, metadata: array}> */
+    /** @var array<string, array{span: ProfileSpan, metadata: array}> */
     private array $pendingRequests = [];
 
     public function __construct(

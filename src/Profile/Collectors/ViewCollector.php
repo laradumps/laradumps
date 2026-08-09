@@ -3,12 +3,11 @@
 namespace LaraDumps\LaraDumps\Profile\Collectors;
 
 use Illuminate\Support\Facades\Event;
-use LaraDumps\LaraDumps\Profile\ProfileManager;
-use OpenTelemetry\API\Trace\SpanInterface;
+use LaraDumps\LaraDumps\Profile\{ProfileManager, Tracing\ProfileSpan};
 
 class ViewCollector
 {
-    /** @var array<string, SpanInterface[]> */
+    /** @var array<string, ProfileSpan[]> */
     private array $viewStack = [];
 
     public function __construct(

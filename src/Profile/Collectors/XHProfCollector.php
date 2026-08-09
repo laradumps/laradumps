@@ -36,7 +36,7 @@ class XHProfCollector
         }
 
         try {
-            xhprof_enable(XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY);
+            xhprof_enable(XHPROF_FLAGS_NO_BUILTINS);
             $this->running = true;
         } catch (\Throwable) {
             $this->isAvailable = false;
@@ -54,7 +54,9 @@ class XHProfCollector
             $this->running = false;
 
             if (! empty($data)) {
+                $start = microtime(true);
                 $this->processData($data);
+                $this->manager->addOverheadMs((microtime(true) - $start) * 1000);
             }
         } catch (\Throwable) {
         }
@@ -92,9 +94,8 @@ class XHProfCollector
 
         $totalMs = $totalWt / 1000;
 
-        $this->manager->overrideTotalDuration($totalMs);
-
-        $rootParentId = $this->manager->getCurrentParentId();
+        $rootParentId = $this->manager->getContextEntryId()
+            ?? $this->manager->getRootEntryId();
 
         $entryIdMap = [];
         $visited = [];
@@ -158,7 +159,6 @@ class XHProfCollector
                         'function' => $child,
                         'source' => 'xhprof',
                         'calls' => $stats['ct'] ?? 1,
-                        'memory' => $stats['mu'] ?? 0,
                     ],
                     origin: null
                 );

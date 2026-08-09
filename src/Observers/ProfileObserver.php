@@ -2,7 +2,6 @@
 
 namespace LaraDumps\LaraDumps\Observers;
 
-use Illuminate\Support\Facades\Log;
 use LaraDumps\LaraDumps\Profile\Collectors\{
     AppCollector,
     CacheCollector,
@@ -15,9 +14,10 @@ use LaraDumps\LaraDumps\Profile\Collectors\{
     ViewCollector,
     XHProfCollector
 };
-use LaraDumps\LaraDumps\Profile\OpenTelemetry\ProfileTracer;
 use LaraDumps\LaraDumps\Profile\ProfileManager;
+use LaraDumps\LaraDumps\Profile\Tracing\ProfileTracer;
 use LaraDumps\LaraDumpsCore\Actions\Config;
+use LaraDumps\LaraDumpsCore\Payloads\Payload;
 
 class ProfileObserver extends BaseObserver
 {
@@ -29,7 +29,7 @@ class ProfileObserver extends BaseObserver
 
     private ?XHProfCollector $xhprofCollector = null;
 
-    private static bool $missingOtelWarned = false;
+    private ?Payload $pendingPayload = null;
 
     public function __construct()
     {
@@ -54,30 +54,11 @@ class ProfileObserver extends BaseObserver
 
         $this->manager->start($label);
 
-        if (ProfileTracer::isAvailable()) {
-            $this->manager->setTracer(new ProfileTracer($this->manager));
-        } else {
-            $this->warnMissingOpenTelemetry();
-        }
+        $this->manager->setTracer(new ProfileTracer($this->manager));
 
         if ($this->xhprofCollector) {
             $this->xhprofCollector->start();
         }
-    }
-
-    private function warnMissingOpenTelemetry(): void
-    {
-        if (self::$missingOtelWarned) {
-            return;
-        }
-
-        self::$missingOtelWarned = true;
-
-        Log::error(
-            'LaraDumps: profiling was requested but the OpenTelemetry packages are not installed. '
-            .'The profiler is disabled. Install them with: '
-            .'composer require open-telemetry/sdk open-telemetry/api'
-        );
     }
 
     public function stop(): array
@@ -104,6 +85,19 @@ class ProfileObserver extends BaseObserver
     public function isActive(): bool
     {
         return $this->manager->isActive();
+    }
+
+    public function holdPending(Payload $payload): void
+    {
+        $this->pendingPayload = $payload;
+    }
+
+    public function takePending(): ?Payload
+    {
+        $payload = $this->pendingPayload;
+        $this->pendingPayload = null;
+
+        return $payload;
     }
 
     private function registerCollectors(): void
@@ -150,6 +144,14 @@ class ProfileObserver extends BaseObserver
 
     private function shouldEnableXHProf(): bool
     {
+        if (! boolval(Config::get('profiler.xhprof', false))) {
+            return false;
+        }
+
+        if (! boolval(Config::get('profiler.capture.method', true))) {
+            return false;
+        }
+
         return extension_loaded('xhprof') && function_exists('xhprof_enable');
     }
 }

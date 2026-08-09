@@ -26,11 +26,9 @@
         "pestphp/pest": "^3.7.0 || ^4.0.0",
         "laravel/pint": "^1.26.0",
         "mockery/mockery": "^1.6.12",
-        "larastan/larastan": "^3.8",
-        "open-telemetry/sdk": "^1.14"
+        "larastan/larastan": "^3.8"
     },
     "suggest": {
-        "open-telemetry/sdk": "Enables the request profiler (ds()->startProfile()). Install with: composer require open-telemetry/sdk open-telemetry/api",
         "ext-xhprof": "Adds method-level (function call tree) data to the profiler flame graph"
     },
     "autoload": {

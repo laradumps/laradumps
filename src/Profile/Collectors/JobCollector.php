@@ -4,12 +4,11 @@ namespace LaraDumps\LaraDumps\Profile\Collectors;
 
 use Illuminate\Queue\Events\{JobFailed, JobProcessed, JobProcessing, JobQueued};
 use Illuminate\Support\Facades\Event;
-use LaraDumps\LaraDumps\Profile\ProfileManager;
-use OpenTelemetry\API\Trace\SpanInterface;
+use LaraDumps\LaraDumps\Profile\{ProfileManager, Tracing\ProfileSpan};
 
 class JobCollector
 {
-    /** @var array<string, array{span: SpanInterface, metadata: array}> */
+    /** @var array<string, array{span: ProfileSpan, metadata: array}> */
     private array $processingJobs = [];
 
     public function __construct(
