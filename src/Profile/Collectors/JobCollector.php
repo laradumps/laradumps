@@ -4,12 +4,11 @@ namespace LaraDumps\LaraDumps\Profile\Collectors;
 
 use Illuminate\Queue\Events\{JobFailed, JobProcessed, JobProcessing, JobQueued};
 use Illuminate\Support\Facades\Event;
-use LaraDumps\LaraDumps\Profile\ProfileManager;
-use OpenTelemetry\API\Trace\SpanInterface;
+use LaraDumps\LaraDumps\Profile\{ProfileManager, Tracing\ProfileSpan};
 
 class JobCollector
 {
-    /** @var array<string, array{span: SpanInterface, metadata: array}> */
+    /** @var array<string, array{span: ProfileSpan, metadata: array}> */
     private array $processingJobs = [];
 
     public function __construct(
@@ -43,9 +42,7 @@ class JobCollector
             'queue' => $event->queue ?? null,
         ];
 
-        $origin = $this->manager->captureBacktrace();
-
-        $this->manager->tracer()?->instantSpan('job', "job(queued: {$jobName})", 0, $metadata, $origin);
+        $this->manager->tracer()?->instantSpan('job', "job(queued: {$jobName})", 0, $metadata);
     }
 
     private function handleProcessing(JobProcessing $event): void
@@ -67,9 +64,7 @@ class JobCollector
             'job_id' => $jobId,
         ];
 
-        $origin = $this->manager->captureBacktrace();
-
-        $span = $this->manager->tracer()?->beginSpan('job', "job(processing: {$jobName})", $metadata, $origin);
+        $span = $this->manager->tracer()?->beginSpan('job', "job(processing: {$jobName})", $metadata);
 
         if ($span !== null) {
             $this->processingJobs[$jobId] = ['span' => $span, 'metadata' => $metadata];

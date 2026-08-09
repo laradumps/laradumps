@@ -4,8 +4,8 @@ namespace LaraDumps\LaraDumps\Profile\Collectors;
 
 use Illuminate\Routing\Events\RouteMatched;
 use Illuminate\Support\Facades\Event;
-use LaraDumps\LaraDumps\Profile\OpenTelemetry\ScopedSpan;
 use LaraDumps\LaraDumps\Profile\ProfileManager;
+use LaraDumps\LaraDumps\Profile\Tracing\ScopedSpan;
 
 class ControllerCollector
 {
@@ -57,6 +57,10 @@ class ControllerCollector
 
         $this->currentControllerSpan = $this->manager->tracer()
             ?->beginScopedSpan('controller', $name, $metadata);
+
+        if ($this->currentControllerSpan) {
+            $this->manager->setContextEntryId($this->currentControllerSpan->spanId());
+        }
     }
 
     public function stopController(): void

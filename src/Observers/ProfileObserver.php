@@ -2,7 +2,6 @@
 
 namespace LaraDumps\LaraDumps\Observers;
 
-use Illuminate\Support\Facades\Log;
 use LaraDumps\LaraDumps\Profile\Collectors\{
     AppCollector,
     CacheCollector,
@@ -15,8 +14,8 @@ use LaraDumps\LaraDumps\Profile\Collectors\{
     ViewCollector,
     XHProfCollector
 };
-use LaraDumps\LaraDumps\Profile\OpenTelemetry\ProfileTracer;
 use LaraDumps\LaraDumps\Profile\ProfileManager;
+use LaraDumps\LaraDumps\Profile\Tracing\ProfileTracer;
 use LaraDumps\LaraDumpsCore\Actions\Config;
 
 class ProfileObserver extends BaseObserver
@@ -29,7 +28,7 @@ class ProfileObserver extends BaseObserver
 
     private ?XHProfCollector $xhprofCollector = null;
 
-    private static bool $missingOtelWarned = false;
+    private bool $finalized = false;
 
     public function __construct()
     {
@@ -54,30 +53,11 @@ class ProfileObserver extends BaseObserver
 
         $this->manager->start($label);
 
-        if (ProfileTracer::isAvailable()) {
-            $this->manager->setTracer(new ProfileTracer($this->manager));
-        } else {
-            $this->warnMissingOpenTelemetry();
-        }
+        $this->manager->setTracer(new ProfileTracer($this->manager));
 
         if ($this->xhprofCollector) {
             $this->xhprofCollector->start();
         }
-    }
-
-    private function warnMissingOpenTelemetry(): void
-    {
-        if (self::$missingOtelWarned) {
-            return;
-        }
-
-        self::$missingOtelWarned = true;
-
-        Log::error(
-            'LaraDumps: profiling was requested but the OpenTelemetry packages are not installed. '
-            .'The profiler is disabled. Install them with: '
-            .'composer require open-telemetry/sdk open-telemetry/api'
-        );
     }
 
     public function stop(): array
@@ -94,6 +74,40 @@ class ProfileObserver extends BaseObserver
         $this->manager->setTracer(null);
 
         return $this->manager->stop();
+    }
+
+    /**
+     * Close collectors + measurement in-request, but defer building the payload
+     * (getProfileData) to buildData(), which the terminable phase calls after
+     * the response is sent.
+     */
+    public function finalize(): void
+    {
+        if (! $this->manager->isActive()) {
+            return;
+        }
+
+        $this->xhprofCollector?->stop();
+
+        $this->controllerCollector?->stopController();
+
+        $this->manager->tracer()?->shutdown();
+        $this->manager->setTracer(null);
+
+        $this->manager->finalize();
+
+        $this->finalized = true;
+    }
+
+    public function buildData(): array
+    {
+        if (! $this->finalized) {
+            return [];
+        }
+
+        $this->finalized = false;
+
+        return $this->manager->getProfileData();
     }
 
     public function isEnabled(string $key): bool
@@ -150,6 +164,14 @@ class ProfileObserver extends BaseObserver
 
     private function shouldEnableXHProf(): bool
     {
+        if (! boolval(Config::get('profiler.xhprof', false))) {
+            return false;
+        }
+
+        if (! boolval(Config::get('profiler.capture.method', true))) {
+            return false;
+        }
+
         return extension_loaded('xhprof') && function_exists('xhprof_enable');
     }
 }

@@ -14,6 +14,8 @@ class ProfileEntry
 
     public ?float $durationMs = null;
 
+    public ?float $selfDurationMs = null;
+
     public ?string $parentId = null;
 
     public array $metadata = [];
@@ -64,6 +66,7 @@ class ProfileEntry
             'name' => $this->name,
             'start_ms' => $this->startMs,
             'duration_ms' => $this->durationMs !== null ? round($this->durationMs, 3) : null,
+            'self_duration_ms' => $this->selfDurationMs !== null ? round($this->selfDurationMs, 3) : null,
             'parent_id' => $this->parentId,
             'metadata' => $this->metadata,
             'origin' => [

@@ -43,9 +43,7 @@ class QueryCollector
             'database' => $query->connection->getDatabaseName(),
         ];
 
-        $origin = $this->manager->captureBacktrace();
-
-        $this->manager->tracer()?->instantSpan('sql', $name, $query->time, $metadata, $origin);
+        $this->manager->tracer()?->instantSpan('sql', $name, $query->time, $metadata);
     }
 
     private function formatSql(QueryExecuted $query): string

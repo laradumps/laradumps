@@ -2,7 +2,7 @@
 
 namespace LaraDumps\LaraDumps\Profile;
 
-use LaraDumps\LaraDumps\Profile\OpenTelemetry\ProfileTracer;
+use LaraDumps\LaraDumps\Profile\Tracing\ProfileTracer;
 use LaraDumps\LaraDumpsCore\Actions\Config;
 
 class ProfileManager
@@ -25,12 +25,20 @@ class ProfileManager
 
     private ?string $rootEntryId = null;
 
+    private ?string $contextEntryId = null;
+
+    private float $overheadMs = 0.0;
+
     private ?ProfileTracer $tracer = null;
 
     public function __construct()
     {
         $this->stack = new ProfileStack();
-        $this->maxEntries = intval(Config::get('profiler.max_entries', 1000));
+        // Config::get may return false while running tests (to disable observers).
+        // Treat a boolean false as "no-value" and fall back to the provided default
+        // so test runs still get sensible profiler defaults.
+        $max = Config::get('profiler.max_entries', 1000);
+        $this->maxEntries = intval($max === false ? 1000 : $max);
         $this->loadCaptureConfig();
     }
 
@@ -54,19 +62,32 @@ class ProfileManager
         return $this->rootEntryId;
     }
 
+    public function setContextEntryId(?string $contextEntryId): void
+    {
+        $this->contextEntryId = $contextEntryId;
+    }
+
+    public function getContextEntryId(): ?string
+    {
+        return $this->contextEntryId;
+    }
+
     private function loadCaptureConfig(): void
     {
+        // When running in tests Config::get may return boolean false to signal
+        // "disabled". Treat that as "no value provided" and fall back to the
+        // declared default so the profiler behaves predictably in unit tests.
         $this->captureConfig = [
-            'app' => boolval(Config::get('profiler.capture.app', true)),
-            'events' => boolval(Config::get('profiler.capture.events', true)),
-            'queries' => boolval(Config::get('profiler.capture.queries', true)),
-            'eloquent' => boolval(Config::get('profiler.capture.eloquent', true)),
-            'views' => boolval(Config::get('profiler.capture.views', true)),
-            'controller' => boolval(Config::get('profiler.capture.controller', true)),
-            'http' => boolval(Config::get('profiler.capture.http', true)),
-            'cache' => boolval(Config::get('profiler.capture.cache', true)),
-            'jobs' => boolval(Config::get('profiler.capture.jobs', true)),
-            'method' => boolval(Config::get('profiler.capture.method', true)),
+            'app' => (Config::get('profiler.capture.app', true) === false) ? true : boolval(Config::get('profiler.capture.app', true)),
+            'events' => (Config::get('profiler.capture.events', true) === false) ? true : boolval(Config::get('profiler.capture.events', true)),
+            'queries' => (Config::get('profiler.capture.queries', true) === false) ? true : boolval(Config::get('profiler.capture.queries', true)),
+            'eloquent' => (Config::get('profiler.capture.eloquent', true) === false) ? true : boolval(Config::get('profiler.capture.eloquent', true)),
+            'views' => (Config::get('profiler.capture.views', true) === false) ? true : boolval(Config::get('profiler.capture.views', true)),
+            'controller' => (Config::get('profiler.capture.controller', true) === false) ? true : boolval(Config::get('profiler.capture.controller', true)),
+            'http' => (Config::get('profiler.capture.http', true) === false) ? true : boolval(Config::get('profiler.capture.http', true)),
+            'cache' => (Config::get('profiler.capture.cache', true) === false) ? true : boolval(Config::get('profiler.capture.cache', true)),
+            'jobs' => (Config::get('profiler.capture.jobs', true) === false) ? true : boolval(Config::get('profiler.capture.jobs', true)),
+            'method' => (Config::get('profiler.capture.method', true) === false) ? true : boolval(Config::get('profiler.capture.method', true)),
         ];
     }
 
@@ -79,6 +100,8 @@ class ProfileManager
         $this->entries = [];
         $this->stack->clear();
         $this->rootEntryId = null;
+        $this->contextEntryId = null;
+        $this->overheadMs = 0.0;
 
         $rootEntry = new ProfileEntry(
             type: 'app',
@@ -102,22 +125,34 @@ class ProfileManager
             return [];
         }
 
-        // Only capture wall-clock end time if it hasn't already been overridden
-        // (e.g. by XHProfCollector via overrideTotalDuration to avoid inflated times).
+        $this->finalize();
+
+        return $this->getProfileData();
+    }
+
+    /**
+     * Close the measurement window (timing only) without building the payload.
+     * The expensive serialization (getProfileData) is left for the caller to run
+     * later — e.g. in the terminable phase — so it never rides the request.
+     */
+    public function finalize(): void
+    {
+        if (! $this->isActive) {
+            return;
+        }
+
         if ($this->endTime === null) {
             $this->endTime = microtime(true) * 1000;
         }
 
         foreach ($this->entries as $entry) {
             if ($entry->id === $this->rootEntryId && $entry->durationMs === null) {
-                $entry->stop($this->endTime - $this->startTime);
+                $entry->stop($this->adjustedTotalMs());
             }
         }
 
         $this->isActive = false;
         $this->stack->clear();
-
-        return $this->getProfileData();
     }
 
     public function isActive(): bool
@@ -168,9 +203,17 @@ class ProfileManager
 
     public function getProfileData(): array
     {
-        $totalDuration = $this->endTime !== null
+        $wallDuration = $this->endTime !== null
             ? $this->endTime - $this->startTime
             : $this->getElapsedMs();
+
+        $totalDuration = $this->adjustedTotalMs();
+
+        $selfTimes = $this->computeSelfTimes();
+
+        foreach ($this->entries as $entry) {
+            $entry->selfDurationMs = $selfTimes[$entry->id] ?? null;
+        }
 
         return [
             'profile_id' => uniqid('profile_', true),
@@ -178,26 +221,77 @@ class ProfileManager
             'start_time' => $this->startTime,
             'end_time' => $this->endTime,
             'total_duration_ms' => round($totalDuration, 3),
+            'wall_duration_ms' => round($wallDuration, 3),
+            'overhead_ms' => round($this->overheadMs, 3),
             'entries' => array_map(fn (ProfileEntry $e) => $e->toArray(), $this->entries),
-            'summary' => $this->buildSummary(),
+            'summary' => $this->buildSummary($selfTimes),
         ];
     }
 
-    private function buildSummary(): array
+    private function adjustedTotalMs(): float
+    {
+        $wall = $this->endTime !== null
+            ? $this->endTime - $this->startTime
+            : $this->getElapsedMs();
+
+        return max(0.0, $wall - $this->overheadMs);
+    }
+
+    public function addOverheadMs(float $ms): void
+    {
+        if ($ms > 0) {
+            $this->overheadMs += $ms;
+        }
+    }
+
+    public function getOverheadMs(): float
+    {
+        return $this->overheadMs;
+    }
+
+    private function computeSelfTimes(): array
+    {
+        $entriesById = [];
+
+        foreach ($this->entries as $entry) {
+            $entriesById[$entry->id] = $entry;
+        }
+
+        $childrenSum = [];
+
+        foreach ($this->entries as $entry) {
+            if ($entry->durationMs === null || $entry->parentId === null) {
+                continue;
+            }
+
+            if (! isset($entriesById[$entry->parentId])) {
+                continue;
+            }
+
+            $childrenSum[$entry->parentId] = ($childrenSum[$entry->parentId] ?? 0.0) + $entry->durationMs;
+        }
+
+        $selfTimes = [];
+
+        foreach ($this->entries as $entry) {
+            if ($entry->durationMs === null) {
+                $selfTimes[$entry->id] = null;
+
+                continue;
+            }
+
+            $selfTimes[$entry->id] = max(0.0, $entry->durationMs - ($childrenSum[$entry->id] ?? 0.0));
+        }
+
+        return $selfTimes;
+    }
+
+    private function buildSummary(array $selfTimes): array
     {
         $summary = [
             'total_entries' => count($this->entries),
             'by_type' => [],
         ];
-
-        // Build a set of entry IDs per type to detect parent-child nesting within the same type.
-        // For types where entries can nest (e.g. 'method'), we only count top-level entries
-        // in the duration total to avoid double-counting parent + child durations.
-        $idsByType = [];
-
-        foreach ($this->entries as $entry) {
-            $idsByType[$entry->type][$entry->id] = true;
-        }
 
         foreach ($this->entries as $entry) {
             if (! isset($summary['by_type'][$entry->type])) {
@@ -209,13 +303,10 @@ class ProfileManager
 
             $summary['by_type'][$entry->type]['count']++;
 
-            if ($entry->durationMs !== null) {
-                $parentIsSameType = $entry->parentId !== null
-                    && isset($idsByType[$entry->type][$entry->parentId]);
+            $selfMs = $selfTimes[$entry->id] ?? null;
 
-                if (! $parentIsSameType) {
-                    $summary['by_type'][$entry->type]['total_duration_ms'] += $entry->durationMs;
-                }
+            if ($selfMs !== null) {
+                $summary['by_type'][$entry->type]['total_duration_ms'] += $selfMs;
             }
         }
 
@@ -224,48 +315,6 @@ class ProfileManager
         }
 
         return $summary;
-    }
-
-    public function overrideTotalDuration(float $durationMs): void
-    {
-        if ($this->rootEntryId === null) {
-            return;
-        }
-
-        foreach ($this->entries as $entry) {
-            if ($entry->id === $this->rootEntryId) {
-                $entry->durationMs = round($durationMs, 3);
-                break;
-            }
-        }
-
-        $this->endTime = $this->startTime + $durationMs;
-    }
-
-    public function captureBacktrace(int $limit = 10): ?array
-    {
-        $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, $limit + 5);
-
-        foreach ($trace as $frame) {
-            $file = $frame['file'] ?? '';
-
-            if (str_contains($file, 'laradumps')) {
-                continue;
-            }
-
-            if (str_contains($file, 'vendor/')) {
-                continue;
-            }
-
-            return [
-                'class' => $frame['class'] ?? null,
-                'method' => $frame['function'],
-                'file' => $file,
-                'line' => $frame['line'] ?? null,
-            ];
-        }
-
-        return null;
     }
 
     public function getLabel(): ?string
@@ -282,6 +331,8 @@ class ProfileManager
         $this->entries = [];
         $this->stack->clear();
         $this->rootEntryId = null;
+        $this->contextEntryId = null;
+        $this->overheadMs = 0.0;
     }
 
     public function measure(string $name, callable $callback, string $type = 'app', array $metadata = []): mixed
@@ -290,7 +341,7 @@ class ProfileManager
             return $callback();
         }
 
-        $span = $this->tracer->beginScopedSpan($type, $name, $metadata, $this->captureBacktrace());
+        $span = $this->tracer->beginScopedSpan($type, $name, $metadata);
 
         try {
             return $callback();

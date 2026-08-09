@@ -22,9 +22,18 @@ class ProfileMiddleware
 
         $response = $next($request);
 
-        app(LaraDumps::class)->stopProfile();
+        app(LaraDumps::class)->captureProfileForTermination();
 
         return $response;
+    }
+
+    public function terminate(Request $request, Response $response): void
+    {
+        if (! $this->shouldProfile()) {
+            return;
+        }
+
+        app(LaraDumps::class)->flushProfile();
     }
 
     private function shouldProfile(): bool

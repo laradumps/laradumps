@@ -53,9 +53,7 @@ class EventCollector
             'payload_type' => isset($payload[0]) ? get_class($payload[0]) : null,
         ];
 
-        $origin = $this->manager->captureBacktrace();
-
-        $this->manager->tracer()?->instantSpan('event', $name, 0, $metadata, $origin);
+        $this->manager->tracer()?->instantSpan('event', $name, 0, $metadata);
     }
 
     private function buildName(string $eventName): string
