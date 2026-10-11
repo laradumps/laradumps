@@ -59,19 +59,13 @@ Route::get('/', function () {
 });
 ```
 
-By opening this page in your browser, the desktop App will display the dump, and the page will be loaded without any interference.
-
-<p align="center">
-  <img src="./art/dark.png" height="500" alt="" />
-</p>
-
 <br/>
 
 ### Get Started
 
 #### Requirements
 
-PHP 8.1+ and Laravel 10.0+.
+PHP 8.2+ and Laravel 11.0+.
 
 For PHP projects that are not built on Laravel, please refer to the [laradumps/laradumps-core](https://github.com/laradumps/laradumps-core) repository.
 
