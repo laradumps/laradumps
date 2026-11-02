@@ -36,11 +36,15 @@ class SlowQueryObserver extends BaseObserver
             return;
         }
 
+        if (app(QueryObserver::class)->isEnabled('queries')) {
+            return;
+        }
+
         $sql = $this->resolveFullSql($event);
 
         $queries = $this->buildQueryMetadata($event, $sql);
 
-        $payload = new QueriesPayload($queries, screen: 'slow queries');
+        $payload = new QueriesPayload($queries, screen: 'slow_queries');
 
         (new LaraDumps())->send($payload);
     }
