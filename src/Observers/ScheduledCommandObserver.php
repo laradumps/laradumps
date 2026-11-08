@@ -51,7 +51,7 @@ class ScheduledCommandObserver extends BaseObserver
             'Timezone' => $event->timezone,
             'User' => $event->user,
             'Output' => $this->getEventOutput($event),
-        ], screen: 'scheduled commands', label: $this->label);
+        ], screen: 'scheduled_commands', label: $this->label);
     }
 
     protected function getEventOutput(Event $event): ?string

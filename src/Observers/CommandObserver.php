@@ -30,13 +30,18 @@ class CommandObserver extends BaseObserver
 
     private function generatePayload(object $event): Payload
     {
-        return new DumpPayload(Dumper::dump([
+        [$pre, $id] = Dumper::dump([
             /* @phpstan-ignore-next-line */
             'command' => $event->command ?? $event->input->getArguments()['command'] ?? 'default',
             'exit_code' => $event->exitCode, /** @phpstan-ignore-line */
             'arguments' => $event->input->getArguments(), /** @phpstan-ignore-line */
             'options' => $event->input->getOptions(), /** @phpstan-ignore-line */
-        ]));
+        ]);
+
+        $payload = new DumpPayload($pre, screen: 'commands');
+        $payload->setDumpId($id);
+
+        return $payload;
     }
 
     private function sendPayload(Payload $payload): void

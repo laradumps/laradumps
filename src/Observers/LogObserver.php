@@ -49,7 +49,7 @@ class LogObserver extends BaseObserver
 
     private function onMessageLogged(MessageLogged $event): void
     {
-        $level = $event->level === 'debug' ? 'info' : $event->level;
+        $level = $event->level;
 
         if (! $this->shouldLogMessage($event->message, $level) || $this->isEmailLog($event->message)) {
             return;
