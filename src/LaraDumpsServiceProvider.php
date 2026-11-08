@@ -22,6 +22,7 @@ use LaraDumps\LaraDumps\Observers\{BrainObserver,
     MailObserver,
     ProfileObserver,
     QueryObserver,
+    RequestObserver,
     ScheduledCommandObserver,
     SlowQueryObserver};
 use LaraDumps\LaraDumps\Payloads\QueryPayload;
@@ -78,6 +79,7 @@ class LaraDumpsServiceProvider extends ServiceProvider
         $this->app->singleton(SlowQueryObserver::class);
         $this->app->singleton(BrainObserver::class);
         $this->app->singleton(ProfileObserver::class);
+        $this->app->singleton(RequestObserver::class);
         $this->app->singleton(ProfileManager::class, function () {
             return app(ProfileObserver::class)->getManager();
         });
@@ -94,6 +96,7 @@ class LaraDumpsServiceProvider extends ServiceProvider
 
     private function bootObservers(): void
     {
+        app(RequestObserver::class)->register();
         app(JobsObserver::class)->register();
         app(CommandObserver::class)->register();
         app(ScheduledCommandObserver::class)->register();

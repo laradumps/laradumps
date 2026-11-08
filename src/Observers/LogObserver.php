@@ -19,13 +19,6 @@ class LogObserver extends BaseObserver
 {
     protected array $queries = [];
 
-    protected Request $request;
-
-    public function __construct()
-    {
-        $this->request = app(Request::class);
-    }
-
     public function register(): void
     {
         if (! $this->isEnabled('logs')) {
@@ -34,7 +27,7 @@ class LogObserver extends BaseObserver
 
         Event::listen(MessageLogged::class, $this->onMessageLogged(...));
         Event::listen(QueryExecuted::class, $this->onQueryExecuted(...));
-        Event::listen([JobProcessing::class, JobProcessed::class], fn () => $this->clearQueries());
+        Event::listen([JobProcessing::class, JobProcessed::class, 'Laravel\Octane\Events\RequestReceived'], fn () => $this->clearQueries());
     }
 
     private function onQueryExecuted(QueryExecuted $event): void
@@ -89,7 +82,7 @@ class LogObserver extends BaseObserver
         }
 
         if ($level === 'info' && ! data_get($config, 'boost_info')) {
-            $routeName = $this->request->route()?->getName();
+            $routeName = $this->request()->route()?->getName();
             if ($routeName === 'boost.browser-logs') {
                 return false;
             }
@@ -122,12 +115,12 @@ class LogObserver extends BaseObserver
 
     private function requestHeaders(): array
     {
-        return array_map(fn (array $header) => implode(', ', $header), $this->request->headers->all());
+        return array_map(fn (array $header) => implode(', ', $header), $this->request()->headers->all());
     }
 
     private function requestBody(): ?string
     {
-        $payload = $this->request->all();
+        $payload = $this->request()->all();
 
         if (empty($payload)) {
             return null;
@@ -140,7 +133,7 @@ class LogObserver extends BaseObserver
 
     private function applicationRouteContext(): array
     {
-        $route = $this->request->route();
+        $route = $this->request()->route();
 
         if (! $route) {
             return [];
@@ -179,6 +172,11 @@ class LogObserver extends BaseObserver
         }
 
         return $sql;
+    }
+
+    private function request(): Request
+    {
+        return app('request');
     }
 
     private function clearQueries(): void
