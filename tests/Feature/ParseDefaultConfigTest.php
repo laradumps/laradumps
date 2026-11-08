@@ -25,6 +25,7 @@ it('parses the config yaml base file', function () {
                     'cache' => false,
                     'brain' => false,
                     'profiler' => false,
+                    'livewire' => false,
                 ],
                 'logs' => [
                     'info' => true,

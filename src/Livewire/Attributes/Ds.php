@@ -2,7 +2,7 @@
 
 namespace LaraDumps\LaraDumps\Livewire\Attributes;
 
-use LaraDumps\LaraDumps\Livewire\Support\Debug;
+use LaraDumps\LaraDumps\Observers\LivewireObserver;
 use Livewire\Attribute;
 
 #[\Attribute(\Attribute::TARGET_CLASS)]
@@ -14,9 +14,6 @@ class Ds extends Attribute
 
     public function boot(): void
     {
-        app(Debug::class)->debug(
-            $this->component->getId(),
-            $this->queries
-        );
+        app(LivewireObserver::class)->pin($this->getComponent()->getName());
     }
 }
