@@ -5,7 +5,7 @@ namespace LaraDumps\LaraDumps;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\{Collection, ServiceProvider, Stringable};
-use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\{Blade, Route};
 use Illuminate\Testing\TestResponse;
 use Illuminate\View\View;
 use LaraDumps\LaraDumps\Actions\DefaultConfig;
@@ -18,6 +18,7 @@ use LaraDumps\LaraDumps\Observers\{BrainObserver,
     GateObserver,
     HttpClientObserver,
     JobsObserver,
+    LivewireObserver,
     LogObserver,
     MailObserver,
     ProfileObserver,
@@ -29,6 +30,7 @@ use LaraDumps\LaraDumps\Payloads\QueryPayload;
 use LaraDumps\LaraDumps\Profile\ProfileManager;
 use LaraDumps\LaraDumpsCore\Actions\{Config, Dumper};
 use LaraDumps\LaraDumpsCore\Payloads\{DumpPayload, TableV2Payload};
+use Livewire\Mechanisms\HandleComponents\HandleComponents;
 
 class LaraDumpsServiceProvider extends ServiceProvider
 {
@@ -80,6 +82,7 @@ class LaraDumpsServiceProvider extends ServiceProvider
         $this->app->singleton(BrainObserver::class);
         $this->app->singleton(ProfileObserver::class);
         $this->app->singleton(RequestObserver::class);
+        $this->app->singleton(LivewireObserver::class);
         $this->app->singleton(ProfileManager::class, function () {
             return app(ProfileObserver::class)->getManager();
         });
@@ -110,8 +113,17 @@ class LaraDumpsServiceProvider extends ServiceProvider
         app(SlowQueryObserver::class)->register();
         app(BrainObserver::class)->register();
         app(ProfileObserver::class)->register();
+        app(LivewireObserver::class)->register();
 
         $this->registerProfileMiddleware();
+        $this->registerLivewireRoute();
+    }
+
+    private function registerLivewireRoute(): void
+    {
+        if (class_exists(HandleComponents::class) && config('app.debug')) {
+            Route::post(LivewireObserver::SELECT_URI, [LivewireObserver::class, 'select']);
+        }
     }
 
     private function registerProfileMiddleware(): void

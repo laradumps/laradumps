@@ -15,6 +15,7 @@ observers:
   cache: false
   brain: false
   profiler: false
+  livewire: false
 logs:
   info: true
   warning: true

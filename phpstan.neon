@@ -13,6 +13,6 @@ parameters:
     excludePaths:
          analyseAndScan:
             - './src/Observers/BrainObserver.php'
-            - './src/Livewire/Support/Debug.php'
             - './src/Livewire/Attributes/Ds.php'
+            - './src/Observers/LivewireObserver.php'
 

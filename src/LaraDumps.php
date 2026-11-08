@@ -5,8 +5,7 @@ namespace LaraDumps\LaraDumps;
 use Closure;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Mail\Mailable;
-use LaraDumps\LaraDumps\Livewire\Support\Debug;
-use LaraDumps\LaraDumps\Observers\{CacheObserver, CommandObserver, GateObserver, HttpClientObserver, ProfileObserver, QueryObserver, ScheduledCommandObserver};
+use LaraDumps\LaraDumps\Observers\{CacheObserver, CommandObserver, GateObserver, HttpClientObserver, LivewireObserver, ProfileObserver, QueryObserver, ScheduledCommandObserver};
 use LaraDumps\LaraDumps\Payloads\{ContextPayload, MailablePayload, MarkdownPayload, ModelPayload, ProfilePayload, RoutesPayload};
 use LaraDumps\LaraDumps\Profile\ProfileManager;
 use LaraDumps\LaraDumps\Support\JobContext;
@@ -31,7 +30,7 @@ class LaraDumps extends BaseLaraDumps
 
             if (class_exists(Component::class)
                 && $args instanceof Component) {
-                (new Debug())->debug($args->getId());
+                app(LivewireObserver::class)->pin($args->getName());
 
                 return [[], null];
             }
